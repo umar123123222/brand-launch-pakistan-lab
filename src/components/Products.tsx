@@ -1,8 +1,10 @@
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ImageUpload from "./ImageUpload";
 
 const Products = () => {
-  const products = [
+  const [products, setProducts] = useState([
     {
       title: "Premium Perfumes",
       description: "Launch your own fragrance line with our proven perfume formulations. Following Elyscents' success model.",
@@ -24,7 +26,15 @@ const Products = () => {
       stats: "Growing wellness market",
       price: "Therapeutic grade quality"
     }
-  ];
+  ]);
+
+  const handleImageChange = (index: number, newImageUrl: string) => {
+    setProducts(prevProducts => 
+      prevProducts.map((product, i) => 
+        i === index ? { ...product, image: newImageUrl } : product
+      )
+    );
+  };
 
   return (
     <section className="py-20 bg-white">
@@ -43,10 +53,10 @@ const Products = () => {
           {products.map((product, index) => (
             <Card key={index} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border-0">
               <div className="relative overflow-hidden">
-                <img 
-                  src={product.image} 
-                  alt={product.title}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                <ImageUpload
+                  onImageChange={(newImageUrl) => handleImageChange(index, newImageUrl)}
+                  currentImage={product.image}
+                  productTitle={product.title}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
