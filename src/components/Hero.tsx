@@ -18,16 +18,12 @@ const Hero = () => {
         </h1>
         
         <p className="text-xl md:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto leading-relaxed">
-          We turn your vision into a thriving e-commerce brand. From product creation to 500+ daily orders - 
-          just like our success story <span className="text-yellow-400 font-semibold">Elyscents</span>.
+          We create Profitable Brands in 40 to 60 days... Guaranteed!
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <div className="flex justify-center mb-12">
           <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105">
-            Start Your Brand Journey
-          </Button>
-          <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-purple-900 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300">
-            View Success Stories
+            WhatsApp Us To Start Your Brand
           </Button>
         </div>
         
