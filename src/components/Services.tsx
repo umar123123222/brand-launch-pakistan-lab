@@ -37,33 +37,33 @@ const Services = () => {
   ];
 
   return (
-    <section className="py-20 bg-navy">
+    <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Everything You Need to
-            <span className="text-orange"> Succeed</span>
+            <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"> Succeed</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Our comprehensive service package covers every aspect of launching and scaling your e-commerce brand.
           </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <Card key={index} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-gray-700 bg-white/5 backdrop-blur-lg">
+            <Card key={index} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 bg-white">
               <CardHeader>
-                <CardTitle className="text-xl font-bold text-white group-hover:text-orange transition-colors">
+                <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-purple-600 transition-colors">
                   {service.title}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400 mb-4 leading-relaxed">
+                <p className="text-gray-600 mb-4 leading-relaxed">
                   {service.description}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {service.features.map((feature, idx) => (
-                    <Badge key={idx} variant="secondary" className="bg-orange/20 text-orange hover:bg-orange/30">
+                    <Badge key={idx} variant="secondary" className="bg-purple-100 text-purple-700 hover:bg-purple-200">
                       {feature}
                     </Badge>
                   ))}

@@ -4,13 +4,12 @@ import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import Products from "@/components/Products";
 import CaseStudy from "@/components/CaseStudy";
-import Testimonials from "@/components/Testimonials";
 import Pricing from "@/components/Pricing";
 import Contact from "@/components/Contact";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-navy">
+    <div className="min-h-screen">
       <Header />
       <Hero />
       <div id="services">
@@ -22,7 +21,6 @@ const Index = () => {
       <div id="success">
         <CaseStudy />
       </div>
-      <Testimonials />
       <div id="pricing">
         <Pricing />
       </div>

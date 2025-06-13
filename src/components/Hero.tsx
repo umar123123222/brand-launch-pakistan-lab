@@ -1,93 +1,59 @@
 
+import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen bg-navy flex items-center justify-center text-white overflow-hidden">
-      {/* Parallax Perfume Bottles Background */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="w-full h-full bg-gradient-to-r from-navy/80 to-transparent absolute z-10"></div>
-        <img 
-          src="/placeholder.svg" 
-          alt="Stacked perfume bottles under dramatic lighting"
-          className="w-full h-full object-cover animate-parallax"
-        />
+    <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-yellow-400 to-pink-400 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-3xl"></div>
       </div>
       
-      <div className="container mx-auto px-6 text-center relative z-20">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white">
-          Launch Your Brand
-          <span className="block text-orange">
-            in 30 Days—Guaranteed
+      <div className="container mx-auto px-6 text-center relative z-10">
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+          Launch Your
+          <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent block">
+            E-commerce Empire
           </span>
+          in Pakistan
         </h1>
         
-        <p className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xl md:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto leading-relaxed">
           We turn your vision into a thriving e-commerce brand. From product creation to 500+ daily orders - 
-          just like our success story Elyscents.
+          just like our success story <span className="text-yellow-400 font-semibold">Elyscents</span>.
         </p>
         
-        <div className="mb-8">
-          <Button size="lg" className="bg-orange hover:bg-orange/90 text-white px-8 py-4 text-lg font-bold rounded-full transition-all duration-300 transform hover:scale-105">
-            Chat on WhatsApp →
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105">
+            Start Your Brand Journey
+          </Button>
+          <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-purple-900 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300">
+            View Success Stories
           </Button>
         </div>
         
-        {/* Reassurance Strip */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center text-sm uppercase tracking-wide text-orange font-medium">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-orange rounded-full"></span>
-            42 brands launched
+        {/* Success Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="text-center">
+            <div className="text-4xl font-bold text-yellow-400 mb-2">500+</div>
+            <div className="text-gray-300">Daily Orders (Elyscents)</div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-orange rounded-full"></span>
-            Avg profit Rs 14,800/unit
+          <div className="text-center">
+            <div className="text-4xl font-bold text-yellow-400 mb-2">Rs 350k</div>
+            <div className="text-gray-300">Complete Package</div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-orange rounded-full"></span>
-            28-day rollout
-          </div>
-        </div>
-        
-        {/* Process Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-16">
-          <div className="group cursor-pointer">
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-              <div className="w-12 h-12 bg-orange/20 rounded-full flex items-center justify-center mb-4 mx-auto">
-                <div className="w-6 h-6 border-2 border-orange rounded-full"></div>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Ideate</h3>
-              <p className="text-gray-400 text-sm">Brand concept & market research</p>
-            </div>
-          </div>
-          
-          <div className="group cursor-pointer">
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-              <div className="w-12 h-12 bg-orange/20 rounded-full flex items-center justify-center mb-4 mx-auto">
-                <div className="w-6 h-6 border-2 border-orange rounded-sm"></div>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Manufacture</h3>
-              <p className="text-gray-400 text-sm">Product formulation & packaging</p>
-            </div>
-          </div>
-          
-          <div className="group cursor-pointer">
-            <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-              <div className="w-12 h-12 bg-orange/20 rounded-full flex items-center justify-center mb-4 mx-auto">
-                <div className="w-6 h-6 border-2 border-orange rounded-full border-dashed"></div>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Market</h3>
-              <p className="text-gray-400 text-sm">Launch & scale to 500+ orders</p>
-            </div>
+          <div className="text-center">
+            <div className="text-4xl font-bold text-yellow-400 mb-2">100%</div>
+            <div className="text-gray-300">Turnkey Solution</div>
           </div>
         </div>
       </div>
       
-      {/* Floating WhatsApp Widget */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <Button className="bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full shadow-lg">
-          <span className="text-2xl">💬</span>
-        </Button>
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <ArrowDown className="w-6 h-6 text-white" />
       </div>
     </section>
   );
