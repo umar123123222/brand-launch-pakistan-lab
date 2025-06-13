@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Products = () => {
@@ -5,7 +6,7 @@ const Products = () => {
     {
       title: "Premium Perfumes",
       description: "Launch your own fragrance line with our proven perfume formulations. Following Elyscents' success model.",
-      image: "/lovable-uploads/ddae2a1d-da08-4405-bb49-6736d7f35a26.png",
+      image: "/lovable-uploads/856ba223-c451-4be0-b915-f524b0311c0e.png",
       stats: "500+ daily orders achieved",
       price: "100 units @ Rs 1,000 each"
     },
