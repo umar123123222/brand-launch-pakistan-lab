@@ -28,8 +28,8 @@ const Hero = () => {
         {/* Success Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           <div className="text-center">
-            <div className="text-4xl font-bold text-yellow-400 mb-2">500+</div>
-            <div className="text-gray-300">Daily Orders (Elyscents)</div>
+            <div className="text-4xl font-bold text-yellow-400 mb-2">16+</div>
+            <div className="text-gray-300">Brands Launched Yet</div>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold text-yellow-400 mb-2">Rs 350k</div>
