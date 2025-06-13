@@ -6,6 +6,7 @@ import Products from "@/components/Products";
 import CaseStudy from "@/components/CaseStudy";
 import Pricing from "@/components/Pricing";
 import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
@@ -25,6 +26,7 @@ const Index = () => {
         <Pricing />
       </div>
       <Contact />
+      <Footer />
     </div>
   );
 };
