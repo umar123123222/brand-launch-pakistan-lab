@@ -1,12 +1,9 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
 const Contact = () => {
-  return (
-    <section className="py-20 bg-white">
+  return <section className="py-20 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -31,10 +28,7 @@ const Contact = () => {
                 </div>
                 <Input placeholder="Your Phone Number" className="h-12" />
                 <Input placeholder="Preferred Product Category" className="h-12" />
-                <Textarea 
-                  placeholder="Tell us about your brand vision and goals..." 
-                  className="min-h-32" 
-                />
+                <Textarea placeholder="Tell us about your brand vision and goals..." className="min-h-32" />
                 <Button className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-lg transition-all duration-300">
                   Schedule Free Consultation
                 </Button>
@@ -77,7 +71,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Email</h4>
-                    <p className="text-gray-600">hello@yourbusiness.com</p>
+                    <p className="text-gray-600">launch@elevate51.com</p>
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Office</h4>
@@ -89,8 +83,6 @@ const Contact = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Contact;
