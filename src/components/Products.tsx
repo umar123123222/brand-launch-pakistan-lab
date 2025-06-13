@@ -1,40 +1,30 @@
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ImageUpload from "./ImageUpload";
 
 const Products = () => {
-  const [products, setProducts] = useState([
+  const products = [
     {
       title: "Premium Perfumes",
       description: "Launch your own fragrance line with our proven perfume formulations. Following Elyscents' success model.",
-      image: "/lovable-uploads/b59cf444-7dee-4720-a447-119971eba464.png",
+      image: "/placeholder.svg",
       stats: "500+ daily orders achieved",
       price: "100 units @ Rs 1,000 each"
     },
     {
       title: "Beard Care Oils",
       description: "Tap into the growing men's grooming market with premium beard oils and care products.",
-      image: "/lovable-uploads/08c48a17-d551-471d-b0c7-774a369772d2.png",
+      image: "/placeholder.svg",
       stats: "High-margin products",
       price: "Custom formulations available"
     },
     {
       title: "Pain Relief Oils",
       description: "Natural pain relief solutions with traditional and modern formulations for wellness market.",
-      image: "/lovable-uploads/d883f5e9-e8af-4261-985e-05e31f2c83be.png",
+      image: "/placeholder.svg",
       stats: "Growing wellness market",
       price: "Therapeutic grade quality"
     }
-  ]);
-
-  const handleImageChange = (index: number, newImageUrl: string) => {
-    setProducts(prevProducts => 
-      prevProducts.map((product, i) => 
-        i === index ? { ...product, image: newImageUrl } : product
-      )
-    );
-  };
+  ];
 
   return (
     <section className="py-20 bg-white">
@@ -53,10 +43,10 @@ const Products = () => {
           {products.map((product, index) => (
             <Card key={index} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border-0">
               <div className="relative overflow-hidden">
-                <ImageUpload
-                  onImageChange={(newImageUrl) => handleImageChange(index, newImageUrl)}
-                  currentImage={product.image}
-                  productTitle={product.title}
+                <img 
+                  src={product.image} 
+                  alt={product.title}
+                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
