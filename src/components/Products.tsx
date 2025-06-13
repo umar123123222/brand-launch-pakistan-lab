@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Products = () => {
@@ -20,7 +19,7 @@ const Products = () => {
     {
       title: "Pain Relief Oils",
       description: "Natural pain relief solutions with traditional and modern formulations for wellness market.",
-      image: "/placeholder.svg",
+      image: "/lovable-uploads/53cc11bc-4d55-42c9-a34c-07be86220d1a.png",
       stats: "Growing wellness market",
       price: "Therapeutic grade quality"
     }
