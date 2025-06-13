@@ -6,7 +6,7 @@ const Products = () => {
     {
       title: "Premium Perfumes",
       description: "Launch your own fragrance line with our proven perfume formulations. Following Elyscents' success model.",
-      image: "/placeholder.svg",
+      image: "/lovable-uploads/ddae2a1d-da08-4405-bb49-6736d7f35a26.png",
       stats: "500+ daily orders achieved",
       price: "100 units @ Rs 1,000 each"
     },
@@ -46,7 +46,7 @@ const Products = () => {
                 <img 
                   src={product.image} 
                   alt={product.title}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-64 object-contain object-center bg-gradient-to-br from-gray-50 to-gray-100 p-4 group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
