@@ -27,21 +27,21 @@ const Products = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-gray-900">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Product Categories We
-            <span className="bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent"> Specialize In</span>
+            <span className="text-orange"> Specialize In</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Choose from our proven product categories, each with market-tested formulations and packaging solutions.
           </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {products.map((product, index) => (
-            <Card key={index} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border-0">
+            <Card key={index} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border-gray-700 bg-white/5 backdrop-blur-lg">
               <div className="relative overflow-hidden">
                 <img 
                   src={product.image} 
@@ -51,17 +51,17 @@ const Products = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
               <CardHeader>
-                <CardTitle className="text-2xl font-bold text-gray-900 group-hover:text-purple-600 transition-colors">
+                <CardTitle className="text-2xl font-bold text-white group-hover:text-orange transition-colors">
                   {product.title}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4 leading-relaxed">
+                <p className="text-gray-400 mb-4 leading-relaxed">
                   {product.description}
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-green-600">{product.stats}</span>
+                    <span className="text-sm font-semibold text-orange">{product.stats}</span>
                   </div>
                   <div className="text-sm text-gray-500">{product.price}</div>
                 </div>
