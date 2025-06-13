@@ -1,10 +1,7 @@
-
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 const Hero = () => {
-  return (
-    <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden">
+  return <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-yellow-400 to-pink-400 rounded-full blur-3xl"></div>
@@ -55,8 +52,6 @@ const Hero = () => {
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
         <ArrowDown className="w-6 h-6 text-white" />
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Hero;
