@@ -1,0 +1,62 @@
+
+import { ArrowDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const Hero = () => {
+  return (
+    <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-yellow-400 to-pink-400 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="container mx-auto px-6 text-center relative z-10">
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+          Launch Your
+          <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent block">
+            E-commerce Empire
+          </span>
+          in Pakistan
+        </h1>
+        
+        <p className="text-xl md:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto leading-relaxed">
+          We turn your vision into a thriving e-commerce brand. From product creation to 500+ daily orders - 
+          just like our success story <span className="text-yellow-400 font-semibold">Elyscents</span>.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105">
+            Start Your Brand Journey
+          </Button>
+          <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-purple-900 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300">
+            View Success Stories
+          </Button>
+        </div>
+        
+        {/* Success Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="text-center">
+            <div className="text-4xl font-bold text-yellow-400 mb-2">500+</div>
+            <div className="text-gray-300">Daily Orders (Elyscents)</div>
+          </div>
+          <div className="text-center">
+            <div className="text-4xl font-bold text-yellow-400 mb-2">Rs 350k</div>
+            <div className="text-gray-300">Complete Package</div>
+          </div>
+          <div className="text-center">
+            <div className="text-4xl font-bold text-yellow-400 mb-2">100%</div>
+            <div className="text-gray-300">Turnkey Solution</div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <ArrowDown className="w-6 h-6 text-white" />
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
