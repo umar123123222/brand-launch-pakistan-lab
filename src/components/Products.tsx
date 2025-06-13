@@ -59,7 +59,6 @@ const Products = () => {
                   currentImage={productImages[index]}
                   placeholder={product.placeholder}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-gray-900 group-hover:text-purple-600 transition-colors">
