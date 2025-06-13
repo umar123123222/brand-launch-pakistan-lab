@@ -8,21 +8,21 @@ const Products = () => {
     {
       title: "Premium Perfumes",
       description: "Launch your own fragrance line with our proven perfume formulations. Following Elyscents' success model.",
-      image: "/placeholder.svg",
+      image: "/lovable-uploads/b59cf444-7dee-4720-a447-119971eba464.png",
       stats: "500+ daily orders achieved",
       price: "100 units @ Rs 1,000 each"
     },
     {
       title: "Beard Care Oils",
       description: "Tap into the growing men's grooming market with premium beard oils and care products.",
-      image: "/placeholder.svg",
+      image: "/lovable-uploads/08c48a17-d551-471d-b0c7-774a369772d2.png",
       stats: "High-margin products",
       price: "Custom formulations available"
     },
     {
       title: "Pain Relief Oils",
       description: "Natural pain relief solutions with traditional and modern formulations for wellness market.",
-      image: "/placeholder.svg",
+      image: "/lovable-uploads/d883f5e9-e8af-4261-985e-05e31f2c83be.png",
       stats: "Growing wellness market",
       price: "Therapeutic grade quality"
     }
