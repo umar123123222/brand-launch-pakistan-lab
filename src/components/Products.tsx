@@ -13,7 +13,7 @@ const Products = () => {
     {
       title: "Beard Care Oils",
       description: "Tap into the growing men's grooming market with premium beard oils and care products.",
-      image: "/placeholder.svg",
+      image: "/lovable-uploads/cdef5520-38aa-405b-bc29-373b2ba78c28.png",
       stats: "High-margin products",
       price: "Custom formulations available"
     },
@@ -48,7 +48,6 @@ const Products = () => {
                   alt={product.title}
                   className="w-full h-64 object-contain object-center bg-gradient-to-br from-gray-50 to-gray-100 p-4 group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-gray-900 group-hover:text-purple-600 transition-colors">
