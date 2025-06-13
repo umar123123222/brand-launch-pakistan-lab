@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
-import { Upload, X } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import { Upload } from 'lucide-react';
 
 interface ImageUploadProps {
   onImageChange: (imageUrl: string) => void;
@@ -39,10 +38,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange, currentImage, 
     }
   };
 
-  const removeImage = () => {
-    onImageChange("/placeholder.svg");
-  };
-
   return (
     <div className="relative">
       {currentImage && currentImage !== "/placeholder.svg" ? (
@@ -52,14 +47,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange, currentImage, 
             alt={productTitle}
             className="w-full h-64 object-cover rounded-t-lg"
           />
-          <Button
-            onClick={removeImage}
-            size="sm"
-            variant="destructive"
-            className="absolute top-2 right-2"
-          >
-            <X className="w-4 h-4" />
-          </Button>
         </div>
       ) : (
         <div
