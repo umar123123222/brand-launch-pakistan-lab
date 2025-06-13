@@ -1,28 +1,39 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ImageUpload from "./ImageUpload";
+import { useState } from "react";
 
 const Products = () => {
+  const [productImages, setProductImages] = useState<{[key: string]: string}>({});
+
+  const handleImageUpload = (productIndex: number, imageUrl: string) => {
+    setProductImages(prev => ({
+      ...prev,
+      [productIndex]: imageUrl
+    }));
+  };
+
   const products = [
     {
       title: "Premium Perfumes",
       description: "Launch your own fragrance line with our proven perfume formulations. Following Elyscents' success model.",
-      image: "/placeholder.svg",
       stats: "500+ daily orders achieved",
-      price: "100 units @ Rs 1,000 each"
+      price: "100 units @ Rs 1,000 each",
+      placeholder: "Upload perfume image"
     },
     {
       title: "Beard Care Oils",
       description: "Tap into the growing men's grooming market with premium beard oils and care products.",
-      image: "/placeholder.svg",
       stats: "High-margin products",
-      price: "Custom formulations available"
+      price: "Custom formulations available",
+      placeholder: "Upload beard oil image"
     },
     {
       title: "Pain Relief Oils",
       description: "Natural pain relief solutions with traditional and modern formulations for wellness market.",
-      image: "/placeholder.svg",
       stats: "Growing wellness market",
-      price: "Therapeutic grade quality"
+      price: "Therapeutic grade quality",
+      placeholder: "Upload pain relief image"
     }
   ];
 
@@ -43,10 +54,10 @@ const Products = () => {
           {products.map((product, index) => (
             <Card key={index} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border-0">
               <div className="relative overflow-hidden">
-                <img 
-                  src={product.image} 
-                  alt={product.title}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                <ImageUpload
+                  onImageUpload={(imageUrl) => handleImageUpload(index, imageUrl)}
+                  currentImage={productImages[index]}
+                  placeholder={product.placeholder}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
