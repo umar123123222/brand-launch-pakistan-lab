@@ -75,7 +75,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Office</h4>
-                    <p className="text-gray-600">Karachi, Pakistan</p>
+                    <p className="text-gray-600">A316, Block 2 Gulshan Iqbal Karachi</p>
                   </div>
                 </div>
               </CardContent>
