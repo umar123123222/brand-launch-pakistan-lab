@@ -19,7 +19,7 @@ const Pricing = () => {
         
         <div className="max-w-4xl mx-auto">
           <Card className="bg-white/10 backdrop-blur-lg border-white/20 text-white relative overflow-hidden">
-            <Badge className="absolute top-6 right-6 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold">
+            <Badge className="absolute top-4 right-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold z-10">
               Most Popular
             </Badge>
             
