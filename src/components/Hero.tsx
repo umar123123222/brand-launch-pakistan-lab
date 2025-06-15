@@ -29,6 +29,25 @@ const Hero = () => {
         <p className="text-xl md:text-2xl mb-3 text-gray-200 max-w-3xl mx-auto leading-relaxed">
           We create Profitable Brands in 40 to 60 days... Guaranteed!
         </p>
+        
+        {/* Embedded YouTube Video */}
+        <div className="flex justify-center mb-8">
+          <div className="w-full max-w-2xl aspect-video rounded-xl overflow-hidden shadow-lg border-2 border-yellow-400 mx-auto">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/MFyveO9shfg?si=-0OJ5BBgloUZ7lIt"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              style={{ display: "block" }}
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Attribution line */}
         <div className="flex justify-center mb-8">
           <span
             className="text-base sm:text-lg font-medium bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent tracking-normal text-center flex items-center gap-1"
