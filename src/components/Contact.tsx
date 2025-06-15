@@ -27,7 +27,7 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.from("consultations").insert([
+    const { error, data } = await supabase.from("consultations").insert([
       {
         name: form.name,
         email: form.email,
@@ -36,11 +36,13 @@ const Contact = () => {
         vision: form.vision,
       },
     ]);
-    setLoading(false);
     if (error) {
+      console.error("Supabase insert error:", error);
       toast({
         title: "Something went wrong!",
-        description: "Please try again later.",
+        description: error.message
+          ? `Supabase error: ${error.message}`
+          : "Please try again later.",
         variant: "destructive",
       });
     } else {
@@ -56,6 +58,7 @@ const Contact = () => {
         vision: "",
       });
     }
+    setLoading(false);
   };
 
   return (
