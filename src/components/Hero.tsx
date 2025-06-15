@@ -26,7 +26,7 @@ const Hero = () => {
             You Collect <span className="text-yellow-400">Revenue</span> and <span className="text-orange-400">Sales</span>
           </span>
         </h1>
-        <p className="text-xl md:text-2xl mb-3 text-gray-200 max-w-3xl mx-auto leading-relaxed">Get a Ready-to-sell E-commerce business in 40 to 60 days 100% Managed by Elyscents Team!</p>
+        <p className="text-xl md:text-2xl mb-3 text-gray-200 max-w-3xl mx-auto leading-relaxed">Product, packaging, Shopify, product shoot and video ads 100% done. You keep the sales.</p>
         
         {/* Embedded YouTube Video */}
         <div className="flex justify-center mb-8">
