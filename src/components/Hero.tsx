@@ -22,7 +22,7 @@ const Hero = () => {
         </p>
         
         <div className="flex justify-center mb-12">
-          <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 text-zinc-900">WhatsApp Us To Start</Button>
+          <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 text-zinc-900">Schedule Free Consultation Call</Button>
         </div>
         
         {/* Success Metrics */}
