@@ -1,6 +1,15 @@
+
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 const Hero = () => {
+  const handleScrollToContact = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const section = document.getElementById('contact');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden pt-16">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -22,7 +31,13 @@ const Hero = () => {
         </p>
         
         <div className="flex justify-center mb-12">
-          <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 text-zinc-900">Schedule Free Consultation Call</Button>
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 text-zinc-900"
+            onClick={handleScrollToContact}
+          >
+            Schedule Free Consultation Call
+          </Button>
         </div>
         
         {/* Success Metrics */}
