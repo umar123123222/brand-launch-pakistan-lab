@@ -1,4 +1,3 @@
-
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 const Hero = () => {
@@ -68,7 +67,7 @@ const Hero = () => {
             Schedule Free Consultation Call
           </Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-10">
           <div className="text-center">
             <div className="text-4xl font-bold text-yellow-400 mb-2">16+</div>
             <div className="text-gray-300">Brands Launched Yet</div>
@@ -91,4 +90,3 @@ const Hero = () => {
   );
 };
 export default Hero;
-
