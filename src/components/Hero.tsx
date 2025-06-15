@@ -11,7 +11,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden pt-32"> {/* Increased pt-16 → pt-32 */}
+    <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden pt-32">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-yellow-400 to-pink-400 rounded-full blur-3xl"></div>
@@ -19,12 +19,13 @@ const Hero = () => {
       </div>
       
       <div className="container mx-auto px-6 text-center relative z-10">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-          Launch Your
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
           <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent block">
-            E-commerce Empire
+            We Build Your E-commerce Brand.
           </span>
-          in Pakistan
+          <span className="block mt-1">
+            You Collect <span className="text-yellow-400">Revenue</span> and <span className="text-orange-400">Sales</span>
+          </span>
         </h1>
         <p className="text-xl md:text-2xl mb-3 text-gray-200 max-w-3xl mx-auto leading-relaxed">
           We create Profitable Brands in 40 to 60 days... Guaranteed!
@@ -68,7 +69,7 @@ const Hero = () => {
             Schedule Free Consultation Call
           </Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-16"> {/* mb-10 -> mb-16 for extra padding */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-16">
           <div className="text-center">
             <div className="text-4xl font-bold text-yellow-400 mb-2">16+</div>
             <div className="text-gray-300">Brands Launched Yet</div>
