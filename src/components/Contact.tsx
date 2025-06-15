@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
+import { Sparkles } from "lucide-react"; // Optional: Add an icon for more impact
 
 const Contact = () => {
   const [form, setForm] = useState({
@@ -78,63 +79,76 @@ const Contact = () => {
         </div>
 
         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <Card className="shadow-xl border-0">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-gray-900">Start Your Consultation</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form className="space-y-6" onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Main prominent consultation card */}
+          <Card className="relative shadow-2xl border-0 bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 p-[2px] overflow-visible animate-fade-in">
+            <div className="absolute -top-6 left-1/2 -translate-x-1/2 flex justify-center items-center w-16 h-16 bg-white rounded-full shadow-md border-4 border-yellow-400 z-10">
+              <Sparkles className="text-yellow-500 w-8 h-8" />
+            </div>
+            <div className="rounded-3xl bg-white/95 backdrop-blur-[2px] shadow-xl px-6 pt-10 pb-8">
+              <CardHeader>
+                <CardTitle className="text-2xl md:text-3xl font-extrabold text-center text-transparent bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 bg-clip-text animate-fade-in">
+                  Book Your Brand Launch Consultation –{" "}
+                  <span className="underline decoration-wavy decoration-yellow-400">Limited Slots!</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      name="name"
+                      placeholder="Your Name"
+                      className="h-12"
+                      value={form.name}
+                      onChange={onChange}
+                      required
+                    />
+                    <Input
+                      name="email"
+                      type="email"
+                      placeholder="Your Email"
+                      className="h-12"
+                      value={form.email}
+                      onChange={onChange}
+                      required
+                    />
+                  </div>
                   <Input
-                    name="name"
-                    placeholder="Your Name"
+                    name="phone"
+                    placeholder="Your Phone Number"
                     className="h-12"
-                    value={form.name}
+                    value={form.phone}
                     onChange={onChange}
-                    required
                   />
                   <Input
-                    name="email"
-                    type="email"
-                    placeholder="Your Email"
+                    name="category"
+                    placeholder="Preferred Product Category"
                     className="h-12"
-                    value={form.email}
+                    value={form.category}
                     onChange={onChange}
-                    required
                   />
-                </div>
-                <Input
-                  name="phone"
-                  placeholder="Your Phone Number"
-                  className="h-12"
-                  value={form.phone}
-                  onChange={onChange}
-                />
-                <Input
-                  name="category"
-                  placeholder="Preferred Product Category"
-                  className="h-12"
-                  value={form.category}
-                  onChange={onChange}
-                />
-                <Textarea
-                  name="vision"
-                  placeholder="Tell us about your brand vision and goals..."
-                  className="min-h-32"
-                  value={form.vision}
-                  onChange={onChange}
-                />
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-lg transition-all duration-300"
-                >
-                  {loading ? "Submitting..." : "Schedule Free Consultation"}
-                </Button>
-              </form>
-            </CardContent>
+                  <Textarea
+                    name="vision"
+                    placeholder="Tell us about your brand vision and goals..."
+                    className="min-h-32"
+                    value={form.vision}
+                    onChange={onChange}
+                  />
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full h-12 bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 hover:from-yellow-600 hover:to-pink-600 text-zinc-900 font-semibold rounded-lg transition-all duration-300 shadow-md text-lg"
+                  >
+                    {loading ? "Submitting..." : "Book My Consultation"}
+                  </Button>
+                  <div className="text-sm text-center text-gray-500 mt-2">
+                    <span className="font-semibold text-orange-600 animate-pulse">Full confidentiality – No charges to apply</span>
+                  </div>
+                </form>
+              </CardContent>
+            </div>
           </Card>
 
+          {/* Why Choose Us and Contact Info cards remain */}
           <div className="space-y-8">
             <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200">
               <CardContent className="p-8">
@@ -187,3 +201,4 @@ const Contact = () => {
 };
 
 export default Contact;
+
