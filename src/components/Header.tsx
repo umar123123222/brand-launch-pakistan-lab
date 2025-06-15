@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Heart } from "lucide-react";
 
 const Header = () => {
   const handleScrollToContact = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -19,7 +20,14 @@ const Header = () => {
               Elevate51
             </h1>
             <span className="mt-1 text-xs sm:text-sm font-medium flex items-center gap-1 bg-gradient-to-r from-pink-500 via-indigo-500 to-purple-600 bg-clip-text text-transparent animate-fade-in select-none">
-              <span role="img" aria-label="heart" className="mr-1">❤️</span>
+              <Heart
+                className="mr-1 animate-heartbeat"
+                size={14}
+                strokeWidth={2.5}
+                color="#ff3e84"
+                fill="#ff3e84"
+                aria-label="heart"
+              />
               Powered by <span className="ml-1 font-semibold">IDMPakistan</span>
             </span>
           </div>
