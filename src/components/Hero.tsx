@@ -1,4 +1,3 @@
-
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 const Hero = () => {
@@ -6,12 +5,12 @@ const Hero = () => {
     e.preventDefault();
     const section = document.getElementById('contact');
     if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
+      section.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
   };
-
-  return (
-    <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden pt-32">
+  return <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden pt-32">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-yellow-400 to-pink-400 rounded-full blur-3xl"></div>
@@ -27,32 +26,22 @@ const Hero = () => {
             You Collect <span className="text-yellow-400">Revenue</span> and <span className="text-orange-400">Sales</span>
           </span>
         </h1>
-        <p className="text-xl md:text-2xl mb-3 text-gray-200 max-w-3xl mx-auto leading-relaxed">
-          We create Profitable Brands in 40 to 60 days... Guaranteed!
-        </p>
+        <p className="text-xl md:text-2xl mb-3 text-gray-200 max-w-3xl mx-auto leading-relaxed">Get a Ready-to-sell E-commerce business in 40 to 60 days 100% Managed by Elyscents Team!</p>
         
         {/* Embedded YouTube Video */}
         <div className="flex justify-center mb-8">
           <div className="w-full max-w-2xl aspect-video rounded-xl overflow-hidden shadow-lg border-2 border-yellow-400 mx-auto">
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/MFyveO9shfg?si=-0OJ5BBgloUZ7lIt"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-              style={{ display: "block" }}
-            ></iframe>
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/MFyveO9shfg?si=-0OJ5BBgloUZ7lIt" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen style={{
+            display: "block"
+          }}></iframe>
           </div>
         </div>
 
         {/* Attribution line */}
         <div className="flex justify-center mb-8">
-          <span
-            className="text-base sm:text-lg font-medium bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent tracking-normal text-center flex items-center gap-1"
-            style={{ letterSpacing: "normal" }}>
+          <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent tracking-normal text-center flex items-center gap-1" style={{
+          letterSpacing: "normal"
+        }}>
             <span role="img" aria-label="heart">❤️</span>
             Powered by
             <span className="font-semibold ml-1 mr-1">IDMPakistan</span>
@@ -61,11 +50,7 @@ const Hero = () => {
           </span>
         </div>
         <div className="flex justify-center mb-12">
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 text-zinc-900"
-            onClick={handleScrollToContact}
-          >
+          <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 text-zinc-900" onClick={handleScrollToContact}>
             Schedule Free Consultation Call
           </Button>
         </div>
@@ -91,8 +76,6 @@ const Hero = () => {
           Scroll to explore <span className="ml-1 align-baseline text-lg">↓</span>
         </span>
       </div>
-    </section>
-  );
+    </section>;
 };
 export default Hero;
-
