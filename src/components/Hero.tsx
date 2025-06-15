@@ -83,8 +83,11 @@ const Hero = () => {
         </div>
       </div>
       
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <ArrowDown className="w-6 h-6 text-white" />
+      {/* Replace floating arrow with scroll next indicator */}
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 opacity-80">
+        <span className="text-sm text-gray-200 bg-gray-900/50 px-5 py-2 rounded-full shadow-md animate-fade-in">
+          Scroll to explore <span className="ml-1 align-baseline text-lg">↓</span>
+        </span>
       </div>
     </section>
   );
