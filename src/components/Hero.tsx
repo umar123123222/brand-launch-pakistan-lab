@@ -6,18 +6,7 @@ import { Button } from "@/components/ui/button";
 const YOUTUBE_VIDEO_ID = "MFyveO9shfg";
 
 const Hero = () => {
-  const [showVideo, setShowVideo] = useState(false);
-
-  const handleScrollToContact = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const section = document.getElementById('contact');
-    if (section) {
-      section.scrollIntoView({
-        behavior: 'smooth'
-      });
-    }
-  };
-
+  // Removed all video/click logic per compliance; only static image is shown.
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden pt-32">
       {/* Lightweight Background Pattern */}
@@ -39,48 +28,20 @@ const Hero = () => {
           Product, packaging, Shopify, product shoot and video ads 100% done. You keep the sales.
         </p>
         
-        {/* Optimized Embed: YouTube Lazy Load */}
+        {/* Static thumbnail only (YouTube iframe and click-to-play logic removed for compliance) */}
         <div className="flex justify-center mb-8">
-          <div className="w-full max-w-2xl aspect-video rounded-xl overflow-hidden shadow-lg border-2 border-yellow-400 mx-auto bg-black">
-            {!showVideo ? (
-              <button
-                type="button"
-                className="w-full h-full relative group"
-                aria-label="Play video"
-                onClick={() => setShowVideo(true)}
-                tabIndex={0}
-                style={{ outline: "none" }}
-              >
-                <img
-                  src={`https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`}
-                  alt="YouTube video thumbnail"
-                  className="object-cover w-full h-full transition-opacity duration-200 group-hover:opacity-80 lazyload"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <span className="absolute inset-0 flex items-center justify-center">
-                  <span className="bg-white/90 rounded-full p-4 md:p-6 shadow-lg transition-transform transform group-hover:scale-110">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="#ea4335">
-                      <circle cx="12" cy="12" r="12" fill="#fff" />
-                      <polygon points="10,8 17,12 10,16" fill="#ea4335" />
-                    </svg>
-                  </span>
-                </span>
-              </button>
-            ) : (
-              <iframe
-                width="100%"
-                height="100%"
-                src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0`}
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-                loading="lazy"
-                style={{ display: "block" }}
-              ></iframe>
-            )}
+          <div className="w-full max-w-2xl aspect-video rounded-xl overflow-hidden shadow-lg border-2 border-yellow-400 mx-auto bg-black flex items-center justify-center">
+            <img
+              src={`https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`}
+              alt="YouTube video thumbnail (static - video not embedded)"
+              className="object-cover w-full h-full"
+              width="896"
+              height="504"
+              loading="lazy"
+              decoding="async"
+              style={{ display: "block" }}
+              draggable={false}
+            />
           </div>
         </div>
 
@@ -98,7 +59,11 @@ const Hero = () => {
           </span>
         </div>
         <div className="flex justify-center mb-12">
-          <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 text-zinc-900" onClick={handleScrollToContact}>
+          <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 text-zinc-900" onClick={(e) => {
+            e.preventDefault();
+            const section = document.getElementById('contact');
+            if (section) section.scrollIntoView({ behavior: 'smooth' });
+          }}>
             Schedule Free Consultation Call
           </Button>
         </div>
