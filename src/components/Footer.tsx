@@ -8,6 +8,8 @@ const Footer = () => {
         </div>
         <div>
           ❤️ Powered by IDMPakistan
+          <span className="mx-2 hidden sm:inline">|</span>
+          <a href="/legal" className="underline hover:text-purple-300 ml-2">Legal</a>
         </div>
       </div>
     </footer>
