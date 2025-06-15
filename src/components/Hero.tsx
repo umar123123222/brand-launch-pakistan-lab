@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import YoutubeLite from "./YoutubeLite";
 
 const YOUTUBE_VIDEO_ID = "MFyveO9shfg";
 
@@ -28,19 +28,12 @@ const Hero = () => {
           Product, packaging, Shopify, product shoot and video ads 100% done. You keep the sales.
         </p>
         
-        {/* Static thumbnail only (YouTube iframe and click-to-play logic removed for compliance) */}
+        {/* YouTube Lite Embed: Only loads iframe after click */}
         <div className="flex justify-center mb-8">
-          <div className="w-full max-w-2xl aspect-video rounded-xl overflow-hidden shadow-lg border-2 border-yellow-400 mx-auto bg-black flex items-center justify-center">
-            <img
-              src={`https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`}
-              alt="YouTube video thumbnail (static - video not embedded)"
-              className="object-cover w-full h-full"
-              width="896"
-              height="504"
-              loading="lazy"
-              decoding="async"
-              style={{ display: "block" }}
-              draggable={false}
+          <div className="w-full max-w-2xl mx-auto">
+            <YoutubeLite
+              videoId={YOUTUBE_VIDEO_ID}
+              alt="Watch our full e-commerce launch demo video"
             />
           </div>
         </div>
