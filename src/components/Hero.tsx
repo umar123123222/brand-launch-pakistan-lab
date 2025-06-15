@@ -1,3 +1,4 @@
+
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 const Hero = () => {
@@ -10,7 +11,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden pt-16">
+    <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center text-white overflow-hidden pt-32"> {/* Increased pt-16 → pt-32 */}
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-yellow-400 to-pink-400 rounded-full blur-3xl"></div>
@@ -67,7 +68,7 @@ const Hero = () => {
             Schedule Free Consultation Call
           </Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-16"> {/* mb-10 -> mb-16 for extra padding */}
           <div className="text-center">
             <div className="text-4xl font-bold text-yellow-400 mb-2">16+</div>
             <div className="text-gray-300">Brands Launched Yet</div>
@@ -83,7 +84,7 @@ const Hero = () => {
         </div>
       </div>
       
-      {/* Replace floating arrow with scroll next indicator */}
+      {/* Scroll to explore indicator */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 opacity-80">
         <span className="text-sm text-gray-200 bg-gray-900/50 px-5 py-2 rounded-full shadow-md animate-fade-in">
           Scroll to explore <span className="ml-1 align-baseline text-lg">↓</span>
@@ -93,3 +94,4 @@ const Hero = () => {
   );
 };
 export default Hero;
+
