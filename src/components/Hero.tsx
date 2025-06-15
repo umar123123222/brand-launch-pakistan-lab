@@ -1,3 +1,4 @@
+
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 const Hero = () => {
@@ -28,15 +29,15 @@ const Hero = () => {
         <p className="text-xl md:text-2xl mb-3 text-gray-200 max-w-3xl mx-auto leading-relaxed">
           We create Profitable Brands in 40 to 60 days... Guaranteed!
         </p>
-        <div
-          className="flex justify-center mb-8"
-        >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent text-base sm:text-lg font-semibold shadow-md select-none animate-fade-in">
-            <span role="img" aria-label="heart" className="mr-1">❤️</span>
+        <div className="flex justify-center mb-8">
+          <span
+            className="text-base sm:text-lg font-medium bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent tracking-normal text-center flex items-center gap-1"
+            style={{ letterSpacing: "normal" }}>
+            <span role="img" aria-label="heart">❤️</span>
             Powered by
-            <span className="mx-1 font-bold">IDMPakistan</span>
-            &amp;
-            <span className="ml-1 font-bold">Elyscents</span>
+            <span className="font-semibold ml-1 mr-1">IDMPakistan</span>
+            &
+            <span className="font-semibold ml-1">Elyscents</span>
           </span>
         </div>
         <div className="flex justify-center mb-12">
@@ -71,3 +72,4 @@ const Hero = () => {
   );
 };
 export default Hero;
+
