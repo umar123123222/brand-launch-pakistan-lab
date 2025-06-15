@@ -1,41 +1,137 @@
+
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/use-toast";
+
 const Contact = () => {
-  return <section className="py-20 bg-white">
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    category: "",
+    vision: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const { error } = await supabase.from("consultations").insert([
+      {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        category: form.category,
+        vision: form.vision,
+      },
+    ]);
+    setLoading(false);
+    if (error) {
+      toast({
+        title: "Something went wrong!",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Form submitted!",
+        description: "Thank you. We will reach out to you shortly.",
+      });
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        category: "",
+        vision: "",
+      });
+    }
+  };
+
+  return (
+    <section className="py-20 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Ready to Build Your
-            <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"> Brand Empire?</span>
+            <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              {" "}
+              Brand Empire?
+            </span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Let's discuss your vision and create the next Pakistani e-commerce success story together.
           </p>
         </div>
-        
+
         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
           <Card className="shadow-xl border-0">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-gray-900">Start Your Consultation</CardTitle>
             </CardHeader>
             <CardContent>
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input placeholder="Your Name" className="h-12" />
-                  <Input placeholder="Your Email" type="email" className="h-12" />
+                  <Input
+                    name="name"
+                    placeholder="Your Name"
+                    className="h-12"
+                    value={form.name}
+                    onChange={onChange}
+                    required
+                  />
+                  <Input
+                    name="email"
+                    type="email"
+                    placeholder="Your Email"
+                    className="h-12"
+                    value={form.email}
+                    onChange={onChange}
+                    required
+                  />
                 </div>
-                <Input placeholder="Your Phone Number" className="h-12" />
-                <Input placeholder="Preferred Product Category" className="h-12" />
-                <Textarea placeholder="Tell us about your brand vision and goals..." className="min-h-32" />
-                <Button className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-lg transition-all duration-300">
-                  Schedule Free Consultation
+                <Input
+                  name="phone"
+                  placeholder="Your Phone Number"
+                  className="h-12"
+                  value={form.phone}
+                  onChange={onChange}
+                />
+                <Input
+                  name="category"
+                  placeholder="Preferred Product Category"
+                  className="h-12"
+                  value={form.category}
+                  onChange={onChange}
+                />
+                <Textarea
+                  name="vision"
+                  placeholder="Tell us about your brand vision and goals..."
+                  className="min-h-32"
+                  value={form.vision}
+                  onChange={onChange}
+                />
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-lg transition-all duration-300"
+                >
+                  {loading ? "Submitting..." : "Schedule Free Consultation"}
                 </Button>
               </form>
             </CardContent>
           </Card>
-          
+
           <div className="space-y-8">
             <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200">
               <CardContent className="p-8">
@@ -60,7 +156,7 @@ const Contact = () => {
                 </ul>
               </CardContent>
             </Card>
-            
+
             <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-200">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">Contact Information</h3>
@@ -83,6 +179,8 @@ const Contact = () => {
           </div>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default Contact;
