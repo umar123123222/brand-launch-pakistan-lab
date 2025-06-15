@@ -1,9 +1,6 @@
-
 import { Card, CardContent } from "@/components/ui/card";
-
 const CaseStudy = () => {
-  return (
-    <section className="py-20 bg-gray-50">
+  return <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -33,11 +30,11 @@ const CaseStudy = () => {
                       <div className="text-purple-200">Daily Orders</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-yellow-400 mb-2">1M+</div>
+                      <div className="text-4xl font-bold text-yellow-400 mb-2">5 Crore+</div>
                       <div className="text-purple-200">Monthly Revenue</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-yellow-400 mb-2">50k+</div>
+                      <div className="text-4xl font-bold text-yellow-400 mb-2">150k+</div>
                       <div className="text-purple-200">Happy Customers</div>
                     </div>
                     <div className="text-center">
@@ -54,11 +51,7 @@ const CaseStudy = () => {
                 
                 <div className="relative">
                   <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-                    <img 
-                      alt="Elyscents Success" 
-                      className="w-full h-auto object-contain rounded-lg mb-6" 
-                      src="/lovable-uploads/d6f10d6b-e8dd-46fe-9eb2-ee755fada5c8.png" 
-                    />
+                    <img alt="Elyscents Success" className="w-full h-auto object-contain rounded-lg mb-6" src="/lovable-uploads/d6f10d6b-e8dd-46fe-9eb2-ee755fada5c8.png" />
                     <div className="text-center">
                       <h4 className="text-xl font-semibold mb-2">From Startup to Market Leader</h4>
                       <p className="text-purple-200">
@@ -72,8 +65,6 @@ const CaseStudy = () => {
           </Card>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default CaseStudy;
