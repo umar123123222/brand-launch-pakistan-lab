@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 
@@ -15,11 +16,9 @@ const Header = () => {
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           <div className="flex flex-col items-start justify-center">
-            <img 
-              src="/lovable-uploads/7b40ae6e-797c-4f08-a90c-f493f4450e93.png" 
-              alt="Elevate51 Logo" 
-              className="h-8 w-auto"
-            />
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              Elevate51
+            </h1>
             <span className="mt-1 text-xs sm:text-sm font-medium flex items-center gap-1 bg-gradient-to-r from-pink-500 via-indigo-500 to-purple-600 bg-clip-text text-transparent animate-fade-in select-none">
               <Heart
                 className="mr-1 animate-heartbeat"
