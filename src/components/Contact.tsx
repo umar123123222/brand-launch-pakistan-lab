@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -168,7 +167,7 @@ const Contact = () => {
                   </li>
                   <li className="flex items-center">
                     <span className="w-2 h-2 bg-yellow-500 rounded-full mr-3"></span>
-                    Ongoing support until you reach 500+ orders
+                    Brand Creation + Brand Success training included
                   </li>
                 </ul>
               </CardContent>
@@ -201,4 +200,3 @@ const Contact = () => {
 };
 
 export default Contact;
-
