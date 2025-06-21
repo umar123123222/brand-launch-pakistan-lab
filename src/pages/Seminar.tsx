@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { Calendar, Clock, Users, TrendingUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -33,26 +33,62 @@ const Seminar = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.from("seminar_registrations").insert([
+      // Validate required fields
+      if (!form.name || !form.email || !form.phone || !form.age || !form.currentWork) {
+        toast({
+          title: "Missing Information",
+          description: "Please fill in all required fields.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Validate age is a number
+      const ageNumber = parseInt(form.age);
+      if (isNaN(ageNumber) || ageNumber < 16 || ageNumber > 80) {
+        toast({
+          title: "Invalid Age",
+          description: "Please enter a valid age between 16 and 80.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      console.log("Submitting form data:", {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        age: ageNumber,
+        current_work: form.currentWork,
+        work_details: form.workDetails || null,
+      });
+
+      const { data, error } = await supabase.from("seminar_registrations").insert([
         {
           name: form.name,
           email: form.email,
           phone: form.phone,
-          age: parseInt(form.age),
+          age: ageNumber,
           current_work: form.currentWork,
-          work_details: form.workDetails,
+          work_details: form.workDetails || null,
         },
       ]);
 
       if (error) {
+        console.error("Supabase error:", error);
         throw error;
       }
+
+      console.log("Registration successful:", data);
 
       toast({
         title: "Registration Successful!",
         description: "Thank you for registering. We will contact you to confirm your slot.",
       });
 
+      // Reset form
       setForm({
         name: "",
         email: "",
@@ -62,6 +98,7 @@ const Seminar = () => {
         workDetails: "",
       });
     } catch (error: any) {
+      console.error("Registration error:", error);
       toast({
         title: "Registration Failed",
         description: error.message || "Please try again later.",
@@ -235,7 +272,7 @@ const Seminar = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Current Work Status *
                     </label>
-                    <Select onValueChange={(value) => handleInputChange("currentWork", value)}>
+                    <Select value={form.currentWork} onValueChange={(value) => handleInputChange("currentWork", value)}>
                       <SelectTrigger className="h-12">
                         <SelectValue placeholder="Select your current work status" />
                       </SelectTrigger>
