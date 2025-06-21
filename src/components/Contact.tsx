@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { Sparkles } from "lucide-react"; // Optional: Add an icon for more impact
 
 const Contact = () => {
@@ -27,38 +27,59 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error, data } = await supabase.from("consultations").insert([
-      {
+
+    try {
+      console.log("Submitting consultation form:", {
         name: form.name,
         email: form.email,
         phone: form.phone,
         category: form.category,
         vision: form.vision,
-      },
-    ]);
-    if (error) {
-      console.error("Supabase insert error:", error);
+      });
+
+      const { error, data } = await supabase.from("consultations").insert([
+        {
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          category: form.category,
+          vision: form.vision,
+        },
+      ]);
+
+      if (error) {
+        console.error("Supabase insert error:", error);
+        toast({
+          title: "Something went wrong!",
+          description: error.message
+            ? `Supabase error: ${error.message}`
+            : "Please try again later.",
+          variant: "destructive",
+        });
+      } else {
+        console.log("Consultation submission successful:", data);
+        toast({
+          title: "Form submitted!",
+          description: "Thank you. We will reach out to you shortly.",
+        });
+        setForm({
+          name: "",
+          email: "",
+          phone: "",
+          category: "",
+          vision: "",
+        });
+      }
+    } catch (error: any) {
+      console.error("Consultation submission error:", error);
       toast({
         title: "Something went wrong!",
-        description: error.message
-          ? `Supabase error: ${error.message}`
-          : "Please try again later.",
+        description: error.message || "Please try again later.",
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Form submitted!",
-        description: "Thank you. We will reach out to you shortly.",
-      });
-      setForm({
-        name: "",
-        email: "",
-        phone: "",
-        category: "",
-        vision: "",
-      });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
