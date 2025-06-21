@@ -39,6 +39,39 @@ export type Database = {
         }
         Relationships: []
       }
+      seminar_registrations: {
+        Row: {
+          age: number
+          current_work: string
+          email: string
+          id: string
+          name: string
+          phone: string
+          submitted_at: string | null
+          work_details: string | null
+        }
+        Insert: {
+          age: number
+          current_work: string
+          email: string
+          id?: string
+          name: string
+          phone: string
+          submitted_at?: string | null
+          work_details?: string | null
+        }
+        Update: {
+          age?: number
+          current_work?: string
+          email?: string
+          id?: string
+          name?: string
+          phone?: string
+          submitted_at?: string | null
+          work_details?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
