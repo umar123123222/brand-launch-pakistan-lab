@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { Sparkles } from "lucide-react"; // Optional: Add an icon for more impact
+import { Sparkles } from "lucide-react";
 
 const Contact = () => {
   const [form, setForm] = useState({
@@ -29,7 +29,9 @@ const Contact = () => {
     setLoading(true);
 
     try {
-      console.log("Submitting consultation form:", {
+      console.log("Starting form submission...");
+      console.log("Supabase client:", supabase);
+      console.log("Form data:", {
         name: form.name,
         email: form.email,
         phone: form.phone,
@@ -37,31 +39,46 @@ const Contact = () => {
         vision: form.vision,
       });
 
-      const { error, data } = await supabase.from("consultations").insert([
-        {
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          category: form.category,
-          vision: form.vision,
-        },
-      ]);
+      // Test Supabase connection first
+      console.log("Testing Supabase connection...");
+      
+      const { error, data } = await supabase
+        .from("consultations")
+        .insert([
+          {
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            category: form.category,
+            vision: form.vision,
+          },
+        ])
+        .select();
+
+      console.log("Supabase response:", { data, error });
 
       if (error) {
         console.error("Supabase insert error:", error);
+        console.error("Error details:", {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        
         toast({
-          title: "Something went wrong!",
-          description: error.message
-            ? `Supabase error: ${error.message}`
-            : "Please try again later.",
+          title: "Submission Failed",
+          description: `Error: ${error.message || "Unknown database error"}`,
           variant: "destructive",
         });
       } else {
         console.log("Consultation submission successful:", data);
         toast({
-          title: "Form submitted!",
-          description: "Thank you. We will reach out to you shortly.",
+          title: "Success!",
+          description: "Thank you! We will contact you soon.",
         });
+        
+        // Reset form
         setForm({
           name: "",
           email: "",
@@ -71,10 +88,14 @@ const Contact = () => {
         });
       }
     } catch (error: any) {
-      console.error("Consultation submission error:", error);
+      console.error("Caught error during submission:", error);
+      console.error("Error type:", typeof error);
+      console.error("Error constructor:", error.constructor.name);
+      console.error("Error stack:", error.stack);
+      
       toast({
-        title: "Something went wrong!",
-        description: error.message || "Please try again later.",
+        title: "Network Error",
+        description: "Please check your connection and try again.",
         variant: "destructive",
       });
     } finally {
@@ -212,7 +233,7 @@ const Contact = () => {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </div>
           </div>
         </div>
       </div>
