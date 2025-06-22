@@ -1,4 +1,5 @@
 
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,7 +57,9 @@ const Seminar = () => {
         return;
       }
 
-      console.log("Submitting form data:", {
+      console.log("Submitting seminar registration...");
+      console.log("Supabase URL:", "https://bsqtjhjqytuncpvbnuwp.supabase.co");
+      console.log("Form data:", {
         name: form.name,
         email: form.email,
         phone: form.phone,
@@ -99,11 +102,23 @@ const Seminar = () => {
       });
     } catch (error: any) {
       console.error("Registration error:", error);
-      toast({
-        title: "Registration Failed",
-        description: error.message || "Please try again later.",
-        variant: "destructive",
-      });
+      console.error("Error name:", error.name);
+      console.error("Error message:", error.message);
+      
+      // More specific error handling
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        toast({
+          title: "Connection Error",
+          description: "Unable to connect to the server. Please check your internet connection and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: error.message || "An unexpected error occurred. Please try again.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -333,3 +348,4 @@ const Seminar = () => {
 };
 
 export default Seminar;
+

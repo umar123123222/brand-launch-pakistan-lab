@@ -1,4 +1,5 @@
 
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,16 +32,10 @@ const Contact = () => {
 
     try {
       console.log("Starting form submission...");
-      console.log("Supabase client:", supabase);
-      console.log("Form data:", {
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        category: form.category,
-        vision: form.vision,
-      });
+      console.log("Supabase URL:", "https://bsqtjhjqytuncpvbnuwp.supabase.co");
+      console.log("Form data:", form);
 
-      // Test Supabase connection first
+      // Test basic connectivity first
       console.log("Testing Supabase connection...");
       
       const { error, data } = await supabase
@@ -60,16 +55,10 @@ const Contact = () => {
 
       if (error) {
         console.error("Supabase insert error:", error);
-        console.error("Error details:", {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        });
         
         toast({
           title: "Submission Failed",
-          description: `Error: ${error.message || "Unknown database error"}`,
+          description: `Error: ${error.message}`,
           variant: "destructive",
         });
       } else {
@@ -90,15 +79,24 @@ const Contact = () => {
       }
     } catch (error: any) {
       console.error("Caught error during submission:", error);
-      console.error("Error type:", typeof error);
-      console.error("Error constructor:", error.constructor.name);
+      console.error("Error name:", error.name);
+      console.error("Error message:", error.message);
       console.error("Error stack:", error.stack);
       
-      toast({
-        title: "Network Error",
-        description: "Please check your connection and try again.",
-        variant: "destructive",
-      });
+      // More specific error handling
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        toast({
+          title: "Connection Error",
+          description: "Unable to connect to the server. Please check your internet connection and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Submission Error",
+          description: error.message || "An unexpected error occurred. Please try again.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -243,3 +241,4 @@ const Contact = () => {
 };
 
 export default Contact;
+
