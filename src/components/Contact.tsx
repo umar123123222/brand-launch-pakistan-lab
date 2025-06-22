@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -233,7 +234,7 @@ const Contact = () => {
                   </div>
                 </div>
               </CardContent>
-            </div>
+            </Card>
           </div>
         </div>
       </div>
