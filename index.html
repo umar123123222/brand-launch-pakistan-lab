@@ -8,15 +8,9 @@
     <meta name="description" content="Launch your e-commerce brand in Pakistan with our proven system. From perfumes to beard oils - we provide everything from product to 500+ daily orders." />
     <meta name="author" content="BrandLaunch" />
 
-    <!-- Updated Content Security Policy to allow Supabase connections -->
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://bsqtjhjqytuncpvbnuwp.supabase.co https://*.supabase.co; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
+    <!-- Content Security Policy - blocks Cloudflare connections -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://bsqtjhjqytuncpvbnuwp.supabase.co https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
     <meta name="referrer" content="no-referrer">
-    
-    <!-- Block all Cloudflare features -->
-    <meta name="cf-2fa-verify" content="false">
-    <meta name="cf-browser-verification" content="false">
-    <meta name="cf-beacon" content="false">
-    <meta name="cf-insights" content="false">
     
     <!-- Open Graph -->
     <meta property="og:title" content="BrandLaunch - Private Label E-commerce Success in Pakistan" />
@@ -34,48 +28,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-    <!-- Aggressive Cloudflare blocking script - runs immediately -->
-    <script>
-      // Block Cloudflare globals immediately
-      (function() {
-        'use strict';
-        
-        // Override and disable all Cloudflare variables
-        if (typeof window !== 'undefined') {
-          window.__CF$cv$params = null;
-          window.cfjsLoaded = null;
-          window.__cfRLUnblockHandlers = null;
-          window.__CF = null;
-          
-          // Block fetch requests to Cloudflare
-          const originalFetch = window.fetch;
-          window.fetch = function(...args) {
-            const url = args[0];
-            if (typeof url === 'string' && (url.includes('cloudflareinsights') || url.includes('cloudflare') || url.includes('beacon'))) {
-              console.log('Blocked Cloudflare request:', url);
-              return Promise.reject(new Error('Blocked by security policy'));
-            }
-            return originalFetch.apply(this, args);
-          };
-          
-          // Override XMLHttpRequest for Cloudflare blocking
-          const originalXHR = window.XMLHttpRequest;
-          window.XMLHttpRequest = function() {
-            const xhr = new originalXHR();
-            const originalOpen = xhr.open;
-            xhr.open = function(method, url, ...args) {
-              if (typeof url === 'string' && (url.includes('cloudflareinsights') || url.includes('cloudflare') || url.includes('beacon'))) {
-                console.log('Blocked Cloudflare XHR:', url);
-                return;
-              }
-              return originalOpen.apply(this, [method, url, ...args]);
-            };
-            return xhr;
-          };
-        }
-      })();
-    </script>
-
     <!-- Google Analytics (Google Ads compatible) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9HG89W80VJ"></script>
     <script>
@@ -83,92 +35,10 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-9HG89W80VJ');
-      
-      // Continuously block Cloudflare beacon attempts
-      setInterval(function() {
-        if (window.__CF$cv$params) {
-          delete window.__CF$cv$params;
-        }
-        if (window.cfjsLoaded) {
-          delete window.cfjsLoaded;
-        }
-        if (window.__CF) {
-          delete window.__CF;
-        }
-      }, 100);
     </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    
-    <!-- Comprehensive Cloudflare blocking -->
-    <script>
-      (function() {
-        'use strict';
-        
-        // Function to remove Cloudflare scripts
-        function removeCloudflareScripts() {
-          const scripts = document.querySelectorAll('script');
-          scripts.forEach(script => {
-            const src = script.src || '';
-            const content = script.textContent || script.innerHTML || '';
-            
-            // Remove any script containing Cloudflare references
-            if (src.includes('cloudflareinsights') || 
-                src.includes('beacon.min.js') || 
-                src.includes('cloudflare') ||
-                content.includes('cloudflareinsights') ||
-                content.includes('cf-beacon') ||
-                content.includes('rayId') ||
-                script.hasAttribute('data-cf-beacon')) {
-              console.log('Removing Cloudflare script:', src || 'inline script');
-              script.remove();
-            }
-          });
-        }
-        
-        // Run immediately
-        removeCloudflareScripts();
-        
-        // Run on DOM ready
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', removeCloudflareScripts);
-        }
-        
-        // Use MutationObserver to catch dynamically added scripts
-        const observer = new MutationObserver(function(mutations) {
-          mutations.forEach(function(mutation) {
-            mutation.addedNodes.forEach(function(node) {
-              if (node.tagName === 'SCRIPT') {
-                const src = node.src || '';
-                const content = node.textContent || node.innerHTML || '';
-                
-                if (src.includes('cloudflareinsights') || 
-                    src.includes('beacon.min.js') || 
-                    src.includes('cloudflare') ||
-                    content.includes('cloudflareinsights') ||
-                    content.includes('cf-beacon') ||
-                    content.includes('rayId') ||
-                    node.hasAttribute('data-cf-beacon')) {
-                  console.log('Blocking dynamically added Cloudflare script:', src || 'inline script');
-                  node.remove();
-                }
-              }
-            });
-          });
-        });
-        
-        // Start observing
-        observer.observe(document, {
-          childList: true,
-          subtree: true
-        });
-        
-        // Also run periodically as a fallback
-        setInterval(removeCloudflareScripts, 500);
-        
-      })();
-    </script>
   </body>
 </html>
