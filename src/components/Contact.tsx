@@ -1,5 +1,4 @@
 
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -169,7 +168,7 @@ const Contact = () => {
                   <Textarea
                     name="vision"
                     placeholder="Tell us about your brand vision and goals..."
-                    className="min-h-32"
+                    className="min-h-32"  
                     value={form.vision}
                     onChange={onChange}
                   />
@@ -224,7 +223,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Email</h4>
-                    <p className="text-gray-600">launch@elevate51.com</p>
+                    <p className="text-gray-600">askelevate51@gmail.com</p>
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Office</h4>
@@ -241,4 +240,3 @@ const Contact = () => {
 };
 
 export default Contact;
-
