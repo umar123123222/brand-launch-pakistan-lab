@@ -39,6 +39,66 @@ export type Database = {
         }
         Relationships: []
       }
+      front_leads: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      full_applications: {
+        Row: {
+          build_support: string
+          category: string
+          city: string
+          created_at: string
+          email: string
+          has_business: string
+          id: string
+          investment_range: string
+          motivation: string
+          phone: string
+        }
+        Insert: {
+          build_support: string
+          category: string
+          city: string
+          created_at?: string
+          email: string
+          has_business: string
+          id?: string
+          investment_range: string
+          motivation: string
+          phone: string
+        }
+        Update: {
+          build_support?: string
+          category?: string
+          city?: string
+          created_at?: string
+          email?: string
+          has_business?: string
+          id?: string
+          investment_range?: string
+          motivation?: string
+          phone?: string
+        }
+        Relationships: []
+      }
       seminar_registrations: {
         Row: {
           age: number

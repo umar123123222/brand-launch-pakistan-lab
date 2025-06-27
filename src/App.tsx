@@ -7,9 +7,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
-import Seminar from "./pages/Seminar";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
+import FunnelStep1 from "./pages/FunnelStep1";
+import FunnelStep2 from "./pages/FunnelStep2";
 
 const queryClient = new QueryClient();
 
@@ -25,7 +26,8 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/legal" element={<Legal />} />
-          <Route path="/seminar" element={<Seminar />} />
+          <Route path="/funnel/step1" element={<FunnelStep1 />} />
+          <Route path="/funnel/step2" element={<FunnelStep2 />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
