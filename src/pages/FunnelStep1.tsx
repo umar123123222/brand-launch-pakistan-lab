@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import YoutubeLite from "@/components/YoutubeLite";
 
 const FunnelStep1 = () => {
   const [name, setName] = useState("");
@@ -68,7 +69,7 @@ const FunnelStep1 = () => {
         <div className="max-w-4xl mx-auto text-center">
           {/* Headline */}
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-8 leading-tight">
-            Launch Your Own Perfume, Skincare, or Beard Oil Brand in 21 Days – 
+            Launch Your Own Perfume, Skincare, or Beard Oil Brand in 40 Days – 
             <span className="block mt-2 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
               Even Without a Product
             </span>
@@ -76,17 +77,10 @@ const FunnelStep1 = () => {
 
           {/* Video */}
           <div className="relative mb-6">
-            <div className="aspect-video w-full max-w-3xl mx-auto rounded-xl overflow-hidden shadow-2xl">
-              <iframe 
-                width="100%" 
-                height="100%" 
-                src="https://www.youtube.com/embed/Io5mji-ECcw?si=vsxFDO_k0ZtLJjxs" 
-                title="YouTube video player" 
-                frameBorder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                referrerPolicy="strict-origin-when-cross-origin" 
-                allowFullScreen
-                className="w-full h-full"
+            <div className="w-full max-w-3xl mx-auto">
+              <YoutubeLite
+                videoId="Io5mji-ECcw"
+                alt="Watch how we help launch product brands"
               />
             </div>
           </div>
