@@ -92,8 +92,13 @@ const FunnelStep1 = () => {
           </div>
 
           {/* Subtext */}
-          <p className="text-xl text-gray-200 mb-12 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
             Watch how I helped 20+ people launch their own product brand in just weeks—real results, real products.
+          </p>
+
+          {/* Call-to-Action Text */}
+          <p className="text-2xl md:text-3xl font-semibold text-white mb-8">
+            Want us to build your brand for you? Apply for a FREE call
           </p>
 
           {/* Form */}
