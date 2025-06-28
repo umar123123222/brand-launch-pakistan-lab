@@ -11,6 +11,7 @@ import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import FunnelStep1 from "./pages/FunnelStep1";
 import FunnelStep2 from "./pages/FunnelStep2";
+import ThankYou from "./pages/ThankYou";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/legal" element={<Legal />} />
           <Route path="/funnel/step1" element={<FunnelStep1 />} />
           <Route path="/funnel/step2" element={<FunnelStep2 />} />
+          <Route path="/thank-you" element={<ThankYou />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

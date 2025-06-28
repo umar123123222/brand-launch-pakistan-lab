@@ -17,7 +17,6 @@ const FunnelStep2 = () => {
   const [motivation, setMotivation] = useState("");
   const [buildSupport, setBuildSupport] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -64,7 +63,8 @@ const FunnelStep2 = () => {
       // Clear stored email
       localStorage.removeItem("funnel_email");
       
-      setIsSubmitted(true);
+      // Redirect to thank you page
+      navigate("/thank-you");
     } catch (error) {
       console.error("Error submitting application:", error);
       toast({
@@ -76,33 +76,6 @@ const FunnelStep2 = () => {
       setIsSubmitting(false);
     }
   };
-
-  if (isSubmitted) {
-    return (
-      <>
-        <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center">
-          <div className="max-w-2xl mx-auto text-center px-6">
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
-              <div className="text-6xl mb-6">✅</div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Application Received!
-              </h1>
-              <p className="text-xl text-gray-200 mb-6">
-                Your application has been received. Our team will reach out to you on WhatsApp within 24 hours if shortlisted.
-              </p>
-              <Button
-                onClick={() => navigate("/")}
-                className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-3 px-6 rounded-lg"
-              >
-                Back to Homepage
-              </Button>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </>
-    );
-  }
 
   return (
     <>
