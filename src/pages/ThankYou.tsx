@@ -1,16 +1,19 @@
 
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
 
-const ThankYou = () => {
-  const navigate = useNavigate();
+// Declare fbq as a global variable to avoid TypeScript errors
+declare global {
+  interface Window {
+    fbq: any;
+  }
+}
 
+const ThankYou = () => {
   useEffect(() => {
     // Track page view for analytics/Facebook Pixel
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'Lead');
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'Lead');
     }
   }, []);
 
@@ -26,12 +29,19 @@ const ThankYou = () => {
             <p className="text-xl text-gray-200 mb-6">
               Your application has been received. Our team will reach out to you on WhatsApp within 24 hours if shortlisted.
             </p>
-            <Button
-              onClick={() => navigate("/")}
-              className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-3 px-6 rounded-lg"
-            >
-              Back to Homepage
-            </Button>
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-6 border border-white/30">
+              <p className="text-white text-lg mb-2 font-medium">
+                You can also reach us directly on WhatsApp:
+              </p>
+              <a
+                href="https://wa.me/923148860546"
+                className="text-2xl font-bold text-green-400 hover:text-green-300 transition-colors inline-flex items-center gap-2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                📱 03148860546
+              </a>
+            </div>
           </div>
         </div>
       </div>

@@ -1,14 +1,17 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
+import { Heart, Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
   const handleScrollToContact = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setIsMenuOpen(false); // Close mobile menu when clicking Get Started
     if (isHomePage) {
       const section = document.getElementById("contact");
       if (section) {
@@ -18,6 +21,10 @@ const Header = () => {
       // If not on home page, navigate to home first then scroll
       window.location.href = "/#contact";
     }
+  };
+
+  const handleNavClick = () => {
+    setIsMenuOpen(false); // Close mobile menu when clicking nav links
   };
 
   return (
@@ -41,6 +48,7 @@ const Header = () => {
             </span>
           </Link>
 
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a href="/#services" className="text-gray-700 hover:text-purple-600 transition-colors">Services</a>
             <a href="/#products" className="text-gray-700 hover:text-purple-600 transition-colors">Products</a>
@@ -51,13 +59,86 @@ const Header = () => {
             <Link to="/legal" className="text-gray-700 hover:text-purple-600 transition-colors">Legal</Link>
           </nav>
 
+          {/* Desktop Get Started Button */}
           <Button
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white"
+            className="hidden md:flex bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white"
             onClick={handleScrollToContact}
           >
             Get Started
           </Button>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 text-gray-700 hover:text-purple-600 transition-colors"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden py-4 border-t border-gray-200 bg-white/95 backdrop-blur-lg">
+            <nav className="flex flex-col space-y-4">
+              <a 
+                href="/#services" 
+                className="text-gray-700 hover:text-purple-600 transition-colors px-2 py-1"
+                onClick={handleNavClick}
+              >
+                Services
+              </a>
+              <a 
+                href="/#products" 
+                className="text-gray-700 hover:text-purple-600 transition-colors px-2 py-1"
+                onClick={handleNavClick}
+              >
+                Products
+              </a>
+              <a 
+                href="/#success" 
+                className="text-gray-700 hover:text-purple-600 transition-colors px-2 py-1"
+                onClick={handleNavClick}
+              >
+                Success Story
+              </a>
+              <a 
+                href="/#pricing" 
+                className="text-gray-700 hover:text-purple-600 transition-colors px-2 py-1"
+                onClick={handleNavClick}
+              >
+                Pricing
+              </a>
+              <Link 
+                to="/funnel/step1" 
+                className="text-gray-700 hover:text-purple-600 transition-colors px-2 py-1"
+                onClick={handleNavClick}
+              >
+                Free Mini Course
+              </Link>
+              <Link 
+                to="/about" 
+                className="text-gray-700 hover:text-purple-600 transition-colors px-2 py-1"
+                onClick={handleNavClick}
+              >
+                About Us
+              </Link>
+              <Link 
+                to="/legal" 
+                className="text-gray-700 hover:text-purple-600 transition-colors px-2 py-1"
+                onClick={handleNavClick}
+              >
+                Legal
+              </Link>
+              <Button
+                className="mx-2 mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white"
+                onClick={handleScrollToContact}
+              >
+                Get Started
+              </Button>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
