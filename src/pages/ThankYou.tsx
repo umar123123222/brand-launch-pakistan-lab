@@ -4,20 +4,13 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
 
-// Declare fbq for TypeScript
-declare global {
-  interface Window {
-    fbq: any;
-  }
-}
-
 const ThankYou = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     // Track page view for analytics/Facebook Pixel
-    if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('track', 'Lead');
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'Lead');
     }
   }, []);
 

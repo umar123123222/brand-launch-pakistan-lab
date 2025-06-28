@@ -4,7 +4,7 @@ import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import YoutubeLite from "./YoutubeLite";
 
-const YOUTUBE_VIDEO_ID = "nTqJnVJilK4";
+const YOUTUBE_VIDEO_ID = "Io5mji-ECcw";
 
 const Hero = () => {
   // Removed all video/click logic per compliance; only static image is shown.

@@ -81,7 +81,7 @@ const FunnelStep1 = () => {
             <div className="relative mb-6">
               <div className="w-full max-w-3xl mx-auto">
                 <YoutubeLite
-                  videoId="nTqJnVJilK4"
+                  videoId="Io5mji-ECcw"
                   alt="Watch how we help launch product brands"
                 />
               </div>
