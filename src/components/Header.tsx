@@ -53,7 +53,6 @@ const Header = () => {
             <a href="/#services" className="text-gray-700 hover:text-purple-600 transition-colors">Services</a>
             <a href="/#products" className="text-gray-700 hover:text-purple-600 transition-colors">Products</a>
             <a href="/#success" className="text-gray-700 hover:text-purple-600 transition-colors">Success Story</a>
-            <a href="/#pricing" className="text-gray-700 hover:text-purple-600 transition-colors">Pricing</a>
             <Link to="/funnel/step1" className="text-gray-700 hover:text-purple-600 transition-colors">Free Mini Course</Link>
             <Link to="/about" className="text-gray-700 hover:text-purple-600 transition-colors">About Us</Link>
             <Link to="/legal" className="text-gray-700 hover:text-purple-600 transition-colors">Legal</Link>
@@ -101,13 +100,6 @@ const Header = () => {
                 onClick={handleNavClick}
               >
                 Success Story
-              </a>
-              <a 
-                href="/#pricing" 
-                className="text-gray-700 hover:text-purple-600 transition-colors px-2 py-1"
-                onClick={handleNavClick}
-              >
-                Pricing
               </a>
               <Link 
                 to="/funnel/step1" 
