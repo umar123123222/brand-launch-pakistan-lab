@@ -59,8 +59,8 @@ const ThankYou = () => {
                   <h4 className="font-medium text-white mb-2">Our Office Location</h4>
                   <p className="text-sm">
                     📍 IDM Pakistan Headquarters<br />
-                    Lahore, Punjab, Pakistan<br />
-                    <span className="text-xs text-gray-300">Registered & Operating Since 2020</span>
+                    A316 block 2 Gulshan Iqbal, Karachi.<br />
+                    <span className="text-xs text-gray-300">Registered and Operating Since 2017</span>
                   </p>
                 </div>
               </div>
