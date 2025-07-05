@@ -454,17 +454,19 @@ const FunnelStep1 = () => {
               </p>
               
               {/* Call to Action Button */}
-              <Button
-                onClick={() => {
-                  const formSection = document.querySelector('form');
-                  if (formSection) {
-                    formSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-                className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105"
-              >
-                Fill the Form to Confirm Your Slot
-              </Button>
+              <div className="w-full max-w-md mx-auto px-4">
+                <Button
+                  onClick={() => {
+                    const formSection = document.querySelector('form');
+                    if (formSection) {
+                      formSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-lg text-base sm:text-lg transition-all duration-300 transform hover:scale-105 text-center"
+                >
+                  Fill the Form to Confirm Your Slot
+                </Button>
+              </div>
             </div>
           </div>
         </div>
