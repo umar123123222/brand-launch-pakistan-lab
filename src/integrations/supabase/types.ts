@@ -9,6 +9,96 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      activity_log: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          lead_id: string | null
+          new_value: string | null
+          notes: string | null
+          old_value: string | null
+          user_id: number | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          lead_id?: string | null
+          new_value?: string | null
+          notes?: string | null
+          old_value?: string | null
+          user_id?: number | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          lead_id?: string | null
+          new_value?: string | null
+          notes?: string | null
+          old_value?: string | null
+          user_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_log_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activity_log_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      commissions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          lead_id: string | null
+          paid_at: string | null
+          user_id: number | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          lead_id?: string | null
+          paid_at?: string | null
+          user_id?: number | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          lead_id?: string | null
+          paid_at?: string | null
+          user_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       consultations: {
         Row: {
           category: string | null
@@ -99,6 +189,232 @@ export type Database = {
         }
         Relationships: []
       }
+      invoice_settings: {
+        Row: {
+          created_at: string | null
+          id: string
+          logo_url: string | null
+          sender_address: string
+          sender_email: string
+          sender_name: string
+          sender_phone: string
+          terms: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          logo_url?: string | null
+          sender_address: string
+          sender_email: string
+          sender_name: string
+          sender_phone: string
+          terms?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          logo_url?: string | null
+          sender_address?: string
+          sender_email?: string
+          sender_name?: string
+          sender_phone?: string
+          terms?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      invoices: {
+        Row: {
+          amount_due_now: number
+          created_at: string | null
+          created_by: number | null
+          due_date: string
+          id: string
+          invoice_number: string
+          invoice_title: string | null
+          invoice_url: string | null
+          lead_id: string
+          total_amount: number
+          updated_at: string | null
+        }
+        Insert: {
+          amount_due_now: number
+          created_at?: string | null
+          created_by?: number | null
+          due_date: string
+          id?: string
+          invoice_number: string
+          invoice_title?: string | null
+          invoice_url?: string | null
+          lead_id: string
+          total_amount: number
+          updated_at?: string | null
+        }
+        Update: {
+          amount_due_now?: number
+          created_at?: string | null
+          created_by?: number | null
+          due_date?: string
+          id?: string
+          invoice_number?: string
+          invoice_title?: string | null
+          invoice_url?: string | null
+          lead_id?: string
+          total_amount?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          assigned_to: number | null
+          build_support: string | null
+          category: string | null
+          city: string
+          commission_amount: number | null
+          created_at: string | null
+          created_by: number | null
+          email: string | null
+          has_business: string | null
+          has_whatsapped_mehreen: boolean | null
+          id: string
+          investment_range: string | null
+          motivation: string | null
+          notes: string | null
+          package_chosen: Database["public"]["Enums"]["package_type"] | null
+          payment_amount: number | null
+          payment_screenshot: string | null
+          phone: string
+          product_id: string | null
+          sample_status: Database["public"]["Enums"]["sample_status"] | null
+          source: string
+          status: Database["public"]["Enums"]["lead_status"] | null
+          submitted_at: string | null
+          updated_at: string | null
+          whatsapped_by_mehreen_at: string | null
+        }
+        Insert: {
+          assigned_to?: number | null
+          build_support?: string | null
+          category?: string | null
+          city: string
+          commission_amount?: number | null
+          created_at?: string | null
+          created_by?: number | null
+          email?: string | null
+          has_business?: string | null
+          has_whatsapped_mehreen?: boolean | null
+          id?: string
+          investment_range?: string | null
+          motivation?: string | null
+          notes?: string | null
+          package_chosen?: Database["public"]["Enums"]["package_type"] | null
+          payment_amount?: number | null
+          payment_screenshot?: string | null
+          phone: string
+          product_id?: string | null
+          sample_status?: Database["public"]["Enums"]["sample_status"] | null
+          source: string
+          status?: Database["public"]["Enums"]["lead_status"] | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          whatsapped_by_mehreen_at?: string | null
+        }
+        Update: {
+          assigned_to?: number | null
+          build_support?: string | null
+          category?: string | null
+          city?: string
+          commission_amount?: number | null
+          created_at?: string | null
+          created_by?: number | null
+          email?: string | null
+          has_business?: string | null
+          has_whatsapped_mehreen?: boolean | null
+          id?: string
+          investment_range?: string | null
+          motivation?: string | null
+          notes?: string | null
+          package_chosen?: Database["public"]["Enums"]["package_type"] | null
+          payment_amount?: number | null
+          payment_screenshot?: string | null
+          phone?: string
+          product_id?: string | null
+          sample_status?: Database["public"]["Enums"]["sample_status"] | null
+          source?: string
+          status?: Database["public"]["Enums"]["lead_status"] | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          whatsapped_by_mehreen_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       seminar_registrations: {
         Row: {
           age: number
@@ -132,15 +448,127 @@ export type Database = {
         }
         Relationships: []
       }
+      user_profiles: {
+        Row: {
+          active: boolean | null
+          auth_user_id: string | null
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          password_changed: boolean | null
+          role: Database["public"]["Enums"]["user_role"]
+          temp_password: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          auth_user_id?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          password_changed?: boolean | null
+          role: Database["public"]["Enums"]["user_role"]
+          temp_password?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          auth_user_id?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          password_changed?: boolean | null
+          role?: Database["public"]["Enums"]["user_role"]
+          temp_password?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      Users: {
+        Row: {
+          active: string | null
+          auth_user_id: string
+          created_at: string | null
+          email: string | null
+          id: number
+          name: string
+          password_hash: number | null
+          password_set: boolean | null
+          role: Database["public"]["Enums"]["user_role"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          active?: string | null
+          auth_user_id: string
+          created_at?: string | null
+          email?: string | null
+          id?: number
+          name: string
+          password_hash?: number | null
+          password_set?: boolean | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          active?: string | null
+          auth_user_id?: string
+          created_at?: string | null
+          email?: string | null
+          id?: number
+          name?: string
+          password_hash?: number | null
+          password_set?: boolean | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_user_with_temp_password: {
+        Args: {
+          user_email: string
+          user_name: string
+          user_role: Database["public"]["Enums"]["user_role"]
+          temp_pass?: string
+        }
+        Returns: Json
+      }
+      get_next_assignee: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
     }
     Enums: {
-      [_ in never]: never
+      lead_status:
+        | "New"
+        | "Interested"
+        | "Not Interested"
+        | "Forwarded to Naba"
+        | "Not Qualified"
+        | "Qualified - Starter"
+        | "Qualified - Growth"
+        | "Closed"
+        | "Dropped"
+        | "In Follow-Up"
+        | "Forwarded to Arbaz"
+      package_type: "Starter" | "Growth"
+      sample_status: "Sent" | "Visited" | "Not Sent"
+      user_role:
+        | "admin"
+        | "mehreen"
+        | "naba"
+        | "arbaz"
+        | "SuperAdmin"
+        | "OutreachAgent"
+        | "QualifyingAgent"
+        | "LeadCloser"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -255,6 +683,32 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      lead_status: [
+        "New",
+        "Interested",
+        "Not Interested",
+        "Forwarded to Naba",
+        "Not Qualified",
+        "Qualified - Starter",
+        "Qualified - Growth",
+        "Closed",
+        "Dropped",
+        "In Follow-Up",
+        "Forwarded to Arbaz",
+      ],
+      package_type: ["Starter", "Growth"],
+      sample_status: ["Sent", "Visited", "Not Sent"],
+      user_role: [
+        "admin",
+        "mehreen",
+        "naba",
+        "arbaz",
+        "SuperAdmin",
+        "OutreachAgent",
+        "QualifyingAgent",
+        "LeadCloser",
+      ],
+    },
   },
 } as const

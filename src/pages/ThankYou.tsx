@@ -1,6 +1,7 @@
 
 import { useEffect } from "react";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 
 // Declare fbq as a global variable to avoid TypeScript errors
 declare global {
@@ -29,6 +30,23 @@ const ThankYou = () => {
             <p className="text-xl text-gray-200 mb-8">
               Your application has been received. Our team will reach out to you on WhatsApp within 24 hours if shortlisted.
             </p>
+            
+            {/* WhatsApp Chat Button */}
+            <div className="mb-8">
+              <Button 
+                asChild
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105"
+              >
+                <a 
+                  href="https://wa.me/923148860546" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2"
+                >
+                  💬 Chat with Our Team on WhatsApp
+                </a>
+              </Button>
+            </div>
             
             {/* Trust Building Section */}
             <div className="bg-white/20 backdrop-blur-sm rounded-lg p-6 border border-white/30 mb-6">
