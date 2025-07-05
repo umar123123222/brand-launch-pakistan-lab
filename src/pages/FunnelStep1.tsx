@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -205,11 +204,13 @@ const FunnelStep1 = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="bg-white/10 rounded-lg p-6 border border-white/20">
                   <h3 className="text-xl font-bold text-yellow-400 mb-2">Starter Plan</h3>
-                  <p className="text-gray-200">Low MOQ, Rs. 250k service fee</p>
+                  <p className="text-gray-200 mb-2">Low MOQ, Rs. 250k service fee</p>
+                  <p className="text-sm text-yellow-300 font-semibold">Minimum investment required: 350k</p>
                 </div>
                 <div className="bg-white/10 rounded-lg p-6 border border-white/20">
                   <h3 className="text-xl font-bold text-green-400 mb-2">Growth Plan</h3>
-                  <p className="text-gray-200">High MOQ, Rs. 0 service fee</p>
+                  <p className="text-gray-200 mb-2">High MOQ, Rs. 0 service fee</p>
+                  <p className="text-sm text-green-300 font-semibold">Minimum investment required: 1,000,000</p>
                 </div>
               </div>
               
@@ -348,93 +349,105 @@ const FunnelStep1 = () => {
             <div className="mt-16 mb-12">
               <h2 className="text-3xl font-bold text-white mb-8">Transparent Pricing - No Hidden Charges</h2>
               
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 overflow-x-auto">
-                <Table className="w-full">
-                  <TableHeader>
-                    <TableRow className="border-white/20">
-                      <TableHead className="text-white font-bold text-center">Feature</TableHead>
-                      <TableHead className="text-yellow-400 font-bold text-center">Starter Plan (Recommended)</TableHead>
-                      <TableHead className="text-green-400 font-bold text-center">Growth Plan</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">Service Charges</TableCell>
-                      <TableCell className="text-center text-white">Rs. 250,000</TableCell>
-                      <TableCell className="text-center text-white">Rs. 0</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">MOQ (Perfume)</TableCell>
-                      <TableCell className="text-center text-white">100 pieces</TableCell>
-                      <TableCell className="text-center text-white">1,000 pieces</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">MOQ (Beard Oil / Pain Relief Oil)</TableCell>
-                      <TableCell className="text-center text-white">300 pieces</TableCell>
-                      <TableCell className="text-center text-white">3,000 pieces</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">Average Product Cost (Perfume)</TableCell>
-                      <TableCell className="text-center text-white">Rs. 1,000</TableCell>
-                      <TableCell className="text-center text-white">Rs. 1,000</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">Average Product Cost (Beard Oil/Pain relief)</TableCell>
-                      <TableCell className="text-center text-white">Rs. 400 (+/- 50)</TableCell>
-                      <TableCell className="text-center text-white">Rs. 400 (+/- 50)</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">Logo, Branding, Packaging Design</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">Label + Box Printing</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">Shopify Store (Professional Setup)</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">Website Content + Product Shoot</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">One Video Ad (Launch Focused)</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">Social Media Handles Setup</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">Facebook BM, Ad Account, Pixel</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">Courier + COD Integration</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">FBR NTN & Trademark Filing</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                    </TableRow>
-                    <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium text-center">1-on-1 Brand Strategy Support</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                      <TableCell className="text-center text-green-400">✅</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 relative">
+                {/* Mobile scroll indicator */}
+                <div className="md:hidden flex items-center justify-center mb-4">
+                  <div className="flex items-center gap-2 text-gray-300 text-sm">
+                    <span>Swipe right to see Growth Plan</span>
+                    <svg className="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+                
+                <div className="overflow-x-auto">
+                  <Table className="w-full">
+                    <TableHeader>
+                      <TableRow className="border-white/20">
+                        <TableHead className="text-white font-bold text-center">Feature</TableHead>
+                        <TableHead className="text-yellow-400 font-bold text-center">Starter Plan (Recommended)</TableHead>
+                        <TableHead className="text-green-400 font-bold text-center">Growth Plan</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">Service Charges</TableCell>
+                        <TableCell className="text-center text-white">Rs. 250,000</TableCell>
+                        <TableCell className="text-center text-white">Rs. 0</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">MOQ (Perfume)</TableCell>
+                        <TableCell className="text-center text-white">100 pieces</TableCell>
+                        <TableCell className="text-center text-white">1,000 pieces</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">MOQ (Beard Oil / Pain Relief Oil)</TableCell>
+                        <TableCell className="text-center text-white">300 pieces</TableCell>
+                        <TableCell className="text-center text-white">3,000 pieces</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">Average Product Cost (Perfume)</TableCell>
+                        <TableCell className="text-center text-white">Rs. 1,000</TableCell>
+                        <TableCell className="text-center text-white">Rs. 1,000</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">Average Product Cost (Beard Oil/Pain relief)</TableCell>
+                        <TableCell className="text-center text-white">Rs. 400 (+/- 50)</TableCell>
+                        <TableCell className="text-center text-white">Rs. 400 (+/- 50)</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">Logo, Branding, Packaging Design</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">Label + Box Printing</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">Shopify Store (Professional Setup)</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">Website Content + Product Shoot</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">One Video Ad (Launch Focused)</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">Social Media Handles Setup</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">Facebook BM, Ad Account, Pixel</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">Courier + COD Integration</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">FBR NTN & Trademark Filing</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                      </TableRow>
+                      <TableRow className="border-white/20">
+                        <TableCell className="text-gray-200 font-medium text-center">1-on-1 Brand Strategy Support</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                        <TableCell className="text-center text-green-400">✅</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
             </div>
 
