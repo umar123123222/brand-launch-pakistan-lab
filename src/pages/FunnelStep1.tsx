@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -134,6 +135,60 @@ const FunnelStep1 = () => {
                   <p className="text-yellow-200 font-medium">
                     📦 Start with as low as 100 units of product, or go big with 1,000 units and 0 service charges
                   </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Elyscents Success Story Section */}
+            <div className="bg-gradient-to-br from-purple-600 to-indigo-600 text-white rounded-2xl p-8 border border-white/20 mb-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                  <h3 className="text-3xl font-bold mb-6">
+                    <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                      Our Success Story: Elyscents
+                    </span>
+                  </h3>
+                  <p className="text-lg mb-6 leading-relaxed text-purple-100">
+                    Starting with the same Rs 350k investment package, Elyscents has grown into Pakistan's 
+                    leading online perfume brand, consistently achieving 500+ orders daily and generating 
+                    millions in revenue.
+                  </p>
+                  
+                  <div className="grid grid-cols-2 gap-6 mb-8">
+                    <div className="text-center">
+                      <div className="text-4xl font-bold text-yellow-400 mb-2">500+</div>
+                      <div className="text-purple-200">Daily Orders</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-4xl font-bold text-yellow-400 mb-2">5 Crore+</div>
+                      <div className="text-purple-200">Monthly Revenue</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-4xl font-bold text-yellow-400 mb-2">150k+</div>
+                      <div className="text-purple-200">Happy Customers</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-4xl font-bold text-yellow-400 mb-2">2 Years</div>
+                      <div className="text-purple-200">To Success</div>
+                    </div>
+                  </div>
+                  
+                  <blockquote className="text-lg italic text-purple-100 border-l-4 border-yellow-400 pl-6">
+                    "The same proven system that built Elyscents can build your brand. 
+                    We know what works because we've done it ourselves."
+                  </blockquote>
+                </div>
+                
+                <div className="relative">
+                  <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
+                    <img alt="Elyscents Success" className="w-full h-auto object-contain rounded-lg mb-6" src="/lovable-uploads/d6f10d6b-e8dd-46fe-9eb2-ee755fada5c8.png" />
+                    <div className="text-center">
+                      <h4 className="text-xl font-semibold mb-2">From Startup to Market Leader</h4>
+                      <p className="text-purple-200">
+                        The exact blueprint we used for Elyscents is now available for your brand.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -291,90 +346,90 @@ const FunnelStep1 = () => {
 
             {/* Pricing Table */}
             <div className="mt-16 mb-12">
-              <h2 className="text-3xl font-bold text-white mb-8">FRONT</h2>
+              <h2 className="text-3xl font-bold text-white mb-8">Transparent Pricing - No Hidden Charges</h2>
               
               <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 overflow-x-auto">
                 <Table className="w-full">
                   <TableHeader>
                     <TableRow className="border-white/20">
-                      <TableHead className="text-white font-bold text-left">Feature</TableHead>
+                      <TableHead className="text-white font-bold text-center">Feature</TableHead>
                       <TableHead className="text-yellow-400 font-bold text-center">Starter Plan (Recommended)</TableHead>
                       <TableHead className="text-green-400 font-bold text-center">Growth Plan</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">Service Charges</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">Service Charges</TableCell>
                       <TableCell className="text-center text-white">Rs. 250,000</TableCell>
                       <TableCell className="text-center text-white">Rs. 0</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">MOQ (Perfume)</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">MOQ (Perfume)</TableCell>
                       <TableCell className="text-center text-white">100 pieces</TableCell>
                       <TableCell className="text-center text-white">1,000 pieces</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">MOQ (Beard Oil / Pain Relief Oil)</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">MOQ (Beard Oil / Pain Relief Oil)</TableCell>
                       <TableCell className="text-center text-white">300 pieces</TableCell>
                       <TableCell className="text-center text-white">3,000 pieces</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">Average Product Cost (Perfume)</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">Average Product Cost (Perfume)</TableCell>
                       <TableCell className="text-center text-white">Rs. 1,000</TableCell>
                       <TableCell className="text-center text-white">Rs. 1,000</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">Average Product Cost (Beard Oil/Pain relief)</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">Average Product Cost (Beard Oil/Pain relief)</TableCell>
                       <TableCell className="text-center text-white">Rs. 400 (+/- 50)</TableCell>
                       <TableCell className="text-center text-white">Rs. 400 (+/- 50)</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">Logo, Branding, Packaging Design</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">Logo, Branding, Packaging Design</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">Label + Box Printing</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">Label + Box Printing</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">Shopify Store (Professional Setup)</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">Shopify Store (Professional Setup)</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">Website Content + Product Shoot</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">Website Content + Product Shoot</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">One Video Ad (Launch Focused)</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">One Video Ad (Launch Focused)</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">Social Media Handles Setup</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">Social Media Handles Setup</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">Facebook BM, Ad Account, Pixel</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">Facebook BM, Ad Account, Pixel</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">Courier + COD Integration</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">Courier + COD Integration</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">FBR NTN & Trademark Filing</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">FBR NTN & Trademark Filing</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                     </TableRow>
                     <TableRow className="border-white/20">
-                      <TableCell className="text-gray-200 font-medium">1-on-1 Brand Strategy Support</TableCell>
+                      <TableCell className="text-gray-200 font-medium text-center">1-on-1 Brand Strategy Support</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                       <TableCell className="text-center text-green-400">✅</TableCell>
                     </TableRow>
@@ -384,7 +439,7 @@ const FunnelStep1 = () => {
             </div>
 
             {/* Emotional Copy Below Table */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 mb-12">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 mb-8">
               <p className="text-xl text-gray-200 leading-relaxed">
                 You're not just launching a product — you're stepping into a new identity: <span className="text-yellow-400 font-bold">Brand Owner</span>.
               </p>
@@ -394,9 +449,22 @@ const FunnelStep1 = () => {
               <p className="text-lg text-gray-200 mt-4">
                 Your vision + our team = fully launched business in 40-60 days.
               </p>
-              <p className="text-lg text-red-300 font-semibold mt-4">
+              <p className="text-lg text-red-300 font-semibold mt-4 mb-6">
                 Limited to 20 clients per month only.
               </p>
+              
+              {/* Call to Action Button */}
+              <Button
+                onClick={() => {
+                  const formSection = document.querySelector('form');
+                  if (formSection) {
+                    formSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105"
+              >
+                Fill the Form to Confirm Your Slot
+              </Button>
             </div>
           </div>
         </div>
