@@ -27,11 +27,8 @@ const ThankYou = () => {
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Application Received!
             </h1>
-            <p className="text-xl text-gray-200 mb-4">
+            <p className="text-xl text-gray-200 mb-8">
               Your application has been received. Our team will reach out to you on WhatsApp within 24 hours if shortlisted.
-            </p>
-            <p className="text-lg text-yellow-200 mb-8 font-medium">
-              Our team will contact you shortly on WhatsApp to confirm your order and start your brand.
             </p>
             
             {/* WhatsApp Chat Button */}
