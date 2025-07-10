@@ -1,14 +1,36 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
 
 const BookConsultationThankYou = () => {
+  const location = useLocation();
+  const { bookingTime, fullName } = location.state || {};
+
   useEffect(() => {
     // Track page view for analytics if needed
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'Lead');
     }
   }, []);
+
+  const formatBookingTime = (datetime: string) => {
+    const date = new Date(datetime);
+    return {
+      date: date.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        month: 'long', 
+        day: 'numeric',
+        year: 'numeric'
+      }),
+      time: date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      })
+    };
+  };
+
+  const booking = bookingTime ? formatBookingTime(bookingTime) : null;
 
   return (
     <>
@@ -23,38 +45,25 @@ const BookConsultationThankYou = () => {
               Thank you for booking your call with Elevate51. Our team will reach out to you on WhatsApp shortly before the meeting to confirm details.
             </p>
             
-            {/* Elyscents Success Block */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-6 border border-white/30 mb-8">
-              <h3 className="text-white text-lg font-semibold mb-4">About Our Success Story</h3>
-              <div className="space-y-4 text-gray-200">
-                <div className="flex items-center justify-center mb-4">
-                  <img 
-                    src="/lovable-uploads/d45b5583-4570-41f6-ad16-84cf447f0423.png" 
-                    alt="Elyscents Logo" 
-                    className="h-16 w-auto"
-                  />
-                </div>
-                
-                <p className="text-sm leading-relaxed">
-                  <strong>Elyscents</strong> - Our flagship success story generating 500+ daily orders and 5 Crore+ monthly revenue in the perfume industry.
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-white">500+</div>
-                    <div className="text-sm text-gray-300">Daily Orders</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-white">5 Crore+</div>
-                    <div className="text-sm text-gray-300">Monthly Revenue</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-white">2 Years</div>
-                    <div className="text-sm text-gray-300">Market Leader</div>
-                  </div>
+            {/* Booking Details */}
+            {booking && (
+              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-6 border border-white/30 mb-8">
+                <h3 className="text-white text-lg font-semibold mb-4">Your Booking Details</h3>
+                <div className="space-y-2 text-gray-200">
+                  {fullName && (
+                    <p className="text-lg">
+                      <strong>Name:</strong> {fullName}
+                    </p>
+                  )}
+                  <p className="text-lg">
+                    <strong>Date:</strong> {booking.date}
+                  </p>
+                  <p className="text-lg">
+                    <strong>Time:</strong> {booking.time}
+                  </p>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Reminder */}
             <div className="bg-blue-500/20 backdrop-blur-sm rounded-lg p-6 border border-blue-500/30 mb-6">
@@ -66,23 +75,6 @@ const BookConsultationThankYou = () => {
               </p>
             </div>
 
-            {/* WhatsApp Contact Button */}
-            <div className="mb-8">
-              <Button 
-                asChild
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105"
-              >
-                <a 
-                  href="https://wa.me/923148860546" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2"
-                >
-                  💬 Chat with Our Team on WhatsApp
-                </a>
-              </Button>
-            </div>
-
             {/* Additional Company Info */}
             <div className="border-t border-white/20 pt-6 mt-6">
               <div className="flex items-center justify-center space-x-6 mb-4">
@@ -92,7 +84,7 @@ const BookConsultationThankYou = () => {
                   className="h-12 w-auto"
                 />
                 <img 
-                  src="/lovable-uploads/d45b5583-4570-41f6-ad16-84cf447f0423.png" 
+                  src="/lovable-uploads/d45b5583-4570-41f6-ad91d0122b964.png" 
                   alt="Elyscents Logo" 
                   className="h-12 w-auto"
                 />

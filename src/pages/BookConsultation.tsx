@@ -176,8 +176,13 @@ const BookConsultation = () => {
         description: "Redirecting you to confirmation page..."
       });
 
-      // Redirect to thank you page
-      navigate('/book-consultation/thank-you');
+      // Redirect to thank you page with booking details
+      navigate('/book-consultation/thank-you', {
+        state: {
+          bookingTime: selectedSlot!.datetime,
+          fullName: formData.fullName
+        }
+      });
       
     } catch (error) {
       console.error('Booking error:', error);
