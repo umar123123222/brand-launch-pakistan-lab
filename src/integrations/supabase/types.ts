@@ -62,6 +62,51 @@ export type Database = {
           },
         ]
       }
+      bookings: {
+        Row: {
+          booking_datetime: string
+          business_timeline: string
+          categories: string[]
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          investment_ready: boolean
+          seen_elyscents: boolean
+          status: string
+          updated_at: string
+          whatsapp_number: string
+        }
+        Insert: {
+          booking_datetime: string
+          business_timeline: string
+          categories: string[]
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          investment_ready: boolean
+          seen_elyscents: boolean
+          status?: string
+          updated_at?: string
+          whatsapp_number: string
+        }
+        Update: {
+          booking_datetime?: string
+          business_timeline?: string
+          categories?: string[]
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          investment_ready?: boolean
+          seen_elyscents?: boolean
+          status?: string
+          updated_at?: string
+          whatsapp_number?: string
+        }
+        Relationships: []
+      }
       commissions: {
         Row: {
           amount: number
