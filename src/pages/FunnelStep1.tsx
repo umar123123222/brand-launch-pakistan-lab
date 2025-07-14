@@ -191,24 +191,38 @@ const FunnelStep1 = () => {
               </div>
             </div>
 
-            {/* Brand Launch Package Section */}
+            {/* Package Options Section */}
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 mb-12">
               <h2 className="text-3xl font-bold text-white mb-6">
-                💼 Your Brand Launch Package
+                💼 Choose Your Brand Launch Package
               </h2>
-              <p className="text-xl text-gray-200 mb-6">
-                Everything needed to launch your brand professionally:
+              <p className="text-xl text-gray-200 mb-8">
+                Select the package that fits your budget and goals:
               </p>
               
-              <div className="bg-white/10 rounded-lg p-6 border border-white/20">
-                <h3 className="text-xl font-bold text-yellow-400 mb-2">Complete Brand Launch</h3>
-                <p className="text-gray-200 mb-2">MOQ = 600 perfumes</p>
-                <p className="text-sm text-yellow-300 font-semibold">Each perfume with premium box @ Rs. 1,050</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Starter Package */}
+                <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg p-6 border border-white/20">
+                  <h3 className="text-2xl font-bold text-yellow-400 mb-4">Starter Package</h3>
+                  <div className="space-y-3 text-white">
+                    <p className="text-lg"><strong>Service Charges:</strong> Rs. 250,000</p>
+                    <p className="text-lg"><strong>Product Cost:</strong> Rs. 100,000</p>
+                    <p className="text-sm text-yellow-300">100 perfumes @ Rs. 1,000 each</p>
+                    <p className="text-sm text-gray-200 mt-4">Perfect for testing the market with lower investment</p>
+                  </div>
+                </div>
+
+                {/* Growth Package */}
+                <div className="bg-gradient-to-br from-green-600 to-teal-600 rounded-lg p-6 border border-white/20">
+                  <h3 className="text-2xl font-bold text-yellow-400 mb-4">Growth Package</h3>
+                  <div className="space-y-3 text-white">
+                    <p className="text-lg"><strong>Service Charges:</strong> Rs. 0</p>
+                    <p className="text-lg"><strong>MOQ:</strong> 1,000 pieces</p>
+                    <p className="text-sm text-yellow-300">No service charges - pay only for products</p>
+                    <p className="text-sm text-gray-200 mt-4">Best value for serious entrepreneurs</p>
+                  </div>
+                </div>
               </div>
-              
-              <p className="text-gray-200 mt-6">
-                Get everything needed to launch like a pro with our comprehensive package.
-              </p>
             </div>
 
             {/* Updated Form */}
