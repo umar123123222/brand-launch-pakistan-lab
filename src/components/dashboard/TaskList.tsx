@@ -13,7 +13,7 @@ interface Task {
   id: string;
   task_name: string;
   task_order: number;
-  status: 'Not Started' | 'In Progress' | 'Done';
+  status: string;
   completion_date?: string;
   notes?: string;
 }
