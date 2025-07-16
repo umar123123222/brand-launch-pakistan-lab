@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Calendar, Phone, User, Clock, ChevronDown, ChevronUp } from 'lucide-react';
+import { Calendar, Phone, User, Clock, ChevronDown, ChevronUp, Share, Copy } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import TaskList from './TaskList';
 
 interface Brand {
@@ -34,6 +34,7 @@ interface BrandCardProps {
 
 const BrandCard = ({ brand, onUpdate }: BrandCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { toast } = useToast();
   
   const getDaysRemaining = (deliveryDate: string) => {
     const today = new Date();
@@ -70,6 +71,31 @@ const BrandCard = ({ brand, onUpdate }: BrandCardProps) => {
     return 'border-gray-200';
   };
 
+  const handleShareClick = async () => {
+    const clientUrl = `${window.location.origin}/client/${brand.id}`;
+    
+    try {
+      await navigator.clipboard.writeText(clientUrl);
+      toast({
+        title: "Link Copied!",
+        description: "Client view link has been copied to clipboard.",
+      });
+    } catch (err) {
+      // Fallback for browsers that don't support clipboard API
+      const textArea = document.createElement('textarea');
+      textArea.value = clientUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      toast({
+        title: "Link Copied!",
+        description: "Client view link has been copied to clipboard.",
+      });
+    }
+  };
+
   return (
     <Card className={`transition-all duration-200 hover:shadow-lg ${getCardBorderColor()} border-2`}>
       <CardHeader className="pb-3">
@@ -78,9 +104,20 @@ const BrandCard = ({ brand, onUpdate }: BrandCardProps) => {
             <h3 className="font-bold text-lg text-gray-900">{brand.brand_name}</h3>
             <p className="text-gray-600 text-sm">{brand.client_name}</p>
           </div>
-          <Badge className={getStatusColor(brand.status)}>
-            {brand.status}
-          </Badge>
+          <div className="flex items-center space-x-2">
+            <Badge className={getStatusColor(brand.status)}>
+              {brand.status}
+            </Badge>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleShareClick}
+              className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+              title="Share client view link"
+            >
+              <Share className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
         
         <div className="space-y-2 mt-3">

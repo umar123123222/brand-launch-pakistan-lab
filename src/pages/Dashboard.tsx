@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Plus, Filter, Search } from 'lucide-react';
 import BrandCard from '@/components/dashboard/BrandCard';
 import AddBrandModal from '@/components/dashboard/AddBrandModal';
+import PasswordProtection from '@/components/PasswordProtection';
 import { useToast } from '@/hooks/use-toast';
 
 const Dashboard = () => {
@@ -60,7 +60,7 @@ const Dashboard = () => {
     return daysRemaining <= 10 || brand.status === 'Behind';
   });
 
-  return (
+  const DashboardContent = () => (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -186,6 +186,12 @@ const Dashboard = () => {
         />
       </div>
     </div>
+  );
+
+  return (
+    <PasswordProtection correctPassword="AA5200SSiull2323XXXIDMPaEle22!@#$%$33">
+      <DashboardContent />
+    </PasswordProtection>
   );
 };
 

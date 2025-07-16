@@ -15,6 +15,7 @@ import ThankYou from "./pages/ThankYou";
 import BookConsultation from "./pages/BookConsultation";
 import BookConsultationThankYou from "./pages/BookConsultationThankYou";
 import Dashboard from "./pages/Dashboard";
+import ClientView from "./pages/ClientView";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/book-consultation" element={<BookConsultation />} />
           <Route path="/book-consultation/thank-you" element={<BookConsultationThankYou />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/client/:brandId" element={<ClientView />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
