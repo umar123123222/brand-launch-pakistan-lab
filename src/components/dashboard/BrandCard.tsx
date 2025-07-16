@@ -15,13 +15,13 @@ interface Brand {
   assigned_team_member: string;
   start_date: string;
   estimated_delivery_date: string;
-  status: 'On Track' | 'At Risk' | 'Behind';
+  status: string;
   notes?: string;
   brand_tasks: Array<{
     id: string;
     task_name: string;
     task_order: number;
-    status: 'Not Started' | 'In Progress' | 'Done';
+    status: string;
     completion_date?: string;
     notes?: string;
   }>;
