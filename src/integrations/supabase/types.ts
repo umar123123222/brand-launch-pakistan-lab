@@ -107,6 +107,92 @@ export type Database = {
         }
         Relationships: []
       }
+      brand_tasks: {
+        Row: {
+          brand_id: string
+          completion_date: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          status: string
+          task_name: string
+          task_order: number
+          updated_at: string
+        }
+        Insert: {
+          brand_id: string
+          completion_date?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          status?: string
+          task_name: string
+          task_order: number
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string
+          completion_date?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          status?: string
+          task_name?: string
+          task_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_tasks_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brands: {
+        Row: {
+          assigned_team_member: string
+          brand_name: string
+          client_name: string
+          client_phone: string
+          created_at: string
+          estimated_delivery_date: string
+          id: string
+          notes: string | null
+          start_date: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_team_member: string
+          brand_name: string
+          client_name: string
+          client_phone: string
+          created_at?: string
+          estimated_delivery_date?: string
+          id?: string
+          notes?: string | null
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_team_member?: string
+          brand_name?: string
+          client_name?: string
+          client_phone?: string
+          created_at?: string
+          estimated_delivery_date?: string
+          id?: string
+          notes?: string | null
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       commissions: {
         Row: {
           amount: number

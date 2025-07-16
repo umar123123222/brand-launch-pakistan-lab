@@ -14,6 +14,7 @@ import FunnelStep2 from "./pages/FunnelStep2";
 import ThankYou from "./pages/ThankYou";
 import BookConsultation from "./pages/BookConsultation";
 import BookConsultationThankYou from "./pages/BookConsultationThankYou";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/book-consultation" element={<BookConsultation />} />
           <Route path="/book-consultation/thank-you" element={<BookConsultationThankYou />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
