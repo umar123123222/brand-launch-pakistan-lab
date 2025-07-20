@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -115,74 +116,6 @@ const FunnelStep1 = () => {
                   <div>✅ COD Courier + Payment Setup</div>
                   <div>✅ Full 1-on-1 Guidance Till You Launch</div>
                 </div>
-                
-              </div>
-
-              {/* FORM SECTION - Moved back to after brand launch package */}
-              <div className="max-w-2xl mx-auto mt-12 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 backdrop-blur-lg rounded-3xl p-8 border-2 border-yellow-400/30 shadow-2xl">
-                <div className="text-center mb-8">
-                  <div className="text-4xl mb-4">🚀</div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                    Get Started - Book Your Free Strategy Call
-                  </h2>
-                  <p className="text-lg text-yellow-200 font-medium">
-                    Launching 20-30 brands every month
-                  </p>
-                </div>
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Your Full Name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <input
-                      type="email"
-                      placeholder="Your Email Address"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <input
-                      type="tel"
-                      placeholder="WhatsApp Number (03XXXXXXXXX)"
-                      value={mobileNumber}
-                      onChange={(e) => setMobileNumber(e.target.value)}
-                      className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
-                      required
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-6 px-8 rounded-xl text-xl transition-all duration-300 transform hover:scale-105 shadow-2xl"
-                  >
-                    {isSubmitting ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
-                        Submitting...
-                      </div>
-                    ) : (
-                      "🎯 Get My Free Strategy Call"
-                    )}
-                  </Button>
-                  
-                  <p className="text-sm text-yellow-200 text-center mt-4">
-                    ✅ No spam, ever. Your information is 100% secure.
-                  </p>
-                </form>
               </div>
             </div>
 
@@ -272,6 +205,73 @@ const FunnelStep1 = () => {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* FORM SECTION - Back to its original position after package options */}
+            <div className="max-w-2xl mx-auto mb-12 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 backdrop-blur-lg rounded-3xl p-8 border-2 border-yellow-400/30 shadow-2xl">
+              <div className="text-center mb-8">
+                <div className="text-4xl mb-4">🚀</div>
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                  Get Started - Book Your Free Strategy Call
+                </h2>
+                <p className="text-lg text-yellow-200 font-medium">
+                  Launching 20-30 brands every month
+                </p>
+              </div>
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Your Full Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <input
+                    type="email"
+                    placeholder="Your Email Address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <input
+                    type="tel"
+                    placeholder="WhatsApp Number (03XXXXXXXXX)"
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
+                    className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
+                    required
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-6 px-8 rounded-xl text-xl transition-all duration-300 transform hover:scale-105 shadow-2xl"
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
+                      Submitting...
+                    </div>
+                  ) : (
+                    "🎯 Get My Free Strategy Call"
+                  )}
+                </Button>
+                
+                <p className="text-sm text-yellow-200 text-center mt-4">
+                  ✅ No spam, ever. Your information is 100% secure.
+                </p>
+              </form>
             </div>
 
             {/* Pricing Table */}
