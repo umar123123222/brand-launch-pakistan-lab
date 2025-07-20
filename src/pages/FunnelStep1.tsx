@@ -6,18 +6,11 @@ import { useNavigate } from "react-router-dom";
 import YoutubeLite from "@/components/YoutubeLite";
 import Footer from "@/components/Footer";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Textarea } from "@/components/ui/textarea";
 
 const FunnelStep1 = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [whatsappNumber, setWhatsappNumber] = useState("");
-  const [city, setCity] = useState("");
-  const [hasBusiness, setHasBusiness] = useState("");
-  const [category, setCategory] = useState("");
-  const [motivation, setMotivation] = useState("");
-  const [buildSupport, setBuildSupport] = useState("");
-  const [preferredPlan, setPreferredPlan] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -25,7 +18,7 @@ const FunnelStep1 = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name.trim() || !email.trim() || !whatsappNumber.trim() || !city.trim() || !hasBusiness || !category || !motivation.trim() || !buildSupport || !preferredPlan) {
+    if (!name.trim() || !email.trim() || !mobileNumber.trim()) {
       toast({
         title: "Please fill in all fields",
         variant: "destructive",
@@ -45,16 +38,10 @@ const FunnelStep1 = () => {
 
     try {
       const { error } = await supabase
-        .from("full_applications")
+        .from("front_leads")
         .insert([{ 
-          email: email.trim(),
-          phone: whatsappNumber.trim(),
-          city: city.trim(),
-          has_business: hasBusiness,
-          category: category,
-          motivation: motivation.trim(),
-          build_support: buildSupport,
-          investment_range: preferredPlan
+          name: name.trim(),
+          email: email.trim()
         }]);
 
       if (error) throw error;
@@ -220,10 +207,10 @@ const FunnelStep1 = () => {
               </div>
             </div>
 
-            {/* Updated Form */}
+            {/* Simplified Form */}
             <div className="max-w-2xl mx-auto">
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-8">
-                Apply for Your Brand Launch
+                Get Started - Book Your Free Strategy Call
               </h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -252,88 +239,12 @@ const FunnelStep1 = () => {
                 <div>
                   <input
                     type="tel"
-                    placeholder="WhatsApp Number"
-                    value={whatsappNumber}
-                    onChange={(e) => setWhatsappNumber(e.target.value)}
+                    placeholder="Mobile Number"
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-lg"
                     required
                   />
-                </div>
-
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Your City"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-lg"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <select
-                    value={hasBusiness}
-                    onChange={(e) => setHasBusiness(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-lg"
-                    required
-                  >
-                    <option value="">Do you already have a business?</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
-                </div>
-
-                <div>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-lg"
-                    required
-                  >
-                    <option value="">Which category are you most interested in?</option>
-                    <option value="Perfume">Perfume</option>
-                    <option value="Beard Oil">Beard Oil</option>
-                    <option value="Pain Relief">Pain Relief</option>
-                    <option value="Others">Others</option>
-                  </select>
-                </div>
-
-                <div>
-                  <Textarea
-                    placeholder="Why do you want to launch your own brand now?"
-                    value={motivation}
-                    onChange={(e) => setMotivation(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-lg min-h-[100px]"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <select
-                    value={buildSupport}
-                    onChange={(e) => setBuildSupport(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-lg"
-                    required
-                  >
-                    <option value="">Do you want our team to fully build and launch your brand?</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                    <option value="Need to understand more">Need to understand more</option>
-                  </select>
-                </div>
-
-                <div>
-                  <select
-                    value={preferredPlan}
-                    onChange={(e) => setPreferredPlan(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-lg"
-                    required
-                  >
-                    <option value="">Preferred Plan?</option>
-                    <option value="Starter Plan">Starter Plan</option>
-                    <option value="Growth Plan">Growth Plan</option>
-                  </select>
                 </div>
 
                 <Button
@@ -341,7 +252,7 @@ const FunnelStep1 = () => {
                   disabled={isSubmitting}
                   className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105"
                 >
-                  {isSubmitting ? "Submitting Application..." : "Submit Application"}
+                  {isSubmitting ? "Submitting..." : "Get My Free Strategy Call"}
                 </Button>
               </form>
             </div>
@@ -453,7 +364,7 @@ const FunnelStep1 = () => {
                   }}
                   className="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-lg text-base sm:text-lg transition-all duration-300 transform hover:scale-105 text-center"
                 >
-                  Fill the Form to Confirm Your Slot
+                  Fill the Form to Book Your Free Call
                 </Button>
               </div>
             </div>
