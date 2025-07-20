@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,10 +38,16 @@ const FunnelStep1 = () => {
 
     try {
       const { error } = await supabase
-        .from("front_leads")
+        .from("full_applications")
         .insert([{ 
-          name: name.trim(),
-          email: email.trim()
+          email: email.trim(),
+          phone: mobileNumber.trim(),
+          city: "Not specified", // Default value since city is required
+          has_business: "Not specified", // Default value since has_business is required
+          category: "Not specified", // Default value since category is required
+          investment_range: "Not specified", // Default value since investment_range is required
+          motivation: "Not specified", // Default value since motivation is required
+          build_support: "Not specified" // Default value since build_support is required
         }]);
 
       if (error) throw error;
@@ -207,7 +212,7 @@ const FunnelStep1 = () => {
               </div>
             </div>
 
-            {/* FORM SECTION - Back to its original position after package options */}
+            {/* FORM SECTION - Below package options */}
             <div className="max-w-2xl mx-auto mb-12 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 backdrop-blur-lg rounded-3xl p-8 border-2 border-yellow-400/30 shadow-2xl">
               <div className="text-center mb-8">
                 <div className="text-4xl mb-4">🚀</div>
