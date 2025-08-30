@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -45,22 +45,40 @@ export type Database = {
           old_value?: string | null
           user_id?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "activity_log_lead_id_fkey"
-            columns: ["lead_id"]
-            isOneToOne: false
-            referencedRelation: "leads"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "activity_log_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
+      }
+      addons: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          payment_type: Database["public"]["Enums"]["payment_type"]
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          payment_type?: Database["public"]["Enums"]["payment_type"]
+          price: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          payment_type?: Database["public"]["Enums"]["payment_type"]
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       bookings: {
         Row: {
@@ -193,6 +211,404 @@ export type Database = {
         }
         Relationships: []
       }
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      checklist_templates: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          required_role: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          required_role?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          required_role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      client_addons: {
+        Row: {
+          addon_id: string
+          client_id: string
+          created_at: string
+          id: string
+          quantity: number
+          updated_at: string
+        }
+        Insert: {
+          addon_id: string
+          client_id: string
+          created_at?: string
+          id?: string
+          quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          addon_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          quantity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_addons_addon_id_fkey"
+            columns: ["addon_id"]
+            isOneToOne: false
+            referencedRelation: "addons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_addons_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_checklist_progress: {
+        Row: {
+          checklist_template_id: string
+          client_id: string
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string
+          id: string
+          is_completed: boolean
+          notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          checklist_template_id: string
+          client_id: string
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          checklist_template_id?: string
+          client_id?: string
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          notes?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_checklist_progress_checklist_template_id_fkey"
+            columns: ["checklist_template_id"]
+            isOneToOne: false
+            referencedRelation: "checklist_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_checklist_progress_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_notes: {
+        Row: {
+          author_id: string | null
+          author_name: string | null
+          client_id: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          note: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id?: string | null
+          author_name?: string | null
+          client_id: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          note: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          author_name?: string | null
+          client_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          note?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_notes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_packaging: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          packaging_id: string
+          quantity: number
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          packaging_id: string
+          quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          packaging_id?: string
+          quantity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_packaging_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_packaging_packaging_id_fkey"
+            columns: ["packaging_id"]
+            isOneToOne: false
+            referencedRelation: "packaging"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_products: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          product_id: string
+          quantity: number
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          product_id: string
+          quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          product_id?: string
+          quantity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_products_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_products_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          address: string | null
+          advance_payment_date: string | null
+          advance_payment_paid: boolean | null
+          assigned_agent_id: string | null
+          brand_name: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          domain: string | null
+          drive_link: string | null
+          email: string
+          facebook_page_url: string | null
+          form_filled_date: string | null
+          full_payment_date: string | null
+          full_payment_paid: boolean | null
+          id: string
+          instagram_password: string | null
+          instagram_profile_url: string | null
+          instagram_username: string | null
+          labels_details: string | null
+          labels_name: string | null
+          lms_password: string | null
+          lms_suspended: boolean | null
+          name: string
+          niche: string | null
+          notes: string | null
+          ntn: string | null
+          packaging_id: string | null
+          phone: string | null
+          product_id: string | null
+          product_quantity: number | null
+          shopify_password: string | null
+          shopify_username: string | null
+          status: string
+          subscription_package: string | null
+          total_value: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          advance_payment_date?: string | null
+          advance_payment_paid?: boolean | null
+          assigned_agent_id?: string | null
+          brand_name?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          domain?: string | null
+          drive_link?: string | null
+          email: string
+          facebook_page_url?: string | null
+          form_filled_date?: string | null
+          full_payment_date?: string | null
+          full_payment_paid?: boolean | null
+          id?: string
+          instagram_password?: string | null
+          instagram_profile_url?: string | null
+          instagram_username?: string | null
+          labels_details?: string | null
+          labels_name?: string | null
+          lms_password?: string | null
+          lms_suspended?: boolean | null
+          name: string
+          niche?: string | null
+          notes?: string | null
+          ntn?: string | null
+          packaging_id?: string | null
+          phone?: string | null
+          product_id?: string | null
+          product_quantity?: number | null
+          shopify_password?: string | null
+          shopify_username?: string | null
+          status?: string
+          subscription_package?: string | null
+          total_value?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          advance_payment_date?: string | null
+          advance_payment_paid?: boolean | null
+          assigned_agent_id?: string | null
+          brand_name?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          domain?: string | null
+          drive_link?: string | null
+          email?: string
+          facebook_page_url?: string | null
+          form_filled_date?: string | null
+          full_payment_date?: string | null
+          full_payment_paid?: boolean | null
+          id?: string
+          instagram_password?: string | null
+          instagram_profile_url?: string | null
+          instagram_username?: string | null
+          labels_details?: string | null
+          labels_name?: string | null
+          lms_password?: string | null
+          lms_suspended?: boolean | null
+          name?: string
+          niche?: string | null
+          notes?: string | null
+          ntn?: string | null
+          packaging_id?: string | null
+          phone?: string | null
+          product_id?: string | null
+          product_quantity?: number | null
+          shopify_password?: string | null
+          shopify_username?: string | null
+          status?: string
+          subscription_package?: string | null
+          total_value?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       commissions: {
         Row: {
           amount: number
@@ -218,22 +634,109 @@ export type Database = {
           paid_at?: string | null
           user_id?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "commissions_lead_id_fkey"
-            columns: ["lead_id"]
-            isOneToOne: false
-            referencedRelation: "leads"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "commissions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
+      }
+      company_settings: {
+        Row: {
+          accent_color: string | null
+          addons_necessary: boolean
+          client_portal_access_days: number | null
+          company_logo: string | null
+          company_name: string | null
+          created_at: string
+          currency: string | null
+          description: string | null
+          email_notifications: boolean | null
+          id: string
+          invoice_logo: string | null
+          invoice_note: string | null
+          packaging_moq_with_addon: number
+          packaging_moq_without_addon: number
+          packaging_necessary: boolean
+          payment_currency: string | null
+          payment_methods: Json | null
+          payment_mode: string | null
+          primary_color: string | null
+          primary_email: string | null
+          primary_phone: string | null
+          products_moq_with_addon: number
+          products_moq_without_addon: number
+          products_necessary: boolean
+          secondary_color: string | null
+          secondary_email: string | null
+          secondary_phone: string | null
+          sms_notifications: boolean | null
+          timezone: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          accent_color?: string | null
+          addons_necessary?: boolean
+          client_portal_access_days?: number | null
+          company_logo?: string | null
+          company_name?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          email_notifications?: boolean | null
+          id?: string
+          invoice_logo?: string | null
+          invoice_note?: string | null
+          packaging_moq_with_addon?: number
+          packaging_moq_without_addon?: number
+          packaging_necessary?: boolean
+          payment_currency?: string | null
+          payment_methods?: Json | null
+          payment_mode?: string | null
+          primary_color?: string | null
+          primary_email?: string | null
+          primary_phone?: string | null
+          products_moq_with_addon?: number
+          products_moq_without_addon?: number
+          products_necessary?: boolean
+          secondary_color?: string | null
+          secondary_email?: string | null
+          secondary_phone?: string | null
+          sms_notifications?: boolean | null
+          timezone?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          accent_color?: string | null
+          addons_necessary?: boolean
+          client_portal_access_days?: number | null
+          company_logo?: string | null
+          company_name?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          email_notifications?: boolean | null
+          id?: string
+          invoice_logo?: string | null
+          invoice_note?: string | null
+          packaging_moq_with_addon?: number
+          packaging_moq_without_addon?: number
+          packaging_necessary?: boolean
+          payment_currency?: string | null
+          payment_methods?: Json | null
+          payment_mode?: string | null
+          primary_color?: string | null
+          primary_email?: string | null
+          primary_phone?: string | null
+          products_moq_with_addon?: number
+          products_moq_without_addon?: number
+          products_necessary?: boolean
+          secondary_color?: string | null
+          secondary_email?: string | null
+          secondary_phone?: string | null
+          sms_notifications?: boolean | null
+          timezone?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
       }
       consultations: {
         Row: {
@@ -401,153 +904,244 @@ export type Database = {
           total_amount?: number
           updated_at?: string | null
         }
+        Relationships: []
+      }
+      live_sessions: {
+        Row: {
+          class_url: string
+          created_at: string
+          created_by: string | null
+          duration_minutes: number | null
+          id: string
+          is_active: boolean
+          session_date: string
+          session_time: string
+          title: string
+          updated_at: string
+          zoom_email: string | null
+          zoom_password: string | null
+        }
+        Insert: {
+          class_url: string
+          created_at?: string
+          created_by?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_active?: boolean
+          session_date: string
+          session_time: string
+          title: string
+          updated_at?: string
+          zoom_email?: string | null
+          zoom_password?: string | null
+        }
+        Update: {
+          class_url?: string
+          created_at?: string
+          created_by?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_active?: boolean
+          session_date?: string
+          session_time?: string
+          title?: string
+          updated_at?: string
+          zoom_email?: string | null
+          zoom_password?: string | null
+        }
+        Relationships: []
+      }
+      meetings: {
+        Row: {
+          assigned_agent_email: string
+          client_id: string | null
+          client_name: string
+          created_at: string
+          created_by_email: string | null
+          duration_minutes: number | null
+          id: string
+          meeting_date: string
+          meeting_time: string
+          notes: string | null
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_agent_email: string
+          client_id?: string | null
+          client_name: string
+          created_at?: string
+          created_by_email?: string | null
+          duration_minutes?: number | null
+          id?: string
+          meeting_date: string
+          meeting_time: string
+          notes?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_agent_email?: string
+          client_id?: string | null
+          client_name?: string
+          created_at?: string
+          created_by_email?: string | null
+          duration_minutes?: number | null
+          id?: string
+          meeting_date?: string
+          meeting_time?: string
+          notes?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "invoices_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: "meetings_client_id_fkey"
+            columns: ["client_id"]
             isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "invoices_lead_id_fkey"
-            columns: ["lead_id"]
-            isOneToOne: false
-            referencedRelation: "leads"
+            referencedRelation: "clients"
             referencedColumns: ["id"]
           },
         ]
       }
-      leads: {
+      packaging: {
         Row: {
-          assigned_to: number | null
-          build_support: string | null
-          category: string | null
-          city: string
-          commission_amount: number | null
-          created_at: string | null
-          created_by: number | null
-          email: string | null
-          has_business: string | null
-          has_whatsapped_mehreen: boolean | null
+          capacity: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
           id: string
-          investment_range: string | null
-          motivation: string | null
-          notes: string | null
-          package_chosen: Database["public"]["Enums"]["package_type"] | null
-          payment_amount: number | null
-          payment_screenshot: string | null
-          phone: string
-          product_id: string | null
-          sample_status: Database["public"]["Enums"]["sample_status"] | null
-          source: string
-          status: Database["public"]["Enums"]["lead_status"] | null
-          submitted_at: string | null
-          updated_at: string | null
-          whatsapped_by_mehreen_at: string | null
+          images: string[] | null
+          lead_time: number | null
+          manage_stock: boolean
+          material: string | null
+          min_order_quantity: number
+          name: string
+          price: number
+          size: string
+          size_metric: string
+          supplier: string | null
+          type: string
+          updated_at: string
         }
         Insert: {
-          assigned_to?: number | null
-          build_support?: string | null
-          category?: string | null
-          city: string
-          commission_amount?: number | null
-          created_at?: string | null
-          created_by?: number | null
-          email?: string | null
-          has_business?: string | null
-          has_whatsapped_mehreen?: boolean | null
+          capacity?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
           id?: string
-          investment_range?: string | null
-          motivation?: string | null
-          notes?: string | null
-          package_chosen?: Database["public"]["Enums"]["package_type"] | null
-          payment_amount?: number | null
-          payment_screenshot?: string | null
-          phone: string
-          product_id?: string | null
-          sample_status?: Database["public"]["Enums"]["sample_status"] | null
-          source: string
-          status?: Database["public"]["Enums"]["lead_status"] | null
-          submitted_at?: string | null
-          updated_at?: string | null
-          whatsapped_by_mehreen_at?: string | null
+          images?: string[] | null
+          lead_time?: number | null
+          manage_stock?: boolean
+          material?: string | null
+          min_order_quantity: number
+          name: string
+          price: number
+          size: string
+          size_metric: string
+          supplier?: string | null
+          type: string
+          updated_at?: string
         }
         Update: {
-          assigned_to?: number | null
-          build_support?: string | null
-          category?: string | null
-          city?: string
-          commission_amount?: number | null
-          created_at?: string | null
-          created_by?: number | null
-          email?: string | null
-          has_business?: string | null
-          has_whatsapped_mehreen?: boolean | null
+          capacity?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
           id?: string
-          investment_range?: string | null
-          motivation?: string | null
-          notes?: string | null
-          package_chosen?: Database["public"]["Enums"]["package_type"] | null
-          payment_amount?: number | null
-          payment_screenshot?: string | null
-          phone?: string
-          product_id?: string | null
-          sample_status?: Database["public"]["Enums"]["sample_status"] | null
-          source?: string
-          status?: Database["public"]["Enums"]["lead_status"] | null
-          submitted_at?: string | null
-          updated_at?: string | null
-          whatsapped_by_mehreen_at?: string | null
+          images?: string[] | null
+          lead_time?: number | null
+          manage_stock?: boolean
+          material?: string | null
+          min_order_quantity?: number
+          name?: string
+          price?: number
+          size?: string
+          size_metric?: string
+          supplier?: string | null
+          type?: string
+          updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "leads_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "leads_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "leads_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       products: {
         Row: {
           category: string
+          content_size: string
           created_at: string | null
           description: string | null
           id: string
+          image_url: string | null
+          inspired_by: string | null
+          moq: number
           name: string
+          price: number
           updated_at: string | null
         }
         Insert: {
           category: string
+          content_size?: string
           created_at?: string | null
           description?: string | null
           id?: string
+          image_url?: string | null
+          inspired_by?: string | null
+          moq?: number
           name: string
+          price?: number
           updated_at?: string | null
         }
         Update: {
           category?: string
+          content_size?: string
           created_at?: string | null
           description?: string | null
           id?: string
+          image_url?: string | null
+          inspired_by?: string | null
+          moq?: number
           name?: string
+          price?: number
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      recordings: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          recording_url: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          recording_url: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          recording_url?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -587,77 +1181,56 @@ export type Database = {
       user_profiles: {
         Row: {
           active: boolean | null
-          auth_user_id: string | null
+          auth_user_id: string
+          contact1: string | null
+          contact2: string | null
           created_at: string | null
+          current_password: string | null
+          duty_end_time: string | null
+          duty_start_time: string | null
+          duty_timezone: string | null
           email: string
-          id: string
+          last_login_at: string | null
           name: string
           password_changed: boolean | null
-          role: Database["public"]["Enums"]["user_role"]
+          role: Database["public"]["Enums"]["Role"] | null
           temp_password: string | null
           updated_at: string | null
         }
         Insert: {
           active?: boolean | null
-          auth_user_id?: string | null
+          auth_user_id: string
+          contact1?: string | null
+          contact2?: string | null
           created_at?: string | null
+          current_password?: string | null
+          duty_end_time?: string | null
+          duty_start_time?: string | null
+          duty_timezone?: string | null
           email: string
-          id?: string
+          last_login_at?: string | null
           name: string
           password_changed?: boolean | null
-          role: Database["public"]["Enums"]["user_role"]
+          role?: Database["public"]["Enums"]["Role"] | null
           temp_password?: string | null
           updated_at?: string | null
         }
         Update: {
           active?: boolean | null
-          auth_user_id?: string | null
+          auth_user_id?: string
+          contact1?: string | null
+          contact2?: string | null
           created_at?: string | null
+          current_password?: string | null
+          duty_end_time?: string | null
+          duty_start_time?: string | null
+          duty_timezone?: string | null
           email?: string
-          id?: string
+          last_login_at?: string | null
           name?: string
           password_changed?: boolean | null
-          role?: Database["public"]["Enums"]["user_role"]
+          role?: Database["public"]["Enums"]["Role"] | null
           temp_password?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      Users: {
-        Row: {
-          active: string | null
-          auth_user_id: string
-          created_at: string | null
-          email: string | null
-          id: number
-          name: string
-          password_hash: number | null
-          password_set: boolean | null
-          role: Database["public"]["Enums"]["user_role"] | null
-          updated_at: string | null
-        }
-        Insert: {
-          active?: string | null
-          auth_user_id: string
-          created_at?: string | null
-          email?: string | null
-          id?: number
-          name: string
-          password_hash?: number | null
-          password_set?: boolean | null
-          role?: Database["public"]["Enums"]["user_role"] | null
-          updated_at?: string | null
-        }
-        Update: {
-          active?: string | null
-          auth_user_id?: string
-          created_at?: string | null
-          email?: string | null
-          id?: number
-          name?: string
-          password_hash?: number | null
-          password_set?: boolean | null
-          role?: Database["public"]["Enums"]["user_role"] | null
           updated_at?: string | null
         }
         Relationships: []
@@ -669,12 +1242,16 @@ export type Database = {
     Functions: {
       create_user_with_temp_password: {
         Args: {
+          temp_pass?: string
           user_email: string
           user_name: string
           user_role: Database["public"]["Enums"]["user_role"]
-          temp_pass?: string
         }
         Returns: Json
+      }
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_next_assignee: {
         Args: Record<PropertyKey, never>
@@ -695,6 +1272,14 @@ export type Database = {
         | "In Follow-Up"
         | "Forwarded to Arbaz"
       package_type: "Starter" | "Growth"
+      payment_type: "one_time" | "monthly"
+      Role:
+        | "SuperAdmin"
+        | "Admin"
+        | "SalesAgent"
+        | "WebDeveloper"
+        | "MediaTeam"
+        | "Client"
       sample_status: "Sent" | "Visited" | "Not Sent"
       user_role:
         | "admin"
@@ -705,6 +1290,9 @@ export type Database = {
         | "OutreachAgent"
         | "QualifyingAgent"
         | "LeadCloser"
+        | "Sales Agent"
+        | "Media Team"
+        | "Web Developer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -846,6 +1434,15 @@ export const Constants = {
         "Forwarded to Arbaz",
       ],
       package_type: ["Starter", "Growth"],
+      payment_type: ["one_time", "monthly"],
+      Role: [
+        "SuperAdmin",
+        "Admin",
+        "SalesAgent",
+        "WebDeveloper",
+        "MediaTeam",
+        "Client",
+      ],
       sample_status: ["Sent", "Visited", "Not Sent"],
       user_role: [
         "admin",
@@ -856,6 +1453,9 @@ export const Constants = {
         "OutreachAgent",
         "QualifyingAgent",
         "LeadCloser",
+        "Sales Agent",
+        "Media Team",
+        "Web Developer",
       ],
     },
   },
