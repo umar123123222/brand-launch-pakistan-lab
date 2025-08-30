@@ -32,15 +32,16 @@ const BookConsultation = () => {
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Generate time slots for next 3 days (excluding Sundays)
+  // Generate time slots for next 3 business days (excluding Sundays)
   const generateTimeSlots = () => {
     const slots: TimeSlot[] = [];
     const today = new Date();
-    let daysAdded = 0;
-    let currentDate = new Date(today);
+    let validDaysFound = 0;
+    let dayOffset = 1;
 
-    while (daysAdded < 3) {
-      currentDate.setDate(today.getDate() + daysAdded + 1);
+    while (validDaysFound < 3) {
+      const currentDate = new Date(today);
+      currentDate.setDate(today.getDate() + dayOffset);
       
       // Skip Sundays (0 = Sunday)
       if (currentDate.getDay() !== 0) {
@@ -63,8 +64,9 @@ const BookConsultation = () => {
             });
           }
         }
+        validDaysFound++;
       }
-      daysAdded++;
+      dayOffset++;
     }
     
     return slots;
