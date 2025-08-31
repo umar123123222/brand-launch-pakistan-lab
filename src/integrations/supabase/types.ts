@@ -80,6 +80,51 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_users: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      availability_slots: {
+        Row: {
+          created_at: string
+          end_time: string
+          id: string
+          is_booked: boolean
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          end_time: string
+          id?: string
+          is_booked?: boolean
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          end_time?: string
+          id?: string
+          is_booked?: boolean
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           booking_datetime: string
@@ -124,6 +169,63 @@ export type Database = {
           whatsapp_number?: string
         }
         Relationships: []
+      }
+      bookings_elevate: {
+        Row: {
+          agenda: string | null
+          brand_name: string
+          contact_name: string
+          created_at: string
+          email: string
+          id: string
+          lead_id: string | null
+          phone: string | null
+          slot_id: string | null
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          agenda?: string | null
+          brand_name: string
+          contact_name: string
+          created_at?: string
+          email: string
+          id?: string
+          lead_id?: string | null
+          phone?: string | null
+          slot_id?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          agenda?: string | null
+          brand_name?: string
+          contact_name?: string
+          created_at?: string
+          email?: string
+          id?: string
+          lead_id?: string | null
+          phone?: string | null
+          slot_id?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_elevate_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads_elevate"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_elevate_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "availability_slots"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       brand_tasks: {
         Row: {
@@ -987,6 +1089,90 @@ export type Database = {
         }
         Relationships: []
       }
+      leads_elevate: {
+        Row: {
+          aov: number | null
+          brand_name: string | null
+          contact_name: string | null
+          cps_breakeven: number | null
+          cps_target: number | null
+          created_at: string
+          currency: string
+          current_orders_per_month: number | null
+          email: string | null
+          geo: string | null
+          gp_per_order: number | null
+          gross_margin_pct: number | null
+          id: string
+          monthly_ad_budget: number | null
+          notes: string | null
+          per_sale_fee: number | null
+          phone: string | null
+          roas_breakeven: number | null
+          source: string
+          status: string
+          target_net_margin_pct: number | null
+          updated_at: string
+          vertical: string | null
+          website: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          aov?: number | null
+          brand_name?: string | null
+          contact_name?: string | null
+          cps_breakeven?: number | null
+          cps_target?: number | null
+          created_at?: string
+          currency?: string
+          current_orders_per_month?: number | null
+          email?: string | null
+          geo?: string | null
+          gp_per_order?: number | null
+          gross_margin_pct?: number | null
+          id?: string
+          monthly_ad_budget?: number | null
+          notes?: string | null
+          per_sale_fee?: number | null
+          phone?: string | null
+          roas_breakeven?: number | null
+          source: string
+          status?: string
+          target_net_margin_pct?: number | null
+          updated_at?: string
+          vertical?: string | null
+          website?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          aov?: number | null
+          brand_name?: string | null
+          contact_name?: string | null
+          cps_breakeven?: number | null
+          cps_target?: number | null
+          created_at?: string
+          currency?: string
+          current_orders_per_month?: number | null
+          email?: string | null
+          geo?: string | null
+          gp_per_order?: number | null
+          gross_margin_pct?: number | null
+          id?: string
+          monthly_ad_budget?: number | null
+          notes?: string | null
+          per_sale_fee?: number | null
+          phone?: string | null
+          roas_breakeven?: number | null
+          source?: string
+          status?: string
+          target_net_margin_pct?: number | null
+          updated_at?: string
+          vertical?: string | null
+          website?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
       live_sessions: {
         Row: {
           class_url: string
@@ -1084,6 +1270,41 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      msas: {
+        Row: {
+          created_at: string
+          html_snapshot: string
+          id: string
+          json_payload: Json
+          lead_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          html_snapshot: string
+          id?: string
+          json_payload: Json
+          lead_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          html_snapshot?: string
+          id?: string
+          json_payload?: Json
+          lead_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "msas_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads_elevate"
             referencedColumns: ["id"]
           },
         ]

@@ -16,6 +16,7 @@ import BookConsultation from "./pages/BookConsultation";
 import BookConsultationThankYou from "./pages/BookConsultationThankYou";
 import Dashboard from "./pages/Dashboard";
 import ClientView from "./pages/ClientView";
+import HireUs from "./pages/HireUs";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/book-consultation/thank-you" element={<BookConsultationThankYou />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/client/:brandId" element={<ClientView />} />
+          <Route path="/hire-us" element={<HireUs />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
