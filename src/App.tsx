@@ -17,6 +17,7 @@ import BookConsultationThankYou from "./pages/BookConsultationThankYou";
 import Dashboard from "./pages/Dashboard";
 import ClientView from "./pages/ClientView";
 import HireUs from "./pages/HireUs";
+import PrivateLabel from "./pages/PrivateLabel";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/client/:brandId" element={<ClientView />} />
           <Route path="/hire-us" element={<HireUs />} />
+          <Route path="/private-label" element={<PrivateLabel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

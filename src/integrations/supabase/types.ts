@@ -1480,6 +1480,60 @@ export type Database = {
         }
         Relationships: []
       }
+      supplier_leads: {
+        Row: {
+          brand_name: string
+          concentration: string | null
+          created_at: string
+          email: string
+          estimated_per_unit_cost: number | null
+          estimated_total_cost: number | null
+          id: string
+          moq: number
+          name: string
+          selected_bottle: string | null
+          selected_oil: string | null
+          selected_packaging: string | null
+          status: string
+          updated_at: string
+          whatsapp: string
+        }
+        Insert: {
+          brand_name: string
+          concentration?: string | null
+          created_at?: string
+          email: string
+          estimated_per_unit_cost?: number | null
+          estimated_total_cost?: number | null
+          id?: string
+          moq: number
+          name: string
+          selected_bottle?: string | null
+          selected_oil?: string | null
+          selected_packaging?: string | null
+          status?: string
+          updated_at?: string
+          whatsapp: string
+        }
+        Update: {
+          brand_name?: string
+          concentration?: string | null
+          created_at?: string
+          email?: string
+          estimated_per_unit_cost?: number | null
+          estimated_total_cost?: number | null
+          id?: string
+          moq?: number
+          name?: string
+          selected_bottle?: string | null
+          selected_oil?: string | null
+          selected_packaging?: string | null
+          status?: string
+          updated_at?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           active: boolean | null
