@@ -10,8 +10,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { ExternalLink, Calculator, Calendar, FileText, CheckCircle, XCircle } from 'lucide-react';
+import { ExternalLink, Calculator, Calendar, FileText, CheckCircle, XCircle, Target, TrendingUp, Users } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 interface Lead {
   id?: string;
@@ -403,118 +405,138 @@ const HireUs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
+      <Header />
+      
       {/* Sticky Top Bar */}
-      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <span className="font-medium text-sm">We earn when you earn. No retainers.</span>
+      <div className="sticky top-16 z-40 bg-white/95 backdrop-blur border-b border-gray-200">
+        <div className="container mx-auto px-6 py-3 flex justify-between items-center">
+          <span className="font-medium text-sm text-gray-700">We earn when you earn. No retainers.</span>
           <Button 
             onClick={() => scrollToSection('pre-qual')}
             size="sm"
-            className="bg-accent text-accent-foreground hover:bg-accent/90"
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white"
           >
             Check Fit
           </Button>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-16 max-w-4xl space-y-24">
+      <div className="container mx-auto px-6 py-16 max-w-6xl space-y-32">
         
         {/* Hero Section */}
-        <section id="hero" className="text-center space-y-8">
-          <div className="space-y-4">
-            <h1 className="text-5xl font-bold text-foreground leading-tight">
+        <section id="hero" className="text-center space-y-10 py-16">
+          <div className="space-y-6">
+            <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
               We earn when you earn.
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
               Performance-first Meta & YouTube ads for ecommerce brands that already sell. 
-              No retainers. A per-sale fee from your gross profit, or we don't work together.
+              <span className="block mt-2 font-medium text-gray-800">No retainers. A per-sale fee from your gross profit, or we don't work together.</span>
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6">
             <Button 
               size="lg"
               onClick={() => scrollToSection('pre-qual')}
-              className="bg-accent text-accent-foreground hover:bg-accent/90"
+              className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-lg px-8 py-4 h-auto"
             >
+              <Target className="w-5 h-5 mr-2" />
               Check Fit
             </Button>
             <Button 
               variant="outline" 
               size="lg"
               onClick={() => window.open('https://wa.me/', '_blank')}
+              className="border-2 border-purple-200 hover:border-purple-400 text-purple-700 hover:bg-purple-50 text-lg px-8 py-4 h-auto"
             >
-              <ExternalLink className="w-4 h-4 mr-2" />
+              <ExternalLink className="w-5 h-5 mr-2" />
               WhatsApp Shoaib
             </Button>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-4 pt-8">
-            <Badge variant="secondary" className="text-xs">Trusted by brands selling daily</Badge>
-            <Badge variant="secondary" className="text-xs">Built by operators, not "agencies"</Badge>
-            <Badge variant="secondary" className="text-xs">Numbers or nothing</Badge>
+          <div className="flex flex-wrap justify-center gap-4 pt-12">
+            <Badge className="bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 border-0 px-4 py-2">
+              <Users className="w-4 h-4 mr-2" />
+              Trusted by brands selling daily
+            </Badge>
+            <Badge className="bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 border-0 px-4 py-2">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Built by operators, not "agencies"
+            </Badge>
+            <Badge className="bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 border-0 px-4 py-2">
+              <Target className="w-4 h-4 mr-2" />
+              Numbers or nothing
+            </Badge>
           </div>
         </section>
 
         {/* Proof Section */}
-        <section id="proof" className="space-y-8">
-          <h2 className="text-3xl font-bold text-center">Numbers we sign our name on</h2>
+        <section id="proof" className="space-y-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              Numbers we sign our name on
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Real results from real brands. No fluff, just performance.
+            </p>
+          </div>
           
           <div className="grid md:grid-cols-2 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Attar brand, Pakistan.</CardTitle>
+            <Card className="border-2 border-purple-100 hover:border-purple-200 transition-colors shadow-lg hover:shadow-xl">
+              <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50">
+                <CardTitle className="text-xl font-bold text-gray-800">Attar brand, Pakistan.</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">Time:</span>
-                    <div className="font-medium">30 days</div>
+              <CardContent className="space-y-4 pt-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <div className="text-xs text-gray-500 uppercase tracking-wide">Time</div>
+                    <div className="text-lg font-bold text-gray-800">30 days</div>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">Budget:</span>
-                    <div className="font-medium">PKR 5.4M</div>
+                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <div className="text-xs text-gray-500 uppercase tracking-wide">Budget</div>
+                    <div className="text-lg font-bold text-gray-800">PKR 5.4M</div>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">Revenue:</span>
-                    <div className="font-medium text-green-600">PKR 22.7M</div>
+                  <div className="text-center p-3 bg-green-50 rounded-lg">
+                    <div className="text-xs text-green-600 uppercase tracking-wide">Revenue</div>
+                    <div className="text-lg font-bold text-green-700">PKR 22.7M</div>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">ROAS:</span>
-                    <div className="font-medium text-green-600">4.2</div>
+                  <div className="text-center p-3 bg-green-50 rounded-lg">
+                    <div className="text-xs text-green-600 uppercase tracking-wide">ROAS</div>
+                    <div className="text-lg font-bold text-green-700">4.2x</div>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-gray-600 leading-relaxed">
                   We rebuilt the account, simplified the funnel, fixed creative cadence, and tightened city targeting.
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Skincare brand, UAE.</CardTitle>
+            <Card className="border-2 border-purple-100 hover:border-purple-200 transition-colors shadow-lg hover:shadow-xl">
+              <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50">
+                <CardTitle className="text-xl font-bold text-gray-800">Skincare brand, UAE.</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">Time:</span>
-                    <div className="font-medium">45 days</div>
+              <CardContent className="space-y-4 pt-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <div className="text-xs text-gray-500 uppercase tracking-wide">Time</div>
+                    <div className="text-lg font-bold text-gray-800">45 days</div>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">Budget:</span>
-                    <div className="font-medium">AED 120k</div>
+                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <div className="text-xs text-gray-500 uppercase tracking-wide">Budget</div>
+                    <div className="text-lg font-bold text-gray-800">AED 120k</div>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">Revenue:</span>
-                    <div className="font-medium text-green-600">AED 510k</div>
+                  <div className="text-center p-3 bg-green-50 rounded-lg">
+                    <div className="text-xs text-green-600 uppercase tracking-wide">Revenue</div>
+                    <div className="text-lg font-bold text-green-700">AED 510k</div>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">ROAS:</span>
-                    <div className="font-medium text-green-600">4.25</div>
+                  <div className="text-center p-3 bg-green-50 rounded-lg">
+                    <div className="text-xs text-green-600 uppercase tracking-wide">ROAS</div>
+                    <div className="text-lg font-bold text-green-700">4.25x</div>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-gray-600 leading-relaxed">
                   We aligned offers with AOV, introduced UGC scripts, and killed dead weight.
                 </p>
               </CardContent>
@@ -523,46 +545,53 @@ const HireUs = () => {
         </section>
 
         {/* The Offer Section */}
-        <section id="offer" className="text-center space-y-6 bg-secondary/30 p-8 rounded-lg">
-          <h2 className="text-3xl font-bold">The Offer</h2>
-          <div className="space-y-4 max-w-2xl mx-auto">
-            <p>
-              You're already selling. You can allocate at least 500,000 per month to ads. 
-              If that's you, we'll run your Meta and YouTube with one promise: we make money per sale, from your gross profit.
+        <section id="offer" className="text-center space-y-8 bg-gradient-to-br from-purple-50 via-indigo-50 to-purple-100 p-12 rounded-2xl border border-purple-100">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+            The Offer
+          </h2>
+          <div className="space-y-6 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-700 leading-relaxed">
+              You're already selling. You can allocate at least <span className="font-bold text-purple-700">500,000 per month</span> to ads. 
+              If that's you, we'll run your Meta and YouTube with one promise: <span className="font-bold text-indigo-700">we make money per sale, from your gross profit.</span>
             </p>
-            <p>
-              <strong>What you get:</strong> strategy, creative briefs, account rebuild where needed, 
-              daily optimization, real reporting, and founder-level attention.
-            </p>
-            <p className="text-muted-foreground">
+            <div className="bg-white/70 backdrop-blur p-6 rounded-xl border border-purple-200">
+              <p className="text-lg text-gray-700 mb-4">
+                <strong className="text-purple-700">What you get:</strong> strategy, creative briefs, account rebuild where needed, 
+                daily optimization, real reporting, and founder-level attention.
+              </p>
+            </div>
+            <p className="text-gray-600 italic text-lg">
               If you want retainers, slides, and excuses—this isn't it. 
-              If you want orders at a cost you can live with, click Check fit.
+              If you want orders at a cost you can live with, let's talk.
             </p>
           </div>
           <Button 
             size="lg"
             onClick={() => scrollToSection('pre-qual')}
-            className="bg-accent text-accent-foreground hover:bg-accent/90"
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-lg px-8 py-4 h-auto shadow-lg"
           >
-            Check Fit
+            <Target className="w-5 h-5 mr-2" />
+            Check Fit Now
           </Button>
         </section>
 
         {/* Live Calculator */}
-        <section id="calculator" className="space-y-8">
-          <div className="text-center space-y-4">
-            <div className="flex justify-center">
-              <Calculator className="w-12 h-12 text-accent" />
+        <section id="calculator" className="space-y-12">
+          <div className="text-center space-y-6">
+            <div className="inline-flex p-4 bg-gradient-to-r from-purple-100 to-indigo-100 rounded-full">
+              <Calculator className="w-16 h-16 text-purple-600" />
             </div>
-            <h2 className="text-3xl font-bold">Live Calculator</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              Live Calculator
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Know your numbers before we talk. Enter your AOV and gross margin. 
               We'll show the per-sale fee, breakeven CPS, and breakeven ROAS. Save your numbers and continue.
             </p>
           </div>
 
-          <Card>
-            <CardContent className="p-8 space-y-6">
+          <Card className="border-2 border-purple-200 shadow-2xl bg-gradient-to-br from-white to-purple-50/30">
+            <CardContent className="p-10 space-y-8">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
@@ -630,8 +659,11 @@ const HireUs = () => {
                   </div>
                 </div>
 
-                <div className="space-y-4 bg-secondary/50 p-6 rounded-lg">
-                  <h3 className="font-semibold text-lg">Your Numbers</h3>
+                <div className="space-y-6 bg-gradient-to-br from-purple-50 to-indigo-50 p-8 rounded-xl border border-purple-200">
+                  <h3 className="font-bold text-xl text-purple-800 flex items-center">
+                    <TrendingUp className="w-6 h-6 mr-2" />
+                    Your Numbers
+                  </h3>
                   
                   <div className="space-y-3">
                     <div className="flex justify-between">
@@ -656,15 +688,16 @@ const HireUs = () => {
                     </div>
                   </div>
 
-                  <div className="pt-4 space-y-2">
+                  <div className="pt-6 space-y-3">
                     <Button 
                       onClick={handleSaveCalculator} 
-                      className="w-full"
+                      className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 text-lg font-semibold"
                       disabled={!calculatorData.aov || !calculatorData.gross_margin_pct}
                     >
+                      <Target className="w-5 h-5 mr-2" />
                       Save & Continue
                     </Button>
-                    <p className="text-xs text-muted-foreground text-center">
+                    <p className="text-sm text-purple-600 text-center font-medium">
                       This will save your calculations and scroll to the pre-qualification form
                     </p>
                   </div>
@@ -675,18 +708,18 @@ const HireUs = () => {
         </section>
 
         {/* Pre-Qualification Gate */}
-        <section id="pre-qual" className="space-y-8">
-          <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold">Are we a fit?</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+        <section id="pre-qual" className="space-y-12">
+          <div className="text-center space-y-6 bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-12 rounded-2xl">
+            <h2 className="text-4xl md:text-5xl font-bold">Are we a fit?</h2>
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed">
               We only accept brands with real demand and discipline. 
-              Minimum monthly ad budget: 500,000. Must already be generating sales. 
+              <span className="block mt-2 font-semibold">Minimum monthly ad budget: 500,000. Must already be generating sales.</span>
               Share the basics below to unlock the calendar.
             </p>
           </div>
 
-          <Card>
-            <CardContent className="p-8 space-y-6">
+          <Card className="border-2 border-purple-200 shadow-2xl">
+            <CardContent className="p-10 space-y-8">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="brand_name">Brand Name *</Label>
@@ -799,9 +832,10 @@ const HireUs = () => {
 
               <Button 
                 onClick={handlePreQualSubmit}
-                className="w-full"
+                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-4 text-lg font-semibold"
                 disabled={!preQualData.brand_name || !preQualData.email || !preQualData.monthly_ad_budget || !preQualData.current_orders_per_month}
               >
+                <CheckCircle className="w-5 h-5 mr-2" />
                 Submit Pre-Qualification
               </Button>
             </CardContent>
@@ -1051,11 +1085,8 @@ const HireUs = () => {
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="text-center text-muted-foreground border-t pt-8">
-          <p>&copy; 2024 Elevate51. Performance-first marketing.</p>
-        </footer>
       </div>
+      <Footer />
     </div>
   );
 };
