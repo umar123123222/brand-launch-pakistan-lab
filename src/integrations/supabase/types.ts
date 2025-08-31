@@ -768,6 +768,45 @@ export type Database = {
         }
         Relationships: []
       }
+      error_logs: {
+        Row: {
+          context: Json | null
+          created_at: string
+          id: string
+          level: string | null
+          message: string
+          stack: string | null
+          timestamp: string
+          url: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          level?: string | null
+          message: string
+          stack?: string | null
+          timestamp: string
+          url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          level?: string | null
+          message?: string
+          stack?: string | null
+          timestamp?: string
+          url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       front_leads: {
         Row: {
           created_at: string
@@ -903,6 +942,48 @@ export type Database = {
           lead_id?: string
           total_amount?: number
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      lead_flags: {
+        Row: {
+          created_at: string
+          flag_notes: string | null
+          flag_reason: string
+          flagged_by: string
+          id: string
+          is_resolved: boolean
+          lead_id: string
+          lead_type: string
+          resolved_at: string | null
+          resolved_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          flag_notes?: string | null
+          flag_reason: string
+          flagged_by: string
+          id?: string
+          is_resolved?: boolean
+          lead_id: string
+          lead_type: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          flag_notes?: string | null
+          flag_reason?: string
+          flagged_by?: string
+          id?: string
+          is_resolved?: boolean
+          lead_id?: string
+          lead_type?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1182,6 +1263,7 @@ export type Database = {
         Row: {
           active: boolean | null
           auth_user_id: string
+          can_be_assigned_clients: boolean
           contact1: string | null
           contact2: string | null
           created_at: string | null
@@ -1200,6 +1282,7 @@ export type Database = {
         Insert: {
           active?: boolean | null
           auth_user_id: string
+          can_be_assigned_clients?: boolean
           contact1?: string | null
           contact2?: string | null
           created_at?: string | null
@@ -1218,6 +1301,7 @@ export type Database = {
         Update: {
           active?: boolean | null
           auth_user_id?: string
+          can_be_assigned_clients?: boolean
           contact1?: string | null
           contact2?: string | null
           created_at?: string | null
