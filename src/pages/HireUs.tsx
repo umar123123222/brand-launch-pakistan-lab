@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { PhoneInput } from '@/components/ui/phone-input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -760,10 +761,10 @@ const HireUs = () => {
 
                 <div>
                   <Label htmlFor="whatsapp">WhatsApp</Label>
-                  <Input 
-                    value={preQualData.whatsapp}
-                    onChange={(e) => setPreQualData(prev => ({ ...prev, whatsapp: e.target.value }))}
-                    placeholder="+92 300 1234567"
+                  <PhoneInput
+                    id="whatsapp"
+                    value={preQualData.whatsapp || ''}
+                    onChange={(value) => setPreQualData(prev => ({ ...prev, whatsapp: value }))}
                   />
                 </div>
 

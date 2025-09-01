@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 const FunnelStep2 = () => {
   const [email, setEmail] = useState("");
@@ -98,13 +99,11 @@ const FunnelStep2 = () => {
                 {/* Phone */}
                 <div>
                   <label className="block text-white font-medium mb-2">Phone Number *</label>
-                  <input
-                    type="tel"
-                    placeholder="03XX XXXXXXX"
+                  <PhoneInput
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                    onChange={setPhone}
                     required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-black"
                   />
                 </div>
 

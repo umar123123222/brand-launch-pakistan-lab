@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Calendar, Clock, Users, TrendingUp } from "lucide-react";
@@ -272,12 +273,11 @@ const Seminar = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Phone Number *
                       </label>
-                      <Input
-                        type="tel"
+                      <PhoneInput
+                        id="phone"
                         value={form.phone}
-                        onChange={(e) => handleInputChange("phone", e.target.value)}
-                        placeholder="03XX-XXXXXXX"
-                        className="h-12"
+                        onChange={(value) => handleInputChange("phone", value)}
+                        className="bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-400"
                         required
                       />
                     </div>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Sparkles } from "lucide-react";
@@ -151,12 +152,12 @@ const Contact = () => {
                       required
                     />
                   </div>
-                  <Input
+                  <PhoneInput
                     name="phone"
-                    placeholder="Your Phone Number"
                     className="h-12"
                     value={form.phone}
-                    onChange={onChange}
+                    onChange={(value) => setForm({...form, phone: value})}
+                    required
                   />
                   <Input
                     name="category"

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import YoutubeLite from "@/components/YoutubeLite";
 import Footer from "@/components/Footer";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 const FunnelStep1 = () => {
   const [name, setName] = useState("");
@@ -248,13 +249,11 @@ const FunnelStep1 = () => {
                 </div>
 
                 <div>
-                  <input
-                    type="tel"
-                    placeholder="WhatsApp Number (03XXXXXXXXX)"
+                  <PhoneInput
                     value={mobileNumber}
-                    onChange={(e) => setMobileNumber(e.target.value)}
-                    className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
+                    onChange={setMobileNumber}
                     required
+                    className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
                   />
                 </div>
 

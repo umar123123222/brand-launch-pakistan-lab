@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Calendar } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -276,12 +277,11 @@ const ThankYou = () => {
 
               <div>
                 <Label htmlFor="whatsapp" className="text-white">WhatsApp Number *</Label>
-                <Input
+                <PhoneInput
                   id="whatsapp"
                   value={formData.whatsappNumber}
-                  onChange={(e) => setFormData(prev => ({ ...prev, whatsappNumber: e.target.value }))}
+                  onChange={(value) => setFormData(prev => ({ ...prev, whatsappNumber: value }))}
                   className="mt-2 bg-white/20 border-white/30 text-white placeholder-white/60"
-                  placeholder="Enter your WhatsApp number"
                   required
                 />
               </div>

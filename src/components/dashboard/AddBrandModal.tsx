@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { PhoneInput } from '@/components/ui/phone-input';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -115,11 +116,10 @@ const AddBrandModal = ({ isOpen, onClose, onSuccess }: AddBrandModalProps) => {
 
           <div>
             <Label htmlFor="client_phone">Client Phone/WhatsApp *</Label>
-            <Input
+            <PhoneInput
               id="client_phone"
               value={formData.client_phone}
-              onChange={(e) => handleInputChange('client_phone', e.target.value)}
-              placeholder="+92 300 1234567"
+              onChange={(value) => handleInputChange('client_phone', value)}
               required
             />
           </div>
