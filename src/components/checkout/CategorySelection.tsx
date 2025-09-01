@@ -11,18 +11,22 @@ interface CategorySelectionProps {
 }
 
 const CategorySelection = ({ selectedCategory, onCategorySelect, onNext }: CategorySelectionProps) => {
-  const { data: categories, isLoading } = useQuery({
+  const { data: categories, isLoading, error } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
+      console.log("Fetching categories...");
       const { data, error } = await supabase
         .from("categories")
         .select("*")
         .order("name");
       
+      console.log("Categories response:", { data, error });
       if (error) throw error;
       return data;
     },
   });
+
+  console.log("CategorySelection render:", { categories, isLoading, error });
 
   const handleContinue = () => {
     if (selectedCategory) {
