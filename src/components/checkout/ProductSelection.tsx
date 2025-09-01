@@ -38,23 +38,25 @@ const ProductSelection = ({
   const { data: products, isLoading: productsLoading } = useQuery({
     queryKey: ["products", selectedCategory],
     queryFn: async () => {
+      console.log("Fetching products for category:", selectedCategory);
+      
       // Create mapping for category names to handle inconsistencies
-      const categoryMapping: { [key: string]: string[] } = {
-        'Perfume': ['perfume', 'Perfume'],
-        'Skincare & Beauty': ['Beauty & skincare', 'skincare', 'beauty'],
-        'MenGrooming': ['MenGrooming', 'men grooming', 'grooming']
-      };
+      let categorySearchTerm = selectedCategory;
       
-      const searchTerms = categoryMapping[selectedCategory] || [selectedCategory];
+      // Map category names to match database values
+      if (selectedCategory === 'Perfume') {
+        categorySearchTerm = 'perfume';
+      } else if (selectedCategory === 'Skincare & Beauty') {
+        categorySearchTerm = 'Beauty & skincare';
+      }
       
-      // Use OR condition to match any of the search terms
-      let query = supabase.from("products").select("*");
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .ilike("category", `%${categorySearchTerm}%`)
+        .order("name");
       
-      // Build OR condition for category matching
-      const orConditions = searchTerms.map(term => `category.ilike.%${term}%`).join(',');
-      query = query.or(orConditions);
-      
-      const { data, error } = await query.order("name");
+      console.log("Products query result:", data, error);
       
       if (error) throw error;
       return data;
@@ -66,23 +68,26 @@ const ProductSelection = ({
   const { data: packaging, isLoading: packagingLoading } = useQuery({
     queryKey: ["packaging", selectedCategory],
     queryFn: async () => {
-      // Create mapping for category names to handle inconsistencies
-      const categoryMapping: { [key: string]: string[] } = {
-        'Perfume': ['perfume', 'Perfume'],
-        'Skincare & Beauty': ['beauty', 'skincare', 'Beauty'],
-        'MenGrooming': ['MenGrooming', 'men grooming', 'grooming']
-      };
+      console.log("Fetching packaging for category:", selectedCategory);
       
-      const searchTerms = categoryMapping[selectedCategory] || [selectedCategory];
+      // Map category names to match database values in packaging type field
+      let typeSearchTerm = selectedCategory;
       
-      // Use OR condition to match any of the search terms
-      let query = supabase.from("packaging").select("*");
+      if (selectedCategory === 'MenGrooming') {
+        typeSearchTerm = 'MenGrooming';
+      } else if (selectedCategory === 'Perfume') {
+        typeSearchTerm = 'perfume';
+      } else if (selectedCategory === 'Skincare & Beauty') {
+        typeSearchTerm = 'beauty';
+      }
       
-      // Build OR condition for type matching
-      const orConditions = searchTerms.map(term => `type.ilike.%${term}%`).join(',');
-      query = query.or(orConditions);
+      const { data, error } = await supabase
+        .from("packaging")
+        .select("*")
+        .ilike("type", `%${typeSearchTerm}%`)
+        .order("name");
       
-      const { data, error } = await query.order("name");
+      console.log("Packaging query result:", data, error);
       
       if (error) throw error;
       return data;
