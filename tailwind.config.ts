@@ -22,6 +22,10 @@ export default {
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],
 			},
+			backgroundImage: {
+				'purple-gradient': 'linear-gradient(135deg, hsl(270, 80%, 15%) 0%, hsl(280, 70%, 25%) 50%, hsl(290, 60%, 35%) 100%)',
+				'card-gradient': 'linear-gradient(135deg, hsl(0, 0%, 100%, 0.1) 0%, hsl(0, 0%, 100%, 0.05) 100%)',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
