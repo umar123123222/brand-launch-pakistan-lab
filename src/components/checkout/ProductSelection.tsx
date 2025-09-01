@@ -41,7 +41,7 @@ const ProductSelection = ({
       const { data, error } = await supabase
         .from("products")
         .select("*")
-        .eq("category", selectedCategory)
+        .ilike("category", selectedCategory)
         .order("name");
       
       if (error) throw error;
@@ -57,6 +57,7 @@ const ProductSelection = ({
       const { data, error } = await supabase
         .from("packaging")
         .select("*")
+        .ilike("type", selectedCategory)
         .order("name");
       
       if (error) throw error;
