@@ -38,27 +38,13 @@ const ProductSelection = ({
   const { data: products, isLoading: productsLoading } = useQuery({
     queryKey: ["products", selectedCategory],
     queryFn: async () => {
-      console.log("Fetching products for category:", selectedCategory);
-      
-      // Map category names to match database values exactly
-      let categorySearchTerm = selectedCategory;
-      
-      if (selectedCategory === 'Perfume') {
-        categorySearchTerm = 'perfume';
-      } else if (selectedCategory === 'Skincare & Beauty') {
-        categorySearchTerm = 'Beauty & skincare';
-      } else if (selectedCategory === 'MenGrooming') {
-        // No products for MenGrooming category
-        return [];
-      }
+      if (!selectedCategory) return [];
       
       const { data, error } = await supabase
         .from("products")
         .select("*")
-        .eq("category", categorySearchTerm)
+        .eq("category", selectedCategory)
         .order("name");
-      
-      console.log("Products query result:", data, error);
       
       if (error) throw error;
       return data || [];
@@ -70,26 +56,19 @@ const ProductSelection = ({
   const { data: packaging, isLoading: packagingLoading } = useQuery({
     queryKey: ["packaging", selectedCategory],
     queryFn: async () => {
-      console.log("Fetching packaging for category:", selectedCategory);
+      if (!selectedCategory) return [];
       
-      // Map category names to match database values exactly in packaging type field
-      let typeSearchTerm = selectedCategory;
-      
-      if (selectedCategory === 'MenGrooming') {
-        typeSearchTerm = 'MenGrooming';
-      } else if (selectedCategory === 'Perfume') {
-        typeSearchTerm = 'box'; // Assuming perfume uses box packaging
-      } else if (selectedCategory === 'Skincare & Beauty') {
-        typeSearchTerm = 'box'; // Assuming skincare uses box packaging
+      // Map categories to packaging types
+      let packagingType = selectedCategory;
+      if (selectedCategory === 'Perfume' || selectedCategory === 'Skincare & Beauty') {
+        packagingType = 'box';
       }
       
       const { data, error } = await supabase
         .from("packaging")
         .select("*")
-        .eq("type", typeSearchTerm)
+        .eq("type", packagingType)
         .order("name");
-      
-      console.log("Packaging query result:", data, error);
       
       if (error) throw error;
       return data || [];

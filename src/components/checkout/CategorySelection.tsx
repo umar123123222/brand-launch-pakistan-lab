@@ -53,11 +53,11 @@ const CategorySelection = ({ selectedCategory, onCategorySelect, onNext }: Categ
           <Card
             key={category.id}
             className={`cursor-pointer transition-all hover:shadow-md ${
-              selectedCategory === category.id
+              selectedCategory === category.name
                 ? "ring-2 ring-primary border-primary bg-primary/5"
                 : "hover:border-primary/50"
             }`}
-            onClick={() => onCategorySelect(category.id)}
+            onClick={() => onCategorySelect(category.name)}
           >
             <CardContent className="p-4">
               <div className="aspect-square mb-3 bg-muted rounded-lg overflow-hidden">

@@ -63,8 +63,8 @@ const Checkout = () => {
         return (
           <CategorySelection
             selectedCategory={checkoutData.selectedCategory}
-            onCategorySelect={(category) => {
-              updateCheckoutData({ selectedCategory: category });
+            onCategorySelect={(categoryName) => {
+              updateCheckoutData({ selectedCategory: categoryName });
             }}
             onNext={nextStep}
           />
