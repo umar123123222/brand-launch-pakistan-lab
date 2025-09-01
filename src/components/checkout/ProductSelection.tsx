@@ -40,26 +40,28 @@ const ProductSelection = ({
     queryFn: async () => {
       console.log("Fetching products for category:", selectedCategory);
       
-      // Create mapping for category names to handle inconsistencies
+      // Map category names to match database values exactly
       let categorySearchTerm = selectedCategory;
       
-      // Map category names to match database values
       if (selectedCategory === 'Perfume') {
         categorySearchTerm = 'perfume';
       } else if (selectedCategory === 'Skincare & Beauty') {
         categorySearchTerm = 'Beauty & skincare';
+      } else if (selectedCategory === 'MenGrooming') {
+        // No products for MenGrooming category
+        return [];
       }
       
       const { data, error } = await supabase
         .from("products")
         .select("*")
-        .ilike("category", `%${categorySearchTerm}%`)
+        .eq("category", categorySearchTerm)
         .order("name");
       
       console.log("Products query result:", data, error);
       
       if (error) throw error;
-      return data;
+      return data || [];
     },
     enabled: !!selectedCategory,
   });
@@ -70,27 +72,27 @@ const ProductSelection = ({
     queryFn: async () => {
       console.log("Fetching packaging for category:", selectedCategory);
       
-      // Map category names to match database values in packaging type field
+      // Map category names to match database values exactly in packaging type field
       let typeSearchTerm = selectedCategory;
       
       if (selectedCategory === 'MenGrooming') {
         typeSearchTerm = 'MenGrooming';
       } else if (selectedCategory === 'Perfume') {
-        typeSearchTerm = 'perfume';
+        typeSearchTerm = 'box'; // Assuming perfume uses box packaging
       } else if (selectedCategory === 'Skincare & Beauty') {
-        typeSearchTerm = 'beauty';
+        typeSearchTerm = 'box'; // Assuming skincare uses box packaging
       }
       
       const { data, error } = await supabase
         .from("packaging")
         .select("*")
-        .ilike("type", `%${typeSearchTerm}%`)
+        .eq("type", typeSearchTerm)
         .order("name");
       
       console.log("Packaging query result:", data, error);
       
       if (error) throw error;
-      return data;
+      return data || [];
     },
     enabled: !!selectedCategory,
   });
@@ -208,6 +210,7 @@ const ProductSelection = ({
   const renderItemCard = (item: any, type: 'product' | 'packaging' | 'addon') => {
     const quantity = getQuantity(item.id, type);
     const minQuantity = type === 'product' ? item.moq || 1 : type === 'packaging' ? item.min_order_quantity || 1 : 1;
+    const isAddon = type === 'addon';
 
     return (
       <Card key={`${type}-${item.id}`} className="h-full">
@@ -240,40 +243,60 @@ const ProductSelection = ({
               <span>Price:</span>
               <span className="font-medium">${item.price}</span>
             </div>
-            <div className="flex justify-between">
-              <span>MOQ:</span>
-              <span className="font-medium">{minQuantity}</span>
-            </div>
+            {!isAddon && (
+              <div className="flex justify-between">
+                <span>MOQ:</span>
+                <span className="font-medium">{minQuantity}</span>
+              </div>
+            )}
           </div>
 
-          <div className="mt-4 flex items-center justify-between">
-            <Label className="text-sm font-medium">Quantity:</Label>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() => updateQuantity(item.id, type, Math.max(0, quantity - 1))}
-                disabled={quantity <= 0}
-              >
-                <Minus className="h-3 w-3" />
-              </Button>
-              <Input
-                type="number"
-                value={quantity}
-                onChange={(e) => updateQuantity(item.id, type, Math.max(0, parseInt(e.target.value) || 0))}
-                className="w-16 text-center h-8"
-                min="0"
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() => updateQuantity(item.id, type, quantity + 1)}
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
-            </div>
+          <div className="mt-4">
+            {isAddon ? (
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium">Select:</Label>
+                <input
+                  type="checkbox"
+                  checked={quantity > 0}
+                  onChange={(e) => updateQuantity(item.id, type, e.target.checked ? 1 : 0)}
+                  className="h-4 w-4"
+                />
+              </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium">Quantity:</Label>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={() => updateQuantity(item.id, type, Math.max(0, quantity - minQuantity))}
+                    disabled={quantity <= 0}
+                  >
+                    <Minus className="h-3 w-3" />
+                  </Button>
+                  <Input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => {
+                      const newQty = Math.max(0, parseInt(e.target.value) || 0);
+                      updateQuantity(item.id, type, newQty);
+                    }}
+                    className="w-16 text-center h-8"
+                    min="0"
+                    step={minQuantity}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={() => updateQuantity(item.id, type, quantity + minQuantity)}
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
