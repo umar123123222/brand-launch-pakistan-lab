@@ -260,34 +260,46 @@ const ProductSelection = ({
       </div>
 
       {/* Products Section */}
-      {products && products.length > 0 && (
-        <div>
-          <h3 className="text-lg font-medium mb-4">Products</h3>
+      <div>
+        <h3 className="text-lg font-medium mb-4 text-foreground">Products</h3>
+        {products && products.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {products.map((product) => renderItemCard(product, 'product'))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No products found for this category.</p>
+          </div>
+        )}
+      </div>
 
       {/* Packaging Section */}
-      {packaging && packaging.length > 0 && (
-        <div>
-          <h3 className="text-lg font-medium mb-4">Packaging</h3>
+      <div>
+        <h3 className="text-lg font-medium mb-4 text-foreground">Packaging</h3>
+        {packaging && packaging.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {packaging.map((pack) => renderItemCard(pack, 'packaging'))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No packaging options available.</p>
+          </div>
+        )}
+      </div>
 
       {/* Addons Section */}
-      {addons && addons.length > 0 && (
-        <div>
-          <h3 className="text-lg font-medium mb-4">Add-ons</h3>
+      <div>
+        <h3 className="text-lg font-medium mb-4 text-foreground">Add-ons</h3>
+        {addons && addons.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {addons.map((addon) => renderItemCard(addon, 'addon'))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No add-ons available.</p>
+          </div>
+        )}
+      </div>
 
       {/* MOQ Information */}
       {companySettings && (
