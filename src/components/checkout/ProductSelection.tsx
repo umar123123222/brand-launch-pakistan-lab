@@ -38,11 +38,23 @@ const ProductSelection = ({
   const { data: products, isLoading: productsLoading } = useQuery({
     queryKey: ["products", selectedCategory],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .ilike("category", selectedCategory)
-        .order("name");
+      // Create mapping for category names to handle inconsistencies
+      const categoryMapping: { [key: string]: string[] } = {
+        'Perfume': ['perfume', 'Perfume'],
+        'Skincare & Beauty': ['Beauty & skincare', 'skincare', 'beauty'],
+        'MenGrooming': ['MenGrooming', 'men grooming', 'grooming']
+      };
+      
+      const searchTerms = categoryMapping[selectedCategory] || [selectedCategory];
+      
+      // Use OR condition to match any of the search terms
+      let query = supabase.from("products").select("*");
+      
+      // Build OR condition for category matching
+      const orConditions = searchTerms.map(term => `category.ilike.%${term}%`).join(',');
+      query = query.or(orConditions);
+      
+      const { data, error } = await query.order("name");
       
       if (error) throw error;
       return data;
@@ -54,11 +66,23 @@ const ProductSelection = ({
   const { data: packaging, isLoading: packagingLoading } = useQuery({
     queryKey: ["packaging", selectedCategory],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("packaging")
-        .select("*")
-        .ilike("type", selectedCategory)
-        .order("name");
+      // Create mapping for category names to handle inconsistencies
+      const categoryMapping: { [key: string]: string[] } = {
+        'Perfume': ['perfume', 'Perfume'],
+        'Skincare & Beauty': ['beauty', 'skincare', 'Beauty'],
+        'MenGrooming': ['MenGrooming', 'men grooming', 'grooming']
+      };
+      
+      const searchTerms = categoryMapping[selectedCategory] || [selectedCategory];
+      
+      // Use OR condition to match any of the search terms
+      let query = supabase.from("packaging").select("*");
+      
+      // Build OR condition for type matching
+      const orConditions = searchTerms.map(term => `type.ilike.%${term}%`).join(',');
+      query = query.or(orConditions);
+      
+      const { data, error } = await query.order("name");
       
       if (error) throw error;
       return data;
