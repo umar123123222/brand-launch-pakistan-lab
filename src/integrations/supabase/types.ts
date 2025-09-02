@@ -1153,6 +1153,41 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_client_mapping: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          lead_id: string
+          lead_type: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          lead_id: string
+          lead_type: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          lead_id?: string
+          lead_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_client_mapping_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_flags: {
         Row: {
           created_at: string
@@ -1809,6 +1844,10 @@ export type Database = {
         }
         Returns: Json
       }
+      find_existing_client: {
+        Args: { email_input?: string; phone_input?: string }
+        Returns: string
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -1816,6 +1855,23 @@ export type Database = {
       get_next_assignee: {
         Args: Record<PropertyKey, never>
         Returns: number
+      }
+      get_or_create_client_by_contact: {
+        Args: {
+          brand_name_input?: string
+          business_email_input?: string
+          city_input?: string
+          domain_input?: string
+          email_input?: string
+          name_input?: string
+          niche_input?: string
+          phone_input?: string
+        }
+        Returns: string
+      }
+      normalize_phone: {
+        Args: { phone_input: string }
+        Returns: string
       }
     }
     Enums: {
