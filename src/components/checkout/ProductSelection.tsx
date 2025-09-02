@@ -362,12 +362,12 @@ const ProductSelection = ({
         </Card>
       )}
 
-      <div className="flex justify-between pt-4">
-        <Button variant="outline" onClick={onBack} className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">
+        <Button variant="outline" onClick={onBack} className="flex items-center gap-2 w-full sm:w-auto">
           <ArrowLeft className="w-4 h-4" />
           Back
         </Button>
-        <Button onClick={handleContinue} className="flex items-center gap-2">
+        <Button onClick={handleContinue} className="flex items-center gap-2 w-full sm:w-auto">
           Continue
           <ArrowRight className="w-4 h-4" />
         </Button>

@@ -245,12 +245,12 @@ const ClientInformation = ({
         </div>
       </div>
 
-      <div className="flex justify-between pt-6 border-t">
-        <Button variant="outline" onClick={onBack} className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row justify-between gap-4 pt-6 border-t">
+        <Button variant="outline" onClick={onBack} className="flex items-center gap-2 w-full sm:w-auto">
           <ArrowLeft className="w-4 h-4" />
           Back
         </Button>
-        <Button onClick={handleSubmit} className="bg-primary hover:bg-primary/90">
+        <Button onClick={handleSubmit} className="flex items-center gap-2 w-full sm:w-auto">
           Complete Checkout
         </Button>
       </div>
