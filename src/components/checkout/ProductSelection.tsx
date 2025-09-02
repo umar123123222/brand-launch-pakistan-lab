@@ -236,7 +236,7 @@ const ProductSelection = ({
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Price:</span>
-              <span className="font-medium">${item.price}</span>
+              <span className="font-medium">{companySettings?.currency || 'USD'} {item.price}</span>
             </div>
             {!isAddon && (
               <div className="flex justify-between">
