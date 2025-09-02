@@ -270,7 +270,7 @@ const ProductSelection = ({
                   >
                     <Minus className="h-3 w-3" />
                   </Button>
-                  <div className="min-w-[3rem] px-2 py-1 text-center text-sm font-medium bg-background rounded border">
+                  <div className="min-w-[3rem] px-2 py-1 text-center text-sm font-medium bg-card text-card-foreground rounded border border-input">
                     {quantity}
                   </div>
                   <Button
