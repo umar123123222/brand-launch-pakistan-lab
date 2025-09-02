@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import CategorySelection from "@/components/checkout/CategorySelection";
 import ProductSelection from "@/components/checkout/ProductSelection";
 import ClientInformation from "@/components/checkout/ClientInformation";
+import ConfirmationStep from "@/components/checkout/ConfirmationStep";
 
 export interface CheckoutData {
   selectedCategory: string;
@@ -44,7 +45,7 @@ const Checkout = () => {
   };
 
   const nextStep = () => {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -55,7 +56,7 @@ const Checkout = () => {
     }
   };
 
-  const progressValue = (currentStep / 3) * 100;
+  const progressValue = (currentStep / 4) * 100;
 
   const renderStep = () => {
     switch (currentStep) {
@@ -89,9 +90,18 @@ const Checkout = () => {
               updateCheckoutData({ clientInfo });
             }}
             onBack={prevStep}
-            onSubmit={() => {
-              // Handle checkout submission
-              console.log("Checkout submitted:", checkoutData);
+            onNext={nextStep}
+          />
+        );
+      case 4:
+        return (
+          <ConfirmationStep
+            checkoutData={checkoutData}
+            onBack={prevStep}
+            onConfirm={async () => {
+              // Handle final confirmation and save to database
+              console.log("Order confirmed:", checkoutData);
+              // Add navigation to success page here
             }}
           />
         );
@@ -109,7 +119,7 @@ const Checkout = () => {
               <div className="flex items-center justify-between mb-4">
                 <CardTitle className="text-2xl font-bold">Checkout</CardTitle>
                 <div className="text-sm text-muted-foreground">
-                  Step {currentStep} of 3
+                  Step {currentStep} of 4
                 </div>
               </div>
               <Progress value={progressValue} className="w-full" />
@@ -122,6 +132,9 @@ const Checkout = () => {
                 </span>
                 <span className={currentStep >= 3 ? "text-primary font-medium" : ""}>
                   Client Information
+                </span>
+                <span className={currentStep >= 4 ? "text-primary font-medium" : ""}>
+                  Confirmation
                 </span>
               </div>
             </CardHeader>

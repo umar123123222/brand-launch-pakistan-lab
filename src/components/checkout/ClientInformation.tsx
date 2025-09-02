@@ -25,14 +25,14 @@ interface ClientInformationProps {
   clientInfo: ClientInfo;
   onClientInfoUpdate: (clientInfo: ClientInfo) => void;
   onBack: () => void;
-  onSubmit: () => void;
+  onNext: () => void;
 }
 
 const ClientInformation = ({
   clientInfo,
   onClientInfoUpdate,
   onBack,
-  onSubmit
+  onNext
 }: ClientInformationProps) => {
   const { toast } = useToast();
   const [localClientInfo, setLocalClientInfo] = useState<ClientInfo>(clientInfo);
@@ -43,11 +43,11 @@ const ClientInformation = ({
     onClientInfoUpdate(updated);
   };
 
-  const handleSubmit = () => {
+  const handleNext = () => {
     if (!localClientInfo.name.trim()) {
       toast({
         title: "Required Field",
-        description: "Client name is required to complete the checkout.",
+        description: "Client name is required to continue.",
         variant: "destructive",
       });
       return;
@@ -72,12 +72,7 @@ const ClientInformation = ({
       return;
     }
 
-    toast({
-      title: "Checkout Submitted",
-      description: "Your order has been submitted successfully!",
-    });
-
-    onSubmit();
+    onNext();
   };
 
   return (
@@ -250,8 +245,8 @@ const ClientInformation = ({
           <ArrowLeft className="w-4 h-4" />
           Back
         </Button>
-        <Button onClick={handleSubmit} className="flex items-center gap-2 w-full sm:w-auto">
-          Complete Checkout
+        <Button onClick={handleNext} className="flex items-center gap-2 w-full sm:w-auto">
+          Continue to Confirmation
         </Button>
       </div>
     </div>
