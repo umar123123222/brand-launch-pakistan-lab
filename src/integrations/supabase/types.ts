@@ -373,6 +373,47 @@ export type Database = {
         }
         Relationships: []
       }
+      client_activity_log: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          changed_by_role: string | null
+          client_id: string
+          field_name: string
+          id: string
+          new_value: string | null
+          old_value: string | null
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          changed_by_role?: string | null
+          client_id: string
+          field_name: string
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          changed_by_role?: string | null
+          client_id?: string
+          field_name?: string
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_activity_log_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_addons: {
         Row: {
           addon_id: string
@@ -408,6 +449,47 @@ export type Database = {
           },
           {
             foreignKeyName: "client_addons_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_auth: {
+        Row: {
+          client_id: string
+          created_at: string
+          email: string
+          id: string
+          is_active: boolean
+          last_login: string | null
+          password_hash: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          email: string
+          id?: string
+          is_active?: boolean
+          last_login?: string | null
+          password_hash: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          email?: string
+          id?: string
+          is_active?: boolean
+          last_login?: string | null
+          password_hash?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_auth_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clients"
@@ -597,7 +679,11 @@ export type Database = {
           advance_payment_date: string | null
           advance_payment_paid: boolean | null
           assigned_agent_id: string | null
+          bank_details: string | null
           brand_name: string | null
+          business_address: string | null
+          business_email: string | null
+          business_number: string | null
           city: string | null
           cnic_back_image: string | null
           cnic_front_image: string | null
@@ -630,6 +716,7 @@ export type Database = {
           shopify_password: string | null
           shopify_username: string | null
           status: string
+          strn: string | null
           subscription_package: string | null
           total_value: number | null
           updated_at: string | null
@@ -639,7 +726,11 @@ export type Database = {
           advance_payment_date?: string | null
           advance_payment_paid?: boolean | null
           assigned_agent_id?: string | null
+          bank_details?: string | null
           brand_name?: string | null
+          business_address?: string | null
+          business_email?: string | null
+          business_number?: string | null
           city?: string | null
           cnic_back_image?: string | null
           cnic_front_image?: string | null
@@ -672,6 +763,7 @@ export type Database = {
           shopify_password?: string | null
           shopify_username?: string | null
           status?: string
+          strn?: string | null
           subscription_package?: string | null
           total_value?: number | null
           updated_at?: string | null
@@ -681,7 +773,11 @@ export type Database = {
           advance_payment_date?: string | null
           advance_payment_paid?: boolean | null
           assigned_agent_id?: string | null
+          bank_details?: string | null
           brand_name?: string | null
+          business_address?: string | null
+          business_email?: string | null
+          business_number?: string | null
           city?: string | null
           cnic_back_image?: string | null
           cnic_front_image?: string | null
@@ -714,6 +810,7 @@ export type Database = {
           shopify_password?: string | null
           shopify_username?: string | null
           status?: string
+          strn?: string | null
           subscription_package?: string | null
           total_value?: number | null
           updated_at?: string | null
