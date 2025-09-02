@@ -246,7 +246,7 @@ const ClientInformation = ({
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between gap-4 pt-6 border-t">
-        <Button variant="outline" onClick={onBack} className="flex items-center gap-2 w-full sm:w-auto">
+        <Button variant="secondary" onClick={onBack} className="flex items-center gap-2 w-full sm:w-auto">
           <ArrowLeft className="w-4 h-4" />
           Back
         </Button>
