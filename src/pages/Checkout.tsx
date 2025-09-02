@@ -7,6 +7,7 @@ import CategorySelection from "@/components/checkout/CategorySelection";
 import ProductSelection from "@/components/checkout/ProductSelection";
 import ClientInformation from "@/components/checkout/ClientInformation";
 import ConfirmationStep from "@/components/checkout/ConfirmationStep";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface CheckoutData {
   selectedCategory: string;
@@ -107,11 +108,34 @@ const Checkout = () => {
           <ConfirmationStep
             checkoutData={checkoutData}
             onBack={prevStep}
-            onConfirm={async () => {
-              // Handle final confirmation and save to database
-              console.log("Order confirmed:", checkoutData);
-              // Add navigation to success page here
-            }}
+           onConfirm={async () => {
+             try {
+               // Use the client lookup system instead of direct insertion
+               const { data: clientId, error: clientError } = await supabase.rpc(
+                 'get_or_create_client_by_contact',
+                 {
+                   email_input: checkoutData.clientInfo.email,
+                   phone_input: checkoutData.clientInfo.phone,
+                   name_input: checkoutData.clientInfo.name,
+                   brand_name_input: checkoutData.clientInfo.businessName,
+                   business_email_input: checkoutData.clientInfo.businessEmail,
+                   domain_input: checkoutData.clientInfo.businessWebsite,
+                   niche_input: checkoutData.clientInfo.labels
+                 }
+               );
+
+               if (clientError) {
+                 console.error("Error with client:", clientError);
+                 // Add navigation to success page here anyway
+                 return;
+               }
+
+               console.log("Client handled successfully:", clientId);
+               // Add navigation to success page here
+             } catch (error) {
+               console.error("Checkout error:", error);
+             }
+           }}
           />
         );
       default:

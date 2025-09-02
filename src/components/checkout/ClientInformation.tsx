@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, InfoIcon, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ClientInfo {
   name: string;
@@ -39,12 +41,90 @@ const ClientInformation = ({
 }: ClientInformationProps) => {
   const { toast } = useToast();
   const [localClientInfo, setLocalClientInfo] = useState<ClientInfo>(clientInfo);
+  const [existingClientId, setExistingClientId] = useState<string | null>(null);
+  const [isExistingClient, setIsExistingClient] = useState(false);
+  const [isCheckingClient, setIsCheckingClient] = useState(false);
 
   const updateField = (field: keyof ClientInfo, value: string | File | null) => {
     const updated = { ...localClientInfo, [field]: value };
     setLocalClientInfo(updated);
     onClientInfoUpdate(updated);
   };
+
+  // Function to check for existing client
+  const checkExistingClient = async (email: string, phone: string) => {
+    if (!email && !phone) return;
+    
+    setIsCheckingClient(true);
+    try {
+      const { data, error } = await supabase.rpc('find_existing_client', {
+        email_input: email || null,
+        phone_input: phone || null
+      });
+
+      if (error) {
+        console.error('Error checking existing client:', error);
+        return;
+      }
+
+      if (data) {
+        // Fetch full client data
+        const { data: clientData, error: clientError } = await supabase
+          .from('clients')
+          .select('*')
+          .eq('id', data)
+          .single();
+
+        if (!clientError && clientData) {
+          setExistingClientId(data);
+          setIsExistingClient(true);
+          
+          // Pre-populate form with existing client data
+          const updatedInfo = {
+            ...localClientInfo,
+            name: clientData.name || localClientInfo.name,
+            email: clientData.email || localClientInfo.email,
+            phone: clientData.phone || localClientInfo.phone,
+            businessName: clientData.brand_name || localClientInfo.businessName,
+            businessEmail: clientData.business_email || localClientInfo.businessEmail,
+            businessPhone: clientData.business_number || localClientInfo.businessPhone,
+            businessBankDetails: clientData.bank_details || localClientInfo.businessBankDetails,
+            businessWebsite: clientData.domain || localClientInfo.businessWebsite,
+            businessNtn: clientData.ntn || localClientInfo.businessNtn,
+            businessStrn: clientData.strn || localClientInfo.businessStrn,
+            labels: clientData.labels_details || localClientInfo.labels,
+            cnicNumber: clientData.cnic_number || localClientInfo.cnicNumber,
+          };
+          
+          setLocalClientInfo(updatedInfo);
+          onClientInfoUpdate(updatedInfo);
+          
+          toast({
+            title: "Existing Client Found",
+            description: "We found your information and pre-filled the form. You can update any details as needed.",
+          });
+        }
+      } else {
+        setExistingClientId(null);
+        setIsExistingClient(false);
+      }
+    } catch (error) {
+      console.error('Error checking client:', error);
+    } finally {
+      setIsCheckingClient(false);
+    }
+  };
+
+  // Check for existing client when email or phone changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (localClientInfo.email || localClientInfo.phone) {
+        checkExistingClient(localClientInfo.email, localClientInfo.phone);
+      }
+    }, 1000); // Debounce for 1 second
+
+    return () => clearTimeout(timeoutId);
+  }, [localClientInfo.email, localClientInfo.phone]);
 
   const handleNext = () => {
     // Required field validations
@@ -141,6 +221,26 @@ const ClientInformation = ({
           Please provide your contact details to complete the checkout
         </p>
       </div>
+
+      {/* Existing Client Alerts */}
+      {isCheckingClient && (
+        <Alert className="mb-4">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <AlertDescription>
+            Checking for existing client information...
+          </AlertDescription>
+        </Alert>
+      )}
+      
+      {isExistingClient && (
+        <Alert className="mb-4">
+          <InfoIcon className="h-4 w-4" />
+          <AlertDescription>
+            We found existing information for this client and pre-filled the form. 
+            You can review and update any details as needed.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="grid gap-6">
         {/* Personal Information */}
