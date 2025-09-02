@@ -43,7 +43,7 @@ const ProductSelection = ({
       const { data, error } = await supabase
         .from("products")
         .select("*")
-        .eq("category", selectedCategory)
+        .eq("Category", selectedCategory)
         .order("name");
       
       if (error) throw error;

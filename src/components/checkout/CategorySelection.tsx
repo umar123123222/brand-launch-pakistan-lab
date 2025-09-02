@@ -157,7 +157,7 @@ const CategorySelection = ({ selectedCategory, onCategorySelect, onNext }: Categ
                   </div>
                 )}
               </div>
-              <h3 className="font-semibold text-center text-foreground text-lg">
+              <h3 className="font-semibold text-center text-card-foreground text-lg mt-2 min-h-[28px] flex items-center justify-center">
                 {category.name}
               </h3>
               {selectedCategory === category.name && (
