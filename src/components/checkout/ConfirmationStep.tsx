@@ -94,15 +94,41 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
   const addonsTotal = calculateSubtotal(addons);
   const grandTotal = productsTotal + packagingTotal + addonsTotal;
 
+  const uploadFile = async (file: File, folder: string, filename: string) => {
+    const { data, error } = await supabase.storage
+      .from('cnic-documents')
+      .upload(`${folder}/${filename}`, file);
+    
+    if (error) throw error;
+    return data.path;
+  };
+
   const handleConfirm = async () => {
     setSaving(true);
     try {
+      // Upload CNIC images
+      let cnicFrontPath = '';
+      let cnicBackPath = '';
+      
+      if (checkoutData.clientInfo.cnicFrontImage) {
+        const frontFilename = `cnic_front_${Date.now()}_${checkoutData.clientInfo.cnicFrontImage.name}`;
+        cnicFrontPath = await uploadFile(checkoutData.clientInfo.cnicFrontImage, 'cnic_front', frontFilename);
+      }
+      
+      if (checkoutData.clientInfo.cnicBackImage) {
+        const backFilename = `cnic_back_${Date.now()}_${checkoutData.clientInfo.cnicBackImage.name}`;
+        cnicBackPath = await uploadFile(checkoutData.clientInfo.cnicBackImage, 'cnic_back', backFilename);
+      }
+
       // Save client data
       const clientData = {
         name: checkoutData.clientInfo.name,
         email: checkoutData.clientInfo.email,
         phone: checkoutData.clientInfo.phone,
         brand_name: checkoutData.clientInfo.businessName,
+        cnic_number: checkoutData.clientInfo.cnicNumber,
+        cnic_front_image: cnicFrontPath,
+        cnic_back_image: cnicBackPath,
         ntn: checkoutData.clientInfo.businessNtn,
         labels_name: checkoutData.clientInfo.labels,
         total_value: grandTotal,
@@ -196,10 +222,25 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
         </CardHeader>
         <CardContent className="space-y-2">
           <div><strong>Name:</strong> {checkoutData.clientInfo.name}</div>
-          {checkoutData.clientInfo.email && <div><strong>Email:</strong> {checkoutData.clientInfo.email}</div>}
-          {checkoutData.clientInfo.phone && <div><strong>Phone:</strong> {checkoutData.clientInfo.phone}</div>}
-          {checkoutData.clientInfo.businessName && <div><strong>Business Name:</strong> {checkoutData.clientInfo.businessName}</div>}
+          <div><strong>Email:</strong> {checkoutData.clientInfo.email}</div>
+          <div><strong>Phone:</strong> {checkoutData.clientInfo.phone}</div>
+          <div><strong>Business Name:</strong> {checkoutData.clientInfo.businessName}</div>
+          <div><strong>CNIC Number:</strong> {checkoutData.clientInfo.cnicNumber}</div>
           {checkoutData.clientInfo.businessNtn && <div><strong>NTN:</strong> {checkoutData.clientInfo.businessNtn}</div>}
+          <div className="flex gap-4 mt-4">
+            {checkoutData.clientInfo.cnicFrontImage && (
+              <div>
+                <p className="text-sm font-medium">CNIC Front:</p>
+                <p className="text-sm text-muted-foreground">{checkoutData.clientInfo.cnicFrontImage.name}</p>
+              </div>
+            )}
+            {checkoutData.clientInfo.cnicBackImage && (
+              <div>
+                <p className="text-sm font-medium">CNIC Back:</p>
+                <p className="text-sm text-muted-foreground">{checkoutData.clientInfo.cnicBackImage.name}</p>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
 

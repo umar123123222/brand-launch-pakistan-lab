@@ -599,6 +599,9 @@ export type Database = {
           assigned_agent_id: string | null
           brand_name: string | null
           city: string | null
+          cnic_back_image: string | null
+          cnic_front_image: string | null
+          cnic_number: string | null
           country: string | null
           created_at: string | null
           domain: string | null
@@ -638,6 +641,9 @@ export type Database = {
           assigned_agent_id?: string | null
           brand_name?: string | null
           city?: string | null
+          cnic_back_image?: string | null
+          cnic_front_image?: string | null
+          cnic_number?: string | null
           country?: string | null
           created_at?: string | null
           domain?: string | null
@@ -677,6 +683,9 @@ export type Database = {
           assigned_agent_id?: string | null
           brand_name?: string | null
           city?: string | null
+          cnic_back_image?: string | null
+          cnic_front_image?: string | null
+          cnic_number?: string | null
           country?: string | null
           created_at?: string | null
           domain?: string | null

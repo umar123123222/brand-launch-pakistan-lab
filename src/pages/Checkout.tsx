@@ -17,9 +17,9 @@ export interface CheckoutData {
   }>;
   clientInfo: {
     name: string;
-    phone?: string;
-    email?: string;
-    businessName?: string;
+    phone: string;
+    email: string;
+    businessName: string;
     businessEmail?: string;
     businessPhone?: string;
     businessBankDetails?: string;
@@ -27,6 +27,9 @@ export interface CheckoutData {
     businessNtn?: string;
     businessStrn?: string;
     labels?: string;
+    cnicNumber: string;
+    cnicFrontImage: File | null;
+    cnicBackImage: File | null;
   };
 }
 
@@ -37,6 +40,12 @@ const Checkout = () => {
     selectedProducts: [],
     clientInfo: {
       name: "",
+      phone: "",
+      email: "",
+      businessName: "",
+      cnicNumber: "",
+      cnicFrontImage: null,
+      cnicBackImage: null,
     },
   });
 

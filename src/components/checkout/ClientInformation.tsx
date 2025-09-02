@@ -9,9 +9,9 @@ import { useToast } from "@/hooks/use-toast";
 
 interface ClientInfo {
   name: string;
-  phone?: string;
-  email?: string;
-  businessName?: string;
+  phone: string;
+  email: string;
+  businessName: string;
   businessEmail?: string;
   businessPhone?: string;
   businessBankDetails?: string;
@@ -19,6 +19,9 @@ interface ClientInfo {
   businessNtn?: string;
   businessStrn?: string;
   labels?: string;
+  cnicNumber: string;
+  cnicFrontImage: File | null;
+  cnicBackImage: File | null;
 }
 
 interface ClientInformationProps {
@@ -37,13 +40,14 @@ const ClientInformation = ({
   const { toast } = useToast();
   const [localClientInfo, setLocalClientInfo] = useState<ClientInfo>(clientInfo);
 
-  const updateField = (field: keyof ClientInfo, value: string) => {
+  const updateField = (field: keyof ClientInfo, value: string | File | null) => {
     const updated = { ...localClientInfo, [field]: value };
     setLocalClientInfo(updated);
     onClientInfoUpdate(updated);
   };
 
   const handleNext = () => {
+    // Required field validations
     if (!localClientInfo.name.trim()) {
       toast({
         title: "Required Field",
@@ -53,8 +57,62 @@ const ClientInformation = ({
       return;
     }
 
-    // Validate email format if provided
-    if (localClientInfo.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(localClientInfo.email)) {
+    if (!localClientInfo.phone.trim()) {
+      toast({
+        title: "Required Field",
+        description: "Phone number is required to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!localClientInfo.email.trim()) {
+      toast({
+        title: "Required Field",
+        description: "Email address is required to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!localClientInfo.businessName.trim()) {
+      toast({
+        title: "Required Field",
+        description: "Business name is required to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!localClientInfo.cnicNumber.trim()) {
+      toast({
+        title: "Required Field",
+        description: "CNIC number is required to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!localClientInfo.cnicFrontImage) {
+      toast({
+        title: "Required Field",
+        description: "CNIC front image is required to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!localClientInfo.cnicBackImage) {
+      toast({
+        title: "Required Field",
+        description: "CNIC back image is required to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Email format validations
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(localClientInfo.email)) {
       toast({
         title: "Invalid Email",
         description: "Please enter a valid email address.",
@@ -106,7 +164,7 @@ const ClientInformation = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="phone" className="text-sm font-medium">
-                  Phone Number
+                  Phone Number <span className="text-destructive">*</span>
                 </Label>
                 <PhoneInput
                   id="phone"
@@ -117,7 +175,7 @@ const ClientInformation = ({
 
               <div>
                 <Label htmlFor="email" className="text-sm font-medium">
-                  Email Address
+                  Email Address <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="email"
@@ -125,7 +183,67 @@ const ClientInformation = ({
                   value={localClientInfo.email || ''}
                   onChange={(e) => updateField('email', e.target.value)}
                   placeholder="your@email.com"
+                  required
                 />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="cnicNumber" className="text-sm font-medium">
+                CNIC Number <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="cnicNumber"
+                value={localClientInfo.cnicNumber || ''}
+                onChange={(e) => updateField('cnicNumber', e.target.value)}
+                placeholder="XXXXX-XXXXXXX-X"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="cnicFront" className="text-sm font-medium">
+                  CNIC Front Side <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="cnicFront"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null;
+                    updateField('cnicFrontImage', file);
+                  }}
+                  required
+                  className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                />
+                {localClientInfo.cnicFrontImage && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {localClientInfo.cnicFrontImage.name}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label htmlFor="cnicBack" className="text-sm font-medium">
+                  CNIC Back Side <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="cnicBack"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null;
+                    updateField('cnicBackImage', file);
+                  }}
+                  required
+                  className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                />
+                {localClientInfo.cnicBackImage && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {localClientInfo.cnicBackImage.name}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -133,18 +251,19 @@ const ClientInformation = ({
 
         {/* Business Information */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium border-b pb-2">Business Information (Optional)</h3>
+          <h3 className="text-lg font-medium border-b pb-2">Business Information</h3>
           
           <div className="grid gap-4">
             <div>
               <Label htmlFor="businessName" className="text-sm font-medium">
-                Business Name
+                Business Name <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="businessName"
                 value={localClientInfo.businessName || ''}
                 onChange={(e) => updateField('businessName', e.target.value)}
                 placeholder="Your business name"
+                required
               />
             </div>
 
