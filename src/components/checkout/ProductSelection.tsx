@@ -132,6 +132,32 @@ const ProductSelection = ({
     setLocalProducts(updated);
   };
 
+  const handleQuantityDecrease = (item: any, type: 'product' | 'packaging' | 'addon') => {
+    const quantity = getQuantity(item.id, type);
+    const minQuantity = type === 'product' ? item.moq || 1 : type === 'packaging' ? item.min_order_quantity || 1 : 1;
+    
+    if (quantity <= minQuantity) {
+      // If at or below MOQ, go to 0
+      updateQuantity(item.id, type, 0);
+    } else {
+      // If above MOQ, decrease by 1
+      updateQuantity(item.id, type, quantity - 1);
+    }
+  };
+
+  const handleQuantityIncrease = (item: any, type: 'product' | 'packaging' | 'addon') => {
+    const quantity = getQuantity(item.id, type);
+    const minQuantity = type === 'product' ? item.moq || 1 : type === 'packaging' ? item.min_order_quantity || 1 : 1;
+    
+    if (quantity === 0) {
+      // If at 0, jump to MOQ
+      updateQuantity(item.id, type, minQuantity);
+    } else {
+      // If above 0, increase by 1
+      updateQuantity(item.id, type, quantity + 1);
+    }
+  };
+
   const getQuantity = (id: string, type: 'product' | 'packaging' | 'addon') => {
     const item = localProducts.find(p => p.id === id && p.type === type);
     return item?.quantity || 0;
@@ -265,7 +291,7 @@ const ProductSelection = ({
                     variant="ghost"
                     size="sm"
                     className="h-7 w-7 p-0 hover:bg-primary/10 transition-colors"
-                    onClick={() => updateQuantity(item.id, type, Math.max(0, quantity - minQuantity))}
+                    onClick={() => handleQuantityDecrease(item, type)}
                     disabled={quantity <= 0}
                   >
                     <Minus className="h-3 w-3" />
@@ -277,7 +303,7 @@ const ProductSelection = ({
                     variant="ghost"
                     size="sm"
                     className="h-7 w-7 p-0 hover:bg-primary/10 transition-colors"
-                    onClick={() => updateQuantity(item.id, type, quantity + minQuantity)}
+                    onClick={() => handleQuantityIncrease(item, type)}
                   >
                     <Plus className="h-3 w-3" />
                   </Button>
