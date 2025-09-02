@@ -1309,9 +1309,52 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          is_read: boolean
+          message: string
+          notification_type: string
+          recipient_user_id: string
+          title: string
+          triggered_by_user_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          is_read?: boolean
+          message: string
+          notification_type?: string
+          recipient_user_id: string
+          title: string
+          triggered_by_user_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          notification_type?: string
+          recipient_user_id?: string
+          title?: string
+          triggered_by_user_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       packaging: {
         Row: {
           capacity: string | null
+          Category: string | null
           created_at: string
           created_by: string | null
           description: string | null
@@ -1331,6 +1374,7 @@ export type Database = {
         }
         Insert: {
           capacity?: string | null
+          Category?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
@@ -1350,6 +1394,7 @@ export type Database = {
         }
         Update: {
           capacity?: string | null
+          Category?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
@@ -1367,11 +1412,19 @@ export type Database = {
           type?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "packaging_Category_fkey"
+            columns: ["Category"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {
-          category: string
+          Category: string | null
           content_size: string
           created_at: string | null
           description: string | null
@@ -1384,7 +1437,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
-          category: string
+          Category?: string | null
           content_size?: string
           created_at?: string | null
           description?: string | null
@@ -1397,7 +1450,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
-          category?: string
+          Category?: string | null
           content_size?: string
           created_at?: string | null
           description?: string | null
@@ -1409,7 +1462,15 @@ export type Database = {
           price?: number
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "products_Category_fkey"
+            columns: ["Category"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       recordings: {
         Row: {
@@ -1596,7 +1657,41 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      analytics_dashboard: {
+        Row: {
+          full_payment_clients: number | null
+          ghosted_clients: number | null
+          half_payment_clients: number | null
+          total_bookings: number | null
+          total_clients: number | null
+          total_invoices: number | null
+          total_members: number | null
+          total_revenue: number | null
+        }
+        Relationships: []
+      }
+      monthly_revenue_trend: {
+        Row: {
+          month: string | null
+          month_start: string | null
+          new_clients: number | null
+          revenue: number | null
+        }
+        Relationships: []
+      }
+      team_performance: {
+        Row: {
+          assigned_clients: number | null
+          auth_user_id: string | null
+          email: string | null
+          meetings_booked: number | null
+          meetings_completed: number | null
+          name: string | null
+          role: Database["public"]["Enums"]["Role"] | null
+          total_revenue: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       create_user_with_temp_password: {
