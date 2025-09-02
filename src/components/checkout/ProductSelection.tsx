@@ -40,10 +40,21 @@ const ProductSelection = ({
     queryFn: async () => {
       if (!selectedCategory) return [];
       
+      // First get the category ID from the category name
+      const { data: categoryData, error: categoryError } = await supabase
+        .from("categories")
+        .select("id")
+        .eq("name", selectedCategory)
+        .single();
+      
+      if (categoryError) throw categoryError;
+      if (!categoryData) return [];
+      
+      // Then fetch products using the category ID
       const { data, error } = await supabase
         .from("products")
         .select("*")
-        .eq("Category", selectedCategory)
+        .eq("Category", categoryData.id)
         .order("name");
       
       if (error) throw error;
@@ -58,16 +69,10 @@ const ProductSelection = ({
     queryFn: async () => {
       if (!selectedCategory) return [];
       
-      // Map categories to packaging types
-      let packagingType = selectedCategory;
-      if (selectedCategory === 'Perfume' || selectedCategory === 'Skincare & Beauty') {
-        packagingType = 'box';
-      }
-      
+      // Map categories to packaging types - get all packaging for now since we don't have proper category mapping
       const { data, error } = await supabase
         .from("packaging")
         .select("*")
-        .eq("type", packagingType)
         .order("name");
       
       if (error) throw error;
