@@ -260,31 +260,23 @@ const ProductSelection = ({
             ) : (
               <div className="flex items-center justify-between">
                 <Label className="text-sm font-medium">Quantity:</Label>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 bg-muted/30 rounded-lg p-1">
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0"
+                    className="h-7 w-7 p-0 hover:bg-primary/10 transition-colors"
                     onClick={() => updateQuantity(item.id, type, Math.max(0, quantity - minQuantity))}
                     disabled={quantity <= 0}
                   >
                     <Minus className="h-3 w-3" />
                   </Button>
-                  <Input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => {
-                      const newQty = Math.max(0, parseInt(e.target.value) || 0);
-                      updateQuantity(item.id, type, newQty);
-                    }}
-                    className="w-16 text-center h-8"
-                    min="0"
-                    step={minQuantity}
-                  />
+                  <div className="min-w-[3rem] px-2 py-1 text-center text-sm font-medium bg-background rounded border">
+                    {quantity}
+                  </div>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0"
+                    className="h-7 w-7 p-0 hover:bg-primary/10 transition-colors"
                     onClick={() => updateQuantity(item.id, type, quantity + minQuantity)}
                   >
                     <Plus className="h-3 w-3" />
