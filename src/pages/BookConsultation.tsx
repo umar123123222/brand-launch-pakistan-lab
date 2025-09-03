@@ -6,16 +6,21 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { Calendar } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { format, addDays, startOfDay, isSunday, isSameDay } from "date-fns";
 
 interface TimeSlot {
   time: string;
   datetime: Date;
   available: boolean;
+  capacity: number;
+  booked: number;
 }
+
 
 const BookConsultation = () => {
   const navigate = useNavigate();
@@ -30,85 +35,128 @@ const BookConsultation = () => {
   });
   
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
+  const [businessHours, setBusinessHours] = useState({ start: 9, end: 17 });
 
-  // Generate time slots for next 3 business days (excluding Sundays)
-  const generateTimeSlots = () => {
-    const slots: TimeSlot[] = [];
-    const today = new Date();
-    let validDaysFound = 0;
-    let dayOffset = 1;
+  // Fetch company settings for business hours
+  const fetchScheduleData = async () => {
+    try {
+      // Fetch company settings for business hours
+      const { data: settings, error: settingsError } = await supabase
+        .from('company_settings')
+        .select('*')
+        .limit(1);
 
-    while (validDaysFound < 3) {
-      const currentDate = new Date(today);
-      currentDate.setDate(today.getDate() + dayOffset);
-      
-      // Skip Sundays (0 = Sunday)
-      if (currentDate.getDay() !== 0) {
-        // Generate slots from 9 AM to 5 PM (30-minute intervals)
-        for (let hour = 9; hour < 17; hour++) {
-          for (let minute = 0; minute < 60; minute += 30) {
-            const slotTime = new Date(currentDate);
-            slotTime.setHours(hour, minute, 0, 0);
-            
-            const timeString = slotTime.toLocaleTimeString('en-US', {
-              hour: 'numeric',
-              minute: '2-digit',
-              hour12: true
-            });
-            
-            slots.push({
-              time: timeString,
-              datetime: new Date(slotTime),
-              available: true
-            });
-          }
-        }
-        validDaysFound++;
+      if (settingsError) {
+        console.error('Error fetching company settings:', settingsError);
+      } else if (settings && settings.length > 0) {
+        // Use company settings for business hours
+        setBusinessHours({ start: 9, end: 17 }); // Default for now
       }
-      dayOffset++;
+    } catch (error) {
+      console.error('Error fetching schedule data:', error);
+    }
+  };
+
+  // Generate time slots for a specific date
+  const generateTimeSlotsForDate = async (date: Date): Promise<TimeSlot[]> => {
+    const slots: TimeSlot[] = [];
+    const dayOfWeek = date.getDay();
+    
+    // Skip Sundays
+    if (dayOfWeek === 0) {
+      return slots;
+    }
+
+    // TODO: Check for holidays when database types are updated
+    // For now, assume no holidays
+    
+    let availableHours = { start: businessHours.start, end: businessHours.end };
+    let agentCount = 4; // Default capacity - multiple agents can handle bookings
+
+    // Generate 1-hour slots
+    for (let hour = availableHours.start; hour < availableHours.end; hour++) {
+      const slotTime = new Date(date);
+      slotTime.setHours(hour, 0, 0, 0);
+      
+      const timeString = slotTime.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        hour12: true
+      });
+      
+      slots.push({
+        time: timeString,
+        datetime: new Date(slotTime),
+        available: true,
+        capacity: agentCount,
+        booked: 0
+      });
     }
     
     return slots;
   };
 
-  // Check slot availability from database
+  // Check slot availability and capacity
   const checkSlotAvailability = async (slots: TimeSlot[]) => {
     try {
+      if (slots.length === 0) return slots;
+
+      const slotTimes = slots.map(slot => slot.datetime.toISOString());
+      
       const { data: bookedSlots, error } = await supabase
         .from('bookings')
         .select('booking_datetime')
-        .eq('status', 'confirmed');
+        .eq('status', 'confirmed')
+        .in('booking_datetime', slotTimes);
 
       if (error) {
         console.error('Error fetching bookings:', error);
         return slots;
       }
 
-      const bookedTimes = new Set(
-        bookedSlots?.map(booking => new Date(booking.booking_datetime).getTime())
-      );
+      // Count bookings per time slot
+      const bookingCounts = new Map<string, number>();
+      bookedSlots?.forEach(booking => {
+        const timeKey = new Date(booking.booking_datetime).getTime().toString();
+        bookingCounts.set(timeKey, (bookingCounts.get(timeKey) || 0) + 1);
+      });
 
-      return slots.map(slot => ({
-        ...slot,
-        available: !bookedTimes.has(slot.datetime.getTime())
-      }));
+      return slots.map(slot => {
+        const timeKey = slot.datetime.getTime().toString();
+        const bookedCount = bookingCounts.get(timeKey) || 0;
+        
+        return {
+          ...slot,
+          booked: bookedCount,
+          available: bookedCount < slot.capacity
+        };
+      });
     } catch (error) {
       console.error('Error checking availability:', error);
       return slots;
     }
   };
 
-  useEffect(() => {
-    const initializeSlots = async () => {
-      const generatedSlots = generateTimeSlots();
-      const availableSlots = await checkSlotAvailability(generatedSlots);
-      setAvailableSlots(availableSlots);
-    };
+  // Load slots for selected date
+  const loadSlotsForDate = async (date: Date) => {
+    const slots = await generateTimeSlotsForDate(date);
+    const slotsWithAvailability = await checkSlotAvailability(slots);
+    setAvailableSlots(slotsWithAvailability);
+  };
 
-    initializeSlots();
+  useEffect(() => {
+    fetchScheduleData();
   }, []);
+
+  useEffect(() => {
+    if (selectedDate) {
+      loadSlotsForDate(selectedDate);
+    } else {
+      setAvailableSlots([]);
+    }
+  }, [selectedDate]);
 
   const handleCategoryChange = (category: string, checked: boolean) => {
     if (checked) {
@@ -152,7 +200,8 @@ const BookConsultation = () => {
     setLoading(true);
     
     try {
-      const { error } = await supabase
+      // First create the booking
+      const { data: booking, error: bookingError } = await supabase
         .from('bookings')
         .insert({
           full_name: formData.fullName,
@@ -163,9 +212,11 @@ const BookConsultation = () => {
           seen_elyscents: formData.seenElyscents === "Yes",
           categories: formData.categories,
           booking_datetime: selectedSlot!.datetime.toISOString()
-        });
+        })
+        .select()
+        .single();
 
-      if (error) {
+      if (bookingError) {
         toast({
           title: "Booking failed",
           description: "Please try again or contact support.",
@@ -174,6 +225,9 @@ const BookConsultation = () => {
         return;
       }
 
+      // TODO: Agent assignment will be implemented when database types are updated
+      // For now, booking is created successfully without specific agent assignment
+      
       toast({
         title: "Booking confirmed!",
         description: "Redirecting you to confirmation page..."
@@ -192,28 +246,20 @@ const BookConsultation = () => {
       toast({
         title: "Something went wrong",
         description: "Please try again later.",
-        variant: "destructive"
+        variant: "destructive"  
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const groupSlotsByDate = (slots: TimeSlot[]) => {
-    const grouped: { [key: string]: TimeSlot[] } = {};
+  // Check if date is available for booking (tomorrow onwards, no Sundays)
+  const isDateAvailable = (date: Date) => {
+    const today = startOfDay(new Date());
+    const tomorrow = addDays(today, 1);
     
-    slots.forEach(slot => {
-      const dateKey = slot.datetime.toDateString();
-      if (!grouped[dateKey]) {
-        grouped[dateKey] = [];
-      }
-      grouped[dateKey].push(slot);
-    });
-    
-    return grouped;
+    return date >= tomorrow && !isSunday(date);
   };
-
-  const groupedSlots = groupSlotsByDate(availableSlots);
 
   return (
     <>
@@ -358,49 +404,92 @@ const BookConsultation = () => {
                 </div>
               </div>
 
-              {/* Calendar Booking Section */}
+              {/* Enhanced Calendar Booking Section */}
               {formData.investmentReady === "Yes" && (
                 <div className="space-y-6">
                   <h3 className="text-white text-xl font-bold flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    Select Your Preferred Time Slot
+                    <CalendarDays className="h-5 w-5" />
+                    Select Date & Time for Your Call
                   </h3>
                   
-                  <div className="space-y-6">
-                    {Object.entries(groupedSlots).map(([date, slots]) => (
-                      <div key={date} className="space-y-3">
+                  <div className="bg-white/5 rounded-xl p-6 space-y-6">
+                    {/* Calendar */}
+                    <div className="flex justify-center">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        disabled={(date) => !isDateAvailable(date)}
+                        className="bg-white/10 rounded-lg border border-white/20"
+                        classNames={{
+                          months: "text-white",
+                          month: "space-y-4",
+                          caption: "text-white",
+                          caption_label: "text-white text-lg font-medium",
+                          nav_button: "text-white hover:bg-white/20",
+                          head_cell: "text-white/70 font-medium",
+                          cell: "text-white",
+                          day: "text-white hover:bg-white/20 aria-selected:bg-white aria-selected:text-purple-900",
+                          day_disabled: "text-white/30",
+                          day_outside: "text-white/50"
+                        }}
+                      />
+                    </div>
+
+                    {/* Time Slots */}
+                    {selectedDate && (
+                      <div className="space-y-4">
                         <h4 className="text-white font-medium text-lg">
-                          {new Date(date).toLocaleDateString('en-US', { 
-                            weekday: 'long', 
-                            month: 'long', 
-                            day: 'numeric' 
-                          })}
+                          Available times for {format(selectedDate, 'EEEE, MMMM d')}
                         </h4>
                         
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                          {slots.map((slot, index) => (
-                            <button
-                              key={index}
-                              type="button"
-                              disabled={!slot.available}
-                              onClick={() => setSelectedSlot(slot)}
-                              className={`p-3 rounded-lg border text-sm font-medium transition-all ${
-                                selectedSlot?.datetime.getTime() === slot.datetime.getTime()
-                                  ? 'bg-white text-purple-900 border-white'
-                                  : slot.available
-                                  ? 'bg-white/10 text-white border-white/30 hover:bg-white/20'
-                                  : 'bg-gray-500/20 text-gray-400 border-gray-500/30 cursor-not-allowed'
-                              }`}
-                            >
-                              {slot.time}
-                              {!slot.available && (
-                                <div className="text-xs mt-1">Booked</div>
-                              )}
-                            </button>
-                          ))}
-                        </div>
+                        {availableSlots.length === 0 ? (
+                          <div className="text-center py-8">
+                            <p className="text-white/70">
+                              {isSunday(selectedDate) 
+                                ? "We're closed on Sundays. Please select another day."
+                                : "No available time slots for this date."
+                              }
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                            {availableSlots.map((slot, index) => (
+                              <button
+                                key={index}
+                                type="button"
+                                disabled={!slot.available}
+                                onClick={() => setSelectedSlot(slot)}
+                                className={`p-3 rounded-lg border text-sm font-medium transition-all ${
+                                  selectedSlot?.datetime.getTime() === slot.datetime.getTime()
+                                    ? 'bg-white text-purple-900 border-white shadow-lg'
+                                    : slot.available
+                                    ? 'bg-white/10 text-white border-white/30 hover:bg-white/20'
+                                    : 'bg-gray-500/20 text-gray-400 border-gray-500/30 cursor-not-allowed'
+                                }`}
+                              >
+                                <div>{slot.time}</div>
+                                {!slot.available ? (
+                                  <div className="text-xs mt-1">Fully Booked</div>
+                                ) : slot.capacity > 1 && (
+                                  <div className="text-xs mt-1 text-white/60">
+                                    {slot.capacity - slot.booked} available
+                                  </div>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    ))}
+                    )}
+
+                    {selectedSlot && (
+                      <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                        <p className="text-white text-center">
+                          <strong>Selected:</strong> {format(selectedSlot.datetime, 'EEEE, MMMM d')} at {selectedSlot.time}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
