@@ -98,6 +98,66 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_capacity_tracking: {
+        Row: {
+          agent_id: string
+          booking_count: number
+          created_at: string
+          id: string
+          tracking_date: string
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          booking_count?: number
+          created_at?: string
+          id?: string
+          tracking_date: string
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          booking_count?: number
+          created_at?: string
+          id?: string
+          tracking_date?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      agent_schedules: {
+        Row: {
+          created_at: string
+          day_of_week: number
+          duty_end_time: string
+          duty_start_time: string
+          id: string
+          is_active: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day_of_week: number
+          duty_end_time: string
+          duty_start_time: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          day_of_week?: number
+          duty_end_time?: string
+          duty_start_time?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       availability_slots: {
         Row: {
           created_at: string
@@ -124,6 +184,41 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      booking_assignments: {
+        Row: {
+          assigned_agent_id: string
+          assignment_date: string
+          assignment_time: string
+          booking_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          assigned_agent_id: string
+          assignment_date: string
+          assignment_time: string
+          booking_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          assigned_agent_id?: string
+          assignment_date?: string
+          assignment_time?: string
+          booking_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_assignments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       bookings: {
         Row: {
@@ -491,7 +586,7 @@ export type Database = {
           {
             foreignKeyName: "client_auth_client_id_fkey"
             columns: ["client_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "clients"
             referencedColumns: ["id"]
           },
@@ -690,6 +785,8 @@ export type Database = {
           cnic_number: string | null
           country: string | null
           created_at: string | null
+          dashboard_password: string | null
+          dashboard_suspended: boolean | null
           domain: string | null
           drive_link: string | null
           email: string
@@ -703,8 +800,6 @@ export type Database = {
           instagram_username: string | null
           labels_details: string | null
           labels_name: string | null
-          lms_password: string | null
-          lms_suspended: boolean | null
           name: string
           niche: string | null
           notes: string | null
@@ -737,6 +832,8 @@ export type Database = {
           cnic_number?: string | null
           country?: string | null
           created_at?: string | null
+          dashboard_password?: string | null
+          dashboard_suspended?: boolean | null
           domain?: string | null
           drive_link?: string | null
           email: string
@@ -750,8 +847,6 @@ export type Database = {
           instagram_username?: string | null
           labels_details?: string | null
           labels_name?: string | null
-          lms_password?: string | null
-          lms_suspended?: boolean | null
           name: string
           niche?: string | null
           notes?: string | null
@@ -784,6 +879,8 @@ export type Database = {
           cnic_number?: string | null
           country?: string | null
           created_at?: string | null
+          dashboard_password?: string | null
+          dashboard_suspended?: boolean | null
           domain?: string | null
           drive_link?: string | null
           email?: string
@@ -797,8 +894,6 @@ export type Database = {
           instagram_username?: string | null
           labels_details?: string | null
           labels_name?: string | null
-          lms_password?: string | null
-          lms_suspended?: boolean | null
           name?: string
           niche?: string | null
           notes?: string | null
@@ -848,7 +943,7 @@ export type Database = {
         Row: {
           accent_color: string | null
           addons_necessary: boolean
-          client_portal_access_days: number | null
+          client_dashboard_access_days: number | null
           company_logo: string | null
           company_name: string | null
           created_at: string
@@ -881,7 +976,7 @@ export type Database = {
         Insert: {
           accent_color?: string | null
           addons_necessary?: boolean
-          client_portal_access_days?: number | null
+          client_dashboard_access_days?: number | null
           company_logo?: string | null
           company_name?: string | null
           created_at?: string
@@ -914,7 +1009,7 @@ export type Database = {
         Update: {
           accent_color?: string | null
           addons_necessary?: boolean
-          client_portal_access_days?: number | null
+          client_dashboard_access_days?: number | null
           company_logo?: string | null
           company_name?: string | null
           created_at?: string
@@ -1072,6 +1167,39 @@ export type Database = {
           investment_range?: string
           motivation?: string
           phone?: string
+        }
+        Relationships: []
+      }
+      holidays: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          date: string
+          description: string | null
+          id: string
+          is_recurring: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          date: string
+          description?: string | null
+          id?: string
+          is_recurring?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          date?: string
+          description?: string | null
+          id?: string
+          is_recurring?: boolean
+          name?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1820,19 +1948,6 @@ export type Database = {
         }
         Relationships: []
       }
-      team_performance: {
-        Row: {
-          assigned_clients: number | null
-          auth_user_id: string | null
-          email: string | null
-          meetings_booked: number | null
-          meetings_completed: number | null
-          name: string | null
-          role: Database["public"]["Enums"]["Role"] | null
-          total_revenue: number | null
-        }
-        Relationships: []
-      }
     }
     Functions: {
       create_user_with_temp_password: {
@@ -1856,6 +1971,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      get_next_available_agent: {
+        Args: { booking_date: string; booking_time: string }
+        Returns: string
+      }
       get_or_create_client_by_contact: {
         Args: {
           brand_name_input?: string
@@ -1869,9 +1988,17 @@ export type Database = {
         }
         Returns: string
       }
+      hash_password: {
+        Args: { password: string }
+        Returns: string
+      }
       normalize_phone: {
         Args: { phone_input: string }
         Returns: string
+      }
+      verify_client_password: {
+        Args: { email: string; password: string }
+        Returns: boolean
       }
     }
     Enums: {
