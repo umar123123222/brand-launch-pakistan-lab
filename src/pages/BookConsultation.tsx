@@ -285,7 +285,7 @@ const BookConsultation = () => {
                     id="fullName"
                     value={formData.fullName}
                     onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                    className="mt-2 bg-white/20 border-white/30 text-white placeholder-white/60"
+                    className="mt-2 bg-blue-100 border-blue-200 text-black placeholder-gray-500"
                     placeholder="Enter your full name"
                     required
                   />
@@ -298,7 +298,7 @@ const BookConsultation = () => {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="mt-2 bg-white/20 border-white/30 text-white placeholder-white/60"
+                    className="mt-2 bg-blue-100 border-blue-200 text-black placeholder-gray-500"
                     placeholder="Enter your email"
                     required
                   />
@@ -311,7 +311,7 @@ const BookConsultation = () => {
                   id="whatsapp"
                   value={formData.whatsappNumber}
                   onChange={(value) => setFormData(prev => ({ ...prev, whatsappNumber: value }))}
-                  className="mt-2 bg-white/20 border-white/30 text-white placeholder-white/60"
+                  className="mt-2 bg-blue-100 border-blue-200 text-black placeholder-gray-500"
                   required
                 />
               </div>
