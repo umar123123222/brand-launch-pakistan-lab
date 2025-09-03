@@ -413,68 +413,88 @@ const BookConsultation = () => {
                   </h3>
                   
                   <div className="bg-white/5 rounded-xl p-6 space-y-6">
-                    {/* Calendar */}
+                    {/* Enhanced Calendar */}
                     <div className="flex justify-center">
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={setSelectedDate}
-                        disabled={(date) => !isDateAvailable(date)}
-                        className="bg-white/10 rounded-lg border border-white/20"
-                        classNames={{
-                          months: "text-white",
-                          month: "space-y-4",
-                          caption: "text-white",
-                          caption_label: "text-white text-lg font-medium",
-                          nav_button: "text-white hover:bg-white/20",
-                          head_cell: "text-white/70 font-medium",
-                          cell: "text-white",
-                          day: "text-white hover:bg-white/20 aria-selected:bg-white aria-selected:text-purple-900",
-                          day_disabled: "text-white/30",
-                          day_outside: "text-white/50"
-                        }}
-                      />
+                      <div className="bg-white/10 rounded-xl border border-white/20 p-6 w-full max-w-md">
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={setSelectedDate}
+                          disabled={(date) => !isDateAvailable(date)}
+                          className="w-full"
+                          classNames={{
+                            months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 w-full",
+                            month: "space-y-4 w-full",
+                            caption: "flex justify-center pt-1 relative items-center mb-4",
+                            caption_label: "text-white text-xl font-semibold",
+                            nav: "space-x-1 flex items-center",
+                            nav_button: "h-8 w-8 bg-white/10 text-white hover:bg-white/20 border border-white/20 rounded-md transition-colors",
+                            nav_button_previous: "absolute left-1",
+                            nav_button_next: "absolute right-1",
+                            table: "w-full border-collapse space-y-1",
+                            head_row: "flex w-full",
+                            head_cell: "text-white/70 rounded-md w-full font-medium text-sm py-2 text-center",
+                            row: "flex w-full mt-2",
+                            cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 w-full",
+                            day: "h-10 w-full p-0 font-normal text-white hover:bg-white/20 rounded-md transition-colors aria-selected:bg-white aria-selected:text-purple-900 aria-selected:font-semibold",
+                            day_selected: "bg-white text-purple-900 hover:bg-white hover:text-purple-900 focus:bg-white focus:text-purple-900 font-semibold",
+                            day_today: "bg-white/20 text-white font-semibold",
+                            day_outside: "text-white/30 opacity-50",
+                            day_disabled: "text-white/20 opacity-30 cursor-not-allowed",
+                            day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                            day_hidden: "invisible",
+                          }}
+                        />
+                      </div>
                     </div>
 
-                    {/* Time Slots */}
+                    {/* Enhanced Time Slots */}
                     {selectedDate && (
-                      <div className="space-y-4">
-                        <h4 className="text-white font-medium text-lg">
-                          Available times for {format(selectedDate, 'EEEE, MMMM d')}
-                        </h4>
+                      <div className="space-y-6">
+                        <div className="text-center">
+                          <h4 className="text-white font-semibold text-lg mb-2">
+                            Available times for {format(selectedDate, 'EEEE, MMMM d')}
+                          </h4>
+                          <div className="w-16 h-0.5 bg-white/30 mx-auto"></div>
+                        </div>
                         
                         {availableSlots.length === 0 ? (
-                          <div className="text-center py-8">
-                            <p className="text-white/70">
-                              {isSunday(selectedDate) 
-                                ? "We're closed on Sundays. Please select another day."
-                                : "No available time slots for this date."
-                              }
-                            </p>
+                          <div className="text-center py-12">
+                            <div className="bg-white/5 rounded-xl p-8 border border-white/10">
+                              <p className="text-white/70 text-lg">
+                                {isSunday(selectedDate) 
+                                  ? "We're closed on Sundays. Please select another day."
+                                  : "No available time slots for this date."
+                                }
+                              </p>
+                            </div>
                           </div>
                         ) : (
-                          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
                             {availableSlots.map((slot, index) => (
                               <button
                                 key={index}
                                 type="button"
                                 disabled={!slot.available}
                                 onClick={() => setSelectedSlot(slot)}
-                                className={`p-3 rounded-lg border text-sm font-medium transition-all ${
+                                className={`relative p-4 rounded-xl border-2 text-sm font-semibold transition-all duration-200 transform hover:scale-105 ${
                                   selectedSlot?.datetime.getTime() === slot.datetime.getTime()
-                                    ? 'bg-white text-purple-900 border-white shadow-lg'
+                                    ? 'bg-white text-purple-900 border-white shadow-lg shadow-white/20'
                                     : slot.available
-                                    ? 'bg-white/10 text-white border-white/30 hover:bg-white/20'
-                                    : 'bg-gray-500/20 text-gray-400 border-gray-500/30 cursor-not-allowed'
+                                    ? 'bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/50'
+                                    : 'bg-gray-500/10 text-gray-400 border-gray-500/20 cursor-not-allowed opacity-50'
                                 }`}
                               >
-                                <div>{slot.time}</div>
+                                <div className="text-base">{slot.time}</div>
                                 {!slot.available ? (
-                                  <div className="text-xs mt-1">Fully Booked</div>
-                                ) : slot.capacity > 1 && (
-                                  <div className="text-xs mt-1 text-white/60">
-                                    {slot.capacity - slot.booked} available
+                                  <div className="text-xs mt-1 text-red-300">Booked</div>
+                                ) : slot.capacity > 1 && slot.booked > 0 && (
+                                  <div className="text-xs mt-1 opacity-75">
+                                    {slot.capacity - slot.booked} left
                                   </div>
+                                )}
+                                {selectedSlot?.datetime.getTime() === slot.datetime.getTime() && (
+                                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full"></div>
                                 )}
                               </button>
                             ))}
@@ -484,10 +504,19 @@ const BookConsultation = () => {
                     )}
 
                     {selectedSlot && (
-                      <div className="bg-white/10 rounded-lg p-4 border border-white/20">
-                        <p className="text-white text-center">
-                          <strong>Selected:</strong> {format(selectedSlot.datetime, 'EEEE, MMMM d')} at {selectedSlot.time}
-                        </p>
+                      <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-xl p-6 border border-green-500/30 shadow-lg">
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-2 mb-2">
+                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span className="text-green-400 font-semibold text-sm uppercase tracking-wide">Selected</span>
+                          </div>
+                          <p className="text-white text-lg font-medium">
+                            {format(selectedSlot.datetime, 'EEEE, MMMM d')} at <span className="font-bold">{selectedSlot.time}</span>
+                          </p>
+                          <p className="text-white/70 text-sm mt-1">
+                            Your consultation slot is reserved
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>
