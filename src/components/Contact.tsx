@@ -120,13 +120,13 @@ const Contact = () => {
 
         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Main prominent consultation card */}
-          <Card className="relative shadow-2xl border-0 bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 p-[2px] overflow-visible animate-fade-in">
+          <Card className="relative shadow-2xl border-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 p-[2px] overflow-visible animate-fade-in">
             <div className="absolute -top-6 left-1/2 -translate-x-1/2 flex justify-center items-center w-16 h-16 bg-white rounded-full shadow-md border-4 border-yellow-400 z-10">
               <Sparkles className="text-yellow-500 w-8 h-8" />
             </div>
-            <div className="rounded-3xl bg-white/95 backdrop-blur-[2px] shadow-xl px-6 pt-10 pb-8">
+            <div className="rounded-3xl bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 backdrop-blur-[2px] shadow-xl px-6 pt-10 pb-8">
               <CardHeader>
-                <CardTitle className="text-2xl md:text-3xl font-extrabold text-center text-transparent bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 bg-clip-text animate-fade-in">
+                <CardTitle className="text-2xl md:text-3xl font-extrabold text-center text-transparent bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-400 bg-clip-text animate-fade-in">
                   Book Your Brand Launch Consultation –{" "}
                   <span className="underline decoration-wavy decoration-yellow-400">Limited Slots!</span>
                 </CardTitle>
@@ -137,7 +137,7 @@ const Contact = () => {
                     <Input
                       name="name"
                       placeholder="Your Name"
-                      className="h-12"
+                      className="h-12 bg-purple-700/50 border-purple-500 text-white placeholder-white/70 focus:border-white focus:ring-white"
                       value={form.name}
                       onChange={onChange}
                       required
@@ -146,7 +146,7 @@ const Contact = () => {
                       name="email"
                       type="email"
                       placeholder="Your Email"
-                      className="h-12"
+                      className="h-12 bg-purple-700/50 border-purple-500 text-white placeholder-white/70 focus:border-white focus:ring-white"
                       value={form.email}
                       onChange={onChange}
                       required
@@ -154,7 +154,7 @@ const Contact = () => {
                   </div>
                   <PhoneInput
                     name="phone"
-                    className="h-12"
+                    className="h-12 bg-purple-700/50 border-purple-500 text-white placeholder-white/70 focus:border-white focus:ring-white"
                     value={form.phone}
                     onChange={(value) => setForm({...form, phone: value})}
                     required
@@ -162,14 +162,14 @@ const Contact = () => {
                   <Input
                     name="category"
                     placeholder="Preferred Product Category"
-                    className="h-12"
+                    className="h-12 bg-purple-700/50 border-purple-500 text-white placeholder-white/70 focus:border-white focus:ring-white"
                     value={form.category}
                     onChange={onChange}
                   />
                   <Textarea
                     name="vision"
                     placeholder="Tell us about your brand vision and goals..."
-                    className="min-h-32"  
+                    className="min-h-32 bg-purple-700/50 border-purple-500 text-white placeholder-white/70 focus:border-white focus:ring-white resize-none"
                     value={form.vision}
                     onChange={onChange}
                   />
@@ -180,8 +180,8 @@ const Contact = () => {
                   >
                     {loading ? "Submitting..." : "Book My Consultation"}
                   </Button>
-                  <div className="text-sm text-center text-gray-500 mt-2">
-                    <span className="font-semibold text-orange-600 animate-pulse">Full confidentiality – No charges to apply</span>
+                  <div className="text-sm text-center text-white/80 mt-2">
+                    <span className="font-semibold text-orange-300 animate-pulse">Full confidentiality – No charges to apply</span>
                   </div>
                 </form>
               </CardContent>
