@@ -157,7 +157,8 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
           name: checkoutData.clientInfo.name,
           email: checkoutData.clientInfo.email,
           phone_number: checkoutData.clientInfo.phone,
-          message: message
+          message: message,
+          'product _category': checkoutData.selectedCategory
         }]);
 
       if (error) throw error;
