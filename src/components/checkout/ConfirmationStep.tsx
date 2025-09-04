@@ -123,111 +123,56 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
   const addonsTotal = calculateSubtotal(addons);
   const grandTotal = productsTotal + packagingTotal + addonsTotal;
 
-  const uploadFile = async (file: File, folder: string, filename: string) => {
-    const { data, error } = await supabase.storage
-      .from('cnic-documents')
-      .upload(`${folder}/${filename}`, file);
-    
-    if (error) throw error;
-    return data.path;
-  };
-
   const handleConfirm = async () => {
     setSaving(true);
     try {
-      // Upload CNIC images
-      let cnicFrontPath = '';
-      let cnicBackPath = '';
+      // Create a summary message of their selections
+      const selectedItems = [];
       
-      if (checkoutData.clientInfo.cnicFrontImage) {
-        const frontFilename = `cnic_front_${Date.now()}_${checkoutData.clientInfo.cnicFrontImage.name}`;
-        cnicFrontPath = await uploadFile(checkoutData.clientInfo.cnicFrontImage, 'cnic_front', frontFilename);
-      }
-      
-      if (checkoutData.clientInfo.cnicBackImage) {
-        const backFilename = `cnic_back_${Date.now()}_${checkoutData.clientInfo.cnicBackImage.name}`;
-        cnicBackPath = await uploadFile(checkoutData.clientInfo.cnicBackImage, 'cnic_back', backFilename);
-      }
-
-      // Save client data
-      const clientData = {
-        name: checkoutData.clientInfo.name,
-        email: checkoutData.clientInfo.email,
-        phone: checkoutData.clientInfo.phone,
-        brand_name: checkoutData.clientInfo.businessName,
-        cnic_number: checkoutData.clientInfo.cnicNumber,
-        cnic_front_image: cnicFrontPath,
-        cnic_back_image: cnicBackPath,
-        ntn: checkoutData.clientInfo.businessNtn,
-        labels_name: checkoutData.clientInfo.labels,
-        total_value: grandTotal,
-        status: 'active',
-      };
-
-      const { data: client, error: clientError } = await supabase
-        .from('clients')
-        .insert([clientData])
-        .select()
-        .single();
-
-      if (clientError) throw clientError;
-
-      // Save selected products
       if (products.length > 0) {
-        const productInserts = products.map(product => ({
-          client_id: client.id,
-          product_id: product.id,
-          quantity: product.quantity
-        }));
-
-        const { error: productsError } = await supabase
-          .from('client_products')
-          .insert(productInserts);
-
-        if (productsError) throw productsError;
+        selectedItems.push(`Products: ${products.map(p => `${p.name} (${p.quantity})`).join(', ')}`);
       }
-
-      // Save selected packaging
+      
       if (packaging.length > 0) {
-        const packagingInserts = packaging.map(pack => ({
-          client_id: client.id,
-          packaging_id: pack.id,
-          quantity: pack.quantity
-        }));
-
-        const { error: packagingError } = await supabase
-          .from('client_packaging')
-          .insert(packagingInserts);
-
-        if (packagingError) throw packagingError;
+        selectedItems.push(`Packaging: ${packaging.map(p => `${p.name} (${p.quantity})`).join(', ')}`);
       }
-
-      // Save selected addons
+      
       if (addons.length > 0) {
-        const addonInserts = addons.map(addon => ({
-          client_id: client.id,
-          addon_id: addon.id,
-          quantity: addon.quantity
-        }));
-
-        const { error: addonsError } = await supabase
-          .from('client_addons')
-          .insert(addonInserts);
-
-        if (addonsError) throw addonsError;
+        selectedItems.push(`Addons: ${addons.map(a => `${a.name} (${a.quantity})`).join(', ')}`);
       }
+
+      const message = [
+        `Business Name: ${checkoutData.clientInfo.businessName || 'Not provided'}`,
+        `CNIC: ${checkoutData.clientInfo.cnicNumber || 'Not provided'}`,
+        `NTN: ${checkoutData.clientInfo.businessNtn || 'Not provided'}`,
+        `Labels: ${checkoutData.clientInfo.labels || 'Not provided'}`,
+        `Total Amount: ${formatCurrency(grandTotal)}`,
+        ...selectedItems
+      ].join(' | ');
+
+      // Save to front_leads table
+      const { error } = await supabase
+        .from('front_leads')
+        .insert([{
+          name: checkoutData.clientInfo.name,
+          email: checkoutData.clientInfo.email,
+          phone_number: checkoutData.clientInfo.phone,
+          message: message
+        }]);
+
+      if (error) throw error;
 
       toast({
         title: "Success!",
-        description: "Your order has been confirmed successfully.",
+        description: "Your inquiry has been submitted successfully.",
       });
 
       onConfirm();
     } catch (error) {
-      console.error('Error saving order:', error);
+      console.error('Error saving lead:', error);
       toast({
         title: "Error",
-        description: "Failed to save your order. Please try again.",
+        description: "Failed to submit your inquiry. Please try again.",
         variant: "destructive",
       });
     } finally {
