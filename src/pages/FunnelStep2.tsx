@@ -84,9 +84,6 @@ const FunnelStep2 = () => {
           <div className="max-w-2xl mx-auto">
             {/* Header */}
             <div className="text-center mb-12">
-              <div className="inline-block bg-green-500 text-white px-4 py-2 rounded-lg mb-4 font-bold">
-                STEP 2 - DETAILED APPLICATION
-              </div>
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 Thanks for your interest—just a few more details to see if we're a good fit.
               </h1>
