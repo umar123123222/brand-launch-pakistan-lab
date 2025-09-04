@@ -38,6 +38,12 @@ const FunnelStep1 = () => {
     setIsSubmitting(true);
 
     try {
+      console.log("Submitting form data:", { 
+        name: name.trim(),
+        email: email.trim(),
+        phone: mobileNumber.trim()
+      });
+      
       const { data, error } = await supabase
         .from("full_applications")
         .insert([{ 
@@ -48,7 +54,12 @@ const FunnelStep1 = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      console.log("Supabase response:", { data, error });
+
+      if (error) {
+        console.error("Supabase error details:", error);
+        throw error;
+      }
       
       // Store application ID for step 2
       localStorage.setItem("funnel_application_id", data.id);
