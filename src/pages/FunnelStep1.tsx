@@ -39,16 +39,11 @@ const FunnelStep1 = () => {
 
     try {
       const { error } = await supabase
-        .from("full_applications")
+        .from("consultations")
         .insert([{ 
+          name: name.trim(),
           email: email.trim(),
-          phone: mobileNumber.trim(),
-          city: "Not specified", // Default value since city is required
-          has_business: "Not specified", // Default value since has_business is required
-          category: "Not specified", // Default value since category is required
-          investment_range: "Not specified", // Default value since investment_range is required
-          motivation: "Not specified", // Default value since motivation is required
-          build_support: "Not specified" // Default value since build_support is required
+          phone: mobileNumber.trim()
         }]);
 
       if (error) throw error;
