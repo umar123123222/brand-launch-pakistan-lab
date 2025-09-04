@@ -204,6 +204,17 @@ const BookConsultation = () => {
       const funnelApplicationId = localStorage.getItem('funnel_application_id');
       
       // First create the booking
+      console.log('Attempting to create booking with data:', {
+        full_name: formData.fullName,
+        email: formData.email,
+        whatsapp_number: formData.whatsappNumber,
+        business_timeline: formData.businessTimeline,
+        investment_ready: formData.investmentReady === "Yes",
+        seen_elyscents: formData.seenElyscents === "Yes",
+        categories: formData.categories,
+        booking_datetime: selectedSlot!.datetime.toISOString()
+      });
+
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
         .insert({
@@ -220,14 +231,22 @@ const BookConsultation = () => {
         .single();
 
       if (bookingError) {
-        console.error('Booking error:', bookingError);
+        console.error('Booking error details:', {
+          error: bookingError,
+          code: bookingError.code,
+          message: bookingError.message,
+          details: bookingError.details,
+          hint: bookingError.hint
+        });
         toast({
           title: "Booking failed",
-          description: "Please try again or contact support.",
+          description: bookingError.message || "Please try again or contact support.",
           variant: "destructive"
         });
         return;
       }
+
+      console.log('Booking created successfully:', booking);
 
       // If user came from funnel, create the mapping
       if (funnelApplicationId && booking) {
