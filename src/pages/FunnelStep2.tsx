@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { PhoneInput } from "@/components/ui/phone-input";
 
 const FunnelStep2 = () => {
+  console.log("FunnelStep2 component is loading");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");

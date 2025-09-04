@@ -48,13 +48,16 @@ const FunnelStep1 = () => {
 
       if (error) throw error;
       
+      // Store email for step 2
+      localStorage.setItem("funnel_email", email.trim());
+      
       toast({
         title: "Success!",
-        description: "Application submitted successfully!",
+        description: "Moving to step 2...",
       });
 
-      // Redirect to thank you page
-      navigate("/thank-you");
+      // Redirect to step 2
+      navigate("/funnel/step2");
     } catch (error) {
       console.error("Error submitting form:", error);
       toast({
