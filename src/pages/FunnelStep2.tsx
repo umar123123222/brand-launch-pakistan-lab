@@ -6,12 +6,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
-import { PhoneInput } from "@/components/ui/phone-input";
 
 const FunnelStep2 = () => {
   console.log("FunnelStep2 component is loading");
   const [applicationId, setApplicationId] = useState("");
-  const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
   const [hasBusiness, setHasBusiness] = useState("");
   const [category, setCategory] = useState("");
@@ -36,7 +34,7 @@ const FunnelStep2 = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!phone.trim() || !city.trim() || !hasBusiness || !category || !investmentRange || !motivation.trim() || !buildSupport) {
+    if (!city.trim() || !hasBusiness || !category || !investmentRange || !motivation.trim() || !buildSupport) {
       toast({
         title: "Please fill in all fields",
         variant: "destructive",
@@ -50,7 +48,6 @@ const FunnelStep2 = () => {
       const { error } = await supabase
         .from("full_applications")
         .update({
-          phone: phone.trim(),
           city: city.trim(),
           has_business: hasBusiness,
           category,
@@ -101,17 +98,6 @@ const FunnelStep2 = () => {
             {/* Form */}
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Phone */}
-                <div>
-                  <label className="block text-white font-medium mb-2">Phone Number *</label>
-                  <PhoneInput
-                    value={phone}
-                    onChange={setPhone}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-black"
-                  />
-                </div>
-
                 {/* City */}
                 <div>
                   <label className="block text-white font-medium mb-2">City *</label>
