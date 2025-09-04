@@ -150,6 +150,14 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
         ...selectedItems
       ].join(' | ');
 
+      console.log('Attempting to save to front_leads with data:', {
+        name: checkoutData.clientInfo.name,
+        email: checkoutData.clientInfo.email,
+        phone_number: checkoutData.clientInfo.phone,
+        message: message,
+        product_category: checkoutData.selectedCategory
+      });
+
       // Save to front_leads table
       const { error } = await supabase
         .from('front_leads')
@@ -158,10 +166,15 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
           email: checkoutData.clientInfo.email,
           phone_number: checkoutData.clientInfo.phone,
           message: message,
-          'product _category': checkoutData.selectedCategory
+          product_category: checkoutData.selectedCategory
         }]);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase insert error:', error);
+        throw error;
+      }
+
+      console.log('Successfully saved to front_leads table');
 
       toast({
         title: "Success!",
