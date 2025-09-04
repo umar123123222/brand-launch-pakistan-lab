@@ -52,13 +52,28 @@ const FunnelStep1 = () => {
           phone: mobileNumber.trim()
         }])
         .select()
-        .single();
+        .maybeSingle();
 
       console.log("Supabase response:", { data, error });
 
       if (error) {
         console.error("Supabase error details:", error);
-        throw error;
+        toast({
+          title: "Database Error",
+          description: `Error: ${error.message || 'Unknown error'}`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!data) {
+        console.error("No data returned from insert");
+        toast({
+          title: "Insert Failed",
+          description: "No record was created. Please try again.",
+          variant: "destructive",
+        });
+        return;
       }
       
       // Store application ID for step 2
