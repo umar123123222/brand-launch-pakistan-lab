@@ -1133,39 +1133,42 @@ export type Database = {
       }
       full_applications: {
         Row: {
-          build_support: string
-          category: string
-          city: string
+          build_support: string | null
+          category: string | null
+          city: string | null
           created_at: string
           email: string
-          has_business: string
+          has_business: string | null
           id: string
-          investment_range: string
-          motivation: string
+          investment_range: string | null
+          motivation: string | null
+          name: string | null
           phone: string
         }
         Insert: {
-          build_support: string
-          category: string
-          city: string
+          build_support?: string | null
+          category?: string | null
+          city?: string | null
           created_at?: string
           email: string
-          has_business: string
+          has_business?: string | null
           id?: string
-          investment_range: string
-          motivation: string
+          investment_range?: string | null
+          motivation?: string | null
+          name?: string | null
           phone: string
         }
         Update: {
-          build_support?: string
-          category?: string
-          city?: string
+          build_support?: string | null
+          category?: string | null
+          city?: string | null
           created_at?: string
           email?: string
-          has_business?: string
+          has_business?: string | null
           id?: string
-          investment_range?: string
-          motivation?: string
+          investment_range?: string | null
+          motivation?: string | null
+          name?: string | null
           phone?: string
         }
         Relationships: []

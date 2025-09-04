@@ -10,7 +10,7 @@ import { PhoneInput } from "@/components/ui/phone-input";
 
 const FunnelStep2 = () => {
   console.log("FunnelStep2 component is loading");
-  const [email, setEmail] = useState("");
+  const [applicationId, setApplicationId] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
   const [hasBusiness, setHasBusiness] = useState("");
@@ -23,12 +23,12 @@ const FunnelStep2 = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get email from localStorage
-    const storedEmail = localStorage.getItem("funnel_email");
-    if (storedEmail) {
-      setEmail(storedEmail);
+    // Get application ID from localStorage
+    const storedId = localStorage.getItem("funnel_application_id");
+    if (storedId) {
+      setApplicationId(storedId);
     } else {
-      // Redirect to step 1 if no email found
+      // Redirect to step 1 if no application ID found
       navigate("/funnel/step1");
     }
   }, [navigate]);
@@ -49,8 +49,7 @@ const FunnelStep2 = () => {
     try {
       const { error } = await supabase
         .from("full_applications")
-        .insert([{
-          email,
+        .update({
           phone: phone.trim(),
           city: city.trim(),
           has_business: hasBusiness,
@@ -58,12 +57,13 @@ const FunnelStep2 = () => {
           investment_range: investmentRange,
           motivation: motivation.trim(),
           build_support: buildSupport
-        }]);
+        })
+        .eq('id', applicationId);
 
       if (error) throw error;
 
-      // Clear stored email
-      localStorage.removeItem("funnel_email");
+      // Clear stored application ID
+      localStorage.removeItem("funnel_application_id");
       
       // Redirect to thank you page
       navigate("/thank-you");

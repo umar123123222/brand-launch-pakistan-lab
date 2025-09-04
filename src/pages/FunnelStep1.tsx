@@ -38,18 +38,20 @@ const FunnelStep1 = () => {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase
-        .from("consultations")
+      const { data, error } = await supabase
+        .from("full_applications")
         .insert([{ 
           name: name.trim(),
           email: email.trim(),
           phone: mobileNumber.trim()
-        }]);
+        }])
+        .select()
+        .single();
 
       if (error) throw error;
       
-      // Store email for step 2
-      localStorage.setItem("funnel_email", email.trim());
+      // Store application ID for step 2
+      localStorage.setItem("funnel_application_id", data.id);
       
       toast({
         title: "Success!",
