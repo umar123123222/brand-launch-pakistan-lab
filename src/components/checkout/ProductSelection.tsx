@@ -122,7 +122,10 @@ const ProductSelection = ({
 
   // Currency formatting function
   const formatCurrency = (amount: number) => {
-    const currency = companySettings?.currency || 'USD';
+    // Wait for company settings to load, otherwise don't show currency yet
+    if (!companySettings) return `${amount}`;
+    
+    const currency = companySettings.currency || 'USD';
     const symbols: { [key: string]: string } = { 
       PKR: 'Rs. ', 
       AED: 'AED ', 
@@ -130,7 +133,7 @@ const ProductSelection = ({
       EUR: '€ ',
       GBP: '£ '
     };
-    return `${symbols[currency] || ''}${amount}`;
+    return `${symbols[currency] || currency + ' '}${amount}`;
   };
 
   useEffect(() => {

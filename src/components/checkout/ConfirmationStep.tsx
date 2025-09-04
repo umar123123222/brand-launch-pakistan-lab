@@ -47,7 +47,10 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
 
   // Currency formatting function
   const formatCurrency = (amount: number) => {
-    const currency = companySettings?.currency || 'USD';
+    // Wait for company settings to load, otherwise don't show currency yet  
+    if (!companySettings) return `${amount}`;
+    
+    const currency = companySettings.currency || 'USD';
     const symbols: { [key: string]: string } = { 
       PKR: 'Rs. ', 
       AED: 'AED ', 
@@ -55,7 +58,7 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
       EUR: '€ ',
       GBP: '£ '
     };
-    return `${symbols[currency] || ''}${amount.toFixed(2)}`;
+    return `${symbols[currency] || currency + ' '}${amount.toFixed(2)}`;
   };
 
   useEffect(() => {
