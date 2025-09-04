@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Sparkles } from "lucide-react";
 
 const Contact = () => {
+  const { toast } = useToast();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -28,27 +29,41 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form
+    if (!form.name.trim() || !form.email.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in your name and email.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const { error, data } = await supabase
+      const { error } = await supabase
         .from("consultations")
-        .insert([
-          {
-            name: form.name,
-            email: form.email,
-            phone: form.phone,
-            category: form.category,
-            vision: form.vision,
-          },
-        ])
-        .select();
+        .insert([{
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          category: form.category.trim(),
+          vision: form.vision.trim(),
+        }]);
 
       if (error) {
-        throw error;
+        console.error("Database error:", error);
+        toast({
+          title: "Submission Failed", 
+          description: "There was an issue saving your information. Please try again.",
+          variant: "destructive",
+        });
+        return;
       }
 
-      // Success - show success message and reset form
+      // Success
       toast({
         title: "Success!",
         description: "Thank you! We will contact you soon.",
@@ -64,12 +79,10 @@ const Contact = () => {
       });
 
     } catch (error: any) {
-      console.error("Form submission error:", error);
-      
-      // Show user-friendly error message
+      console.error("Unexpected error:", error);
       toast({
-        title: "Submission Failed",
-        description: error.message || "Something went wrong. Please try again.",
+        title: "Connection Error",
+        description: "Please check your internet connection and try again.",
         variant: "destructive",
       });
     } finally {
