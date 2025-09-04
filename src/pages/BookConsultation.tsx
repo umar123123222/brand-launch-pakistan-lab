@@ -60,23 +60,23 @@ const BookConsultation = () => {
     }
   };
 
-  // Get available agent count
+  // Get available agent count (excluding SuperAdmins)
   const getAgentCapacity = async (): Promise<number> => {
     try {
       const { data: agents, error } = await supabase
         .from('user_profiles')
         .select('role')
-        .in('role', ['SuperAdmin', 'Admin', 'SalesAgent']);
+        .in('role', ['Admin', 'SalesAgent']);
 
       if (error) {
         console.error('Error fetching agents:', error);
-        return 4; // Fallback capacity
+        return 3; // Fallback capacity
       }
 
-      return agents?.length || 4;
+      return agents?.length || 3;
     } catch (error) {
       console.error('Error getting agent capacity:', error);
-      return 4; // Fallback capacity
+      return 3; // Fallback capacity
     }
   };
 
