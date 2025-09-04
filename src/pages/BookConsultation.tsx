@@ -200,6 +200,9 @@ const BookConsultation = () => {
     setLoading(true);
     
     try {
+      // Check if user came from funnel
+      const funnelApplicationId = localStorage.getItem('funnel_application_id');
+      
       // First create the booking
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
@@ -217,12 +220,32 @@ const BookConsultation = () => {
         .single();
 
       if (bookingError) {
+        console.error('Booking error:', bookingError);
         toast({
           title: "Booking failed",
           description: "Please try again or contact support.",
           variant: "destructive"
         });
         return;
+      }
+
+      // If user came from funnel, create the mapping
+      if (funnelApplicationId && booking) {
+        const { error: mappingError } = await supabase
+          .from('lead_client_mapping')
+          .insert({
+            lead_type: 'booking',
+            lead_id: booking.id,
+            client_id: funnelApplicationId
+          });
+        
+        if (mappingError) {
+          console.error('Mapping error:', mappingError);
+          // Don't fail the booking for mapping errors, just log
+        }
+        
+        // Clear the funnel application ID since booking is complete
+        localStorage.removeItem('funnel_application_id');
       }
 
       // TODO: Agent assignment will be implemented when database types are updated

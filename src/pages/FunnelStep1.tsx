@@ -84,9 +84,9 @@ const FunnelStep1 = () => {
         description: "Moving to step 2...",
       });
 
-      // Redirect to step 2 after a small delay to ensure localStorage is set
+      // Redirect to book consultation after a small delay to ensure localStorage is set
       setTimeout(() => {
-        navigate("/funnel/step2");
+        navigate("/book-consultation");
       }, 100);
     } catch (error) {
       console.error("Error submitting form:", error);
