@@ -56,8 +56,10 @@ const FunnelStep1 = () => {
         description: "Moving to step 2...",
       });
 
-      // Redirect to step 2
-      navigate("/funnel/step2");
+      // Redirect to step 2 after a small delay to ensure localStorage is set
+      setTimeout(() => {
+        navigate("/funnel/step2");
+      }, 100);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast({
@@ -75,6 +77,10 @@ const FunnelStep1 = () => {
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900">
         <div className="container mx-auto px-6 py-12">
           <div className="max-w-4xl mx-auto text-center">
+            {/* Step Indicator */}
+            <div className="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg mb-4 font-bold">
+              STEP 1 - BASIC INFO
+            </div>
             {/* Updated Headline */}
             <h1 className="text-3xl md:text-5xl font-bold text-white mb-8 leading-tight">
               Become a Brand Owner in 40 Days — 
