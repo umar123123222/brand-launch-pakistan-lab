@@ -120,6 +120,19 @@ const ProductSelection = ({
     },
   });
 
+  // Currency formatting function
+  const formatCurrency = (amount: number) => {
+    const currency = companySettings?.currency || 'USD';
+    const symbols: { [key: string]: string } = { 
+      PKR: 'Rs. ', 
+      AED: 'AED ', 
+      USD: '$ ',
+      EUR: '€ ',
+      GBP: '£ '
+    };
+    return `${symbols[currency] || ''}${amount}`;
+  };
+
   useEffect(() => {
     setLocalProducts(selectedProducts);
   }, [selectedProducts]);
@@ -262,7 +275,7 @@ const ProductSelection = ({
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Price:</span>
-              <span className="font-medium">{companySettings?.currency || 'USD'} {item.price}</span>
+              <span className="font-medium">{formatCurrency(item.price)}</span>
             </div>
             {!isAddon && (
               <div className="flex justify-between">
