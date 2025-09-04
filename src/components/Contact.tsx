@@ -44,13 +44,13 @@ const Contact = () => {
 
     try {
       const { error } = await supabase
-        .from("consultations")
+        .from("front_leads")
         .insert([{
           name: form.name.trim(),
           email: form.email.trim(),
-          phone: form.phone.trim(),
-          category: form.category.trim(),
-          vision: form.vision.trim(),
+          phone_number: form.phone.trim(),
+          "product _category": form.category.trim(),
+          message: form.vision.trim(),
         }]);
 
       if (error) {
