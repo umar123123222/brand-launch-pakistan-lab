@@ -23,6 +23,8 @@ interface TimeSlot {
   time: string;
   datetime: Date;
   available: boolean;
+  capacity: number;
+  booked: number;
 }
 
 const ThankYou = () => {
@@ -48,12 +50,33 @@ const ThankYou = () => {
     }
   }, []);
 
+  // Get available agent count
+  const getAgentCapacity = async (): Promise<number> => {
+    try {
+      const { data: agents, error } = await supabase
+        .from('user_profiles')
+        .select('role')
+        .in('role', ['SuperAdmin', 'Admin', 'SalesAgent']);
+
+      if (error) {
+        console.error('Error fetching agents:', error);
+        return 4; // Fallback capacity
+      }
+
+      return agents?.length || 4;
+    } catch (error) {
+      console.error('Error getting agent capacity:', error);
+      return 4; // Fallback capacity
+    }
+  };
+
   // Generate time slots for next 3 business days (excluding Sundays)
-  const generateTimeSlots = () => {
+  const generateTimeSlots = async () => {
     const slots: TimeSlot[] = [];
     const today = new Date();
     let validDaysFound = 0;
     let dayOffset = 1;
+    const agentCount = await getAgentCapacity();
 
     while (validDaysFound < 3) {
       const currentDate = new Date(today);
@@ -61,23 +84,33 @@ const ThankYou = () => {
       
       // Skip Sundays (0 = Sunday)
       if (currentDate.getDay() !== 0) {
-        // Generate slots from 9 AM to 5 PM (30-minute intervals)
-        for (let hour = 9; hour < 17; hour++) {
-          for (let minute = 0; minute < 60; minute += 30) {
-            const slotTime = new Date(currentDate);
-            slotTime.setHours(hour, minute, 0, 0);
-            
-            const timeString = slotTime.toLocaleTimeString('en-US', {
-              hour: 'numeric',
-              minute: '2-digit',
-              hour12: true
-            });
-            
-            slots.push({
-              time: timeString,
-              datetime: new Date(slotTime),
-              available: true
-            });
+        // Check for holidays
+        const { data: holidays } = await supabase
+          .from('holidays')
+          .select('date')
+          .eq('date', currentDate.toISOString().split('T')[0]);
+
+        if (!holidays || holidays.length === 0) {
+          // Generate slots from 9 AM to 5 PM (30-minute intervals)
+          for (let hour = 9; hour < 17; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+              const slotTime = new Date(currentDate);
+              slotTime.setHours(hour, minute, 0, 0);
+              
+              const timeString = slotTime.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+              });
+              
+              slots.push({
+                time: timeString,
+                datetime: new Date(slotTime),
+                available: true,
+                capacity: agentCount,
+                booked: 0
+              });
+            }
           }
         }
         validDaysFound++;
@@ -88,27 +121,41 @@ const ThankYou = () => {
     return slots;
   };
 
-  // Check slot availability from database
+  // Check slot availability and capacity
   const checkSlotAvailability = async (slots: TimeSlot[]) => {
     try {
+      if (slots.length === 0) return slots;
+
+      const slotTimes = slots.map(slot => slot.datetime.toISOString());
+      
       const { data: bookedSlots, error } = await supabase
         .from('bookings')
         .select('booking_datetime')
-        .eq('status', 'confirmed');
+        .eq('status', 'confirmed')
+        .in('booking_datetime', slotTimes);
 
       if (error) {
         console.error('Error fetching bookings:', error);
         return slots;
       }
 
-      const bookedTimes = new Set(
-        bookedSlots?.map(booking => new Date(booking.booking_datetime).getTime())
-      );
+      // Count bookings per time slot
+      const bookingCounts = new Map<string, number>();
+      bookedSlots?.forEach(booking => {
+        const timeKey = new Date(booking.booking_datetime).getTime().toString();
+        bookingCounts.set(timeKey, (bookingCounts.get(timeKey) || 0) + 1);
+      });
 
-      return slots.map(slot => ({
-        ...slot,
-        available: !bookedTimes.has(slot.datetime.getTime())
-      }));
+      return slots.map(slot => {
+        const timeKey = slot.datetime.getTime().toString();
+        const bookedCount = bookingCounts.get(timeKey) || 0;
+        
+        return {
+          ...slot,
+          booked: bookedCount,
+          available: bookedCount < slot.capacity
+        };
+      });
     } catch (error) {
       console.error('Error checking availability:', error);
       return slots;
@@ -117,7 +164,7 @@ const ThankYou = () => {
 
   useEffect(() => {
     const initializeSlots = async () => {
-      const generatedSlots = generateTimeSlots();
+      const generatedSlots = await generateTimeSlots();
       const availableSlots = await checkSlotAvailability(generatedSlots);
       setAvailableSlots(availableSlots);
     };
@@ -409,8 +456,12 @@ const ThankYou = () => {
                               }`}
                             >
                               {slot.time}
-                              {!slot.available && (
-                                <div className="text-xs mt-1">Booked</div>
+                              {!slot.available ? (
+                                <div className="text-xs mt-1 text-red-300">Booked</div>
+                              ) : slot.capacity > 1 && slot.booked > 0 && (
+                                <div className="text-xs mt-1 opacity-75">
+                                  {slot.capacity - slot.booked} left
+                                </div>
                               )}
                             </button>
                           ))}

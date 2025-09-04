@@ -60,6 +60,26 @@ const BookConsultation = () => {
     }
   };
 
+  // Get available agent count
+  const getAgentCapacity = async (): Promise<number> => {
+    try {
+      const { data: agents, error } = await supabase
+        .from('user_profiles')
+        .select('role')
+        .in('role', ['SuperAdmin', 'Admin', 'SalesAgent']);
+
+      if (error) {
+        console.error('Error fetching agents:', error);
+        return 4; // Fallback capacity
+      }
+
+      return agents?.length || 4;
+    } catch (error) {
+      console.error('Error getting agent capacity:', error);
+      return 4; // Fallback capacity
+    }
+  };
+
   // Generate time slots for a specific date
   const generateTimeSlotsForDate = async (date: Date): Promise<TimeSlot[]> => {
     const slots: TimeSlot[] = [];
@@ -70,11 +90,18 @@ const BookConsultation = () => {
       return slots;
     }
 
-    // TODO: Check for holidays when database types are updated
-    // For now, assume no holidays
+    // Check for holidays
+    const { data: holidays } = await supabase
+      .from('holidays')
+      .select('date')
+      .eq('date', date.toISOString().split('T')[0]);
+
+    if (holidays && holidays.length > 0) {
+      return slots; // No slots on holidays
+    }
     
     let availableHours = { start: businessHours.start, end: businessHours.end };
-    let agentCount = 4; // Default capacity - multiple agents can handle bookings
+    let agentCount = await getAgentCapacity();
 
     // Generate 1-hour slots
     for (let hour = availableHours.start; hour < availableHours.end; hour++) {
