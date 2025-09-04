@@ -203,8 +203,8 @@ const BookConsultation = () => {
       // Check if user came from funnel
       const funnelApplicationId = localStorage.getItem('funnel_application_id');
       
-      // First create the booking
-      console.log('Attempting to create booking with data:', {
+      // First create the booking - log the exact data being sent
+      const bookingData = {
         full_name: formData.fullName,
         email: formData.email,
         whatsapp_number: formData.whatsappNumber,
@@ -213,20 +213,14 @@ const BookConsultation = () => {
         seen_elyscents: formData.seenElyscents === "Yes",
         categories: formData.categories,
         booking_datetime: selectedSlot!.datetime.toISOString()
-      });
+      };
+      
+      console.log('Attempting to create booking with data:', bookingData);
+      console.log('Current user auth state:', supabase.auth.getUser());
 
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
-        .insert({
-          full_name: formData.fullName,
-          email: formData.email,
-          whatsapp_number: formData.whatsappNumber,
-          business_timeline: formData.businessTimeline,
-          investment_ready: formData.investmentReady === "Yes",
-          seen_elyscents: formData.seenElyscents === "Yes",
-          categories: formData.categories,
-          booking_datetime: selectedSlot!.datetime.toISOString()
-        })
+        .insert(bookingData)
         .select()
         .single();
 
@@ -236,8 +230,18 @@ const BookConsultation = () => {
           code: bookingError.code,
           message: bookingError.message,
           details: bookingError.details,
-          hint: bookingError.hint
+          hint: bookingError.hint,
+          bookingData: bookingData
         });
+        
+        // Try inserting without .single() to see if that's the issue
+        const { data: booking2, error: bookingError2 } = await supabase
+          .from('bookings')
+          .insert(bookingData)
+          .select();
+        
+        console.log('Attempt without .single():', { data: booking2, error: bookingError2 });
+        
         toast({
           title: "Booking failed",
           description: bookingError.message || "Please try again or contact support.",
