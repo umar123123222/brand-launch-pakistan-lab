@@ -69,9 +69,10 @@ const FunnelStep2 = () => {
       navigate("/thank-you");
     } catch (error) {
       console.error("Error submitting application:", error);
+      console.error("Full error details:", JSON.stringify(error, null, 2));
       toast({
         title: "Something went wrong",
-        description: "Please try again.",
+        description: error?.message || "Please try again.",
         variant: "destructive",
       });
     } finally {
