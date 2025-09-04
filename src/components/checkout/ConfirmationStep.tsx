@@ -47,10 +47,8 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
 
   // Currency formatting function
   const formatCurrency = (amount: number) => {
-    // Wait for company settings to load, otherwise don't show currency yet  
-    if (!companySettings) return `${amount}`;
-    
-    const currency = companySettings.currency || 'USD';
+    // Use PKR as default since that's your company currency
+    const currency = companySettings?.currency || 'PKR';
     const symbols: { [key: string]: string } = { 
       PKR: 'Rs. ', 
       AED: 'AED ', 
