@@ -126,69 +126,9 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
   const handleConfirm = async () => {
     setSaving(true);
     try {
-      // Create a summary message of their selections
-      const selectedItems = [];
-      
-      if (products.length > 0) {
-        selectedItems.push(`Products: ${products.map(p => `${p.name} (${p.quantity})`).join(', ')}`);
-      }
-      
-      if (packaging.length > 0) {
-        selectedItems.push(`Packaging: ${packaging.map(p => `${p.name} (${p.quantity})`).join(', ')}`);
-      }
-      
-      if (addons.length > 0) {
-        selectedItems.push(`Addons: ${addons.map(a => `${a.name} (${a.quantity})`).join(', ')}`);
-      }
-
-      const message = [
-        `Business Name: ${checkoutData.clientInfo.businessName || 'Not provided'}`,
-        `CNIC: ${checkoutData.clientInfo.cnicNumber || 'Not provided'}`,
-        `NTN: ${checkoutData.clientInfo.businessNtn || 'Not provided'}`,
-        `Labels: ${checkoutData.clientInfo.labels || 'Not provided'}`,
-        `Total Amount: ${formatCurrency(grandTotal)}`,
-        ...selectedItems
-      ].join(' | ');
-
-      console.log('Attempting to save to front_leads with data:', {
-        name: checkoutData.clientInfo.name,
-        email: checkoutData.clientInfo.email,
-        phone_number: checkoutData.clientInfo.phone,
-        message: message,
-        product_category: checkoutData.selectedCategory
-      });
-
-      // Save to front_leads table
-      const { error } = await supabase
-        .from('front_leads')
-        .insert([{
-          name: checkoutData.clientInfo.name,
-          email: checkoutData.clientInfo.email,
-          phone_number: checkoutData.clientInfo.phone,
-          message: message,
-          product_category: checkoutData.selectedCategory
-        }]);
-
-      if (error) {
-        console.error('Supabase insert error:', error);
-        throw error;
-      }
-
-      console.log('Successfully saved to front_leads table');
-
-      toast({
-        title: "Success!",
-        description: "Your inquiry has been submitted successfully.",
-      });
-
-      onConfirm();
+      await onConfirm();
     } catch (error) {
-      console.error('Error saving lead:', error);
-      toast({
-        title: "Error",
-        description: "Failed to submit your inquiry. Please try again.",
-        variant: "destructive",
-      });
+      console.error('Error during confirmation:', error);
     } finally {
       setSaving(false);
     }
