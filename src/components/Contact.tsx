@@ -31,13 +31,6 @@ const Contact = () => {
     setLoading(true);
 
     try {
-      console.log("Starting form submission...");
-      console.log("Supabase URL:", "https://bsqtjhjqytuncpvbnuwp.supabase.co");
-      console.log("Form data:", form);
-
-      // Test basic connectivity first
-      console.log("Testing Supabase connection...");
-      
       const { error, data } = await supabase
         .from("consultations")
         .insert([
@@ -51,52 +44,34 @@ const Contact = () => {
         ])
         .select();
 
-      console.log("Supabase response:", { data, error });
-
       if (error) {
-        console.error("Supabase insert error:", error);
-        
-        toast({
-          title: "Submission Failed",
-          description: `Error: ${error.message}`,
-          variant: "destructive",
-        });
-      } else {
-        console.log("Consultation submission successful:", data);
-        toast({
-          title: "Success!",
-          description: "Thank you! We will contact you soon.",
-        });
-        
-        // Reset form
-        setForm({
-          name: "",
-          email: "",
-          phone: "",
-          category: "",
-          vision: "",
-        });
+        throw error;
       }
-    } catch (error: any) {
-      console.error("Caught error during submission:", error);
-      console.error("Error name:", error.name);
-      console.error("Error message:", error.message);
-      console.error("Error stack:", error.stack);
+
+      // Success - show success message and reset form
+      toast({
+        title: "Success!",
+        description: "Thank you! We will contact you soon.",
+      });
       
-      // More specific error handling
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        toast({
-          title: "Connection Error",
-          description: "Unable to connect to the server. Please check your internet connection and try again.",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Submission Error",
-          description: error.message || "An unexpected error occurred. Please try again.",
-          variant: "destructive",
-        });
-      }
+      // Reset form
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        category: "",
+        vision: "",
+      });
+
+    } catch (error: any) {
+      console.error("Form submission error:", error);
+      
+      // Show user-friendly error message
+      toast({
+        title: "Submission Failed",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
