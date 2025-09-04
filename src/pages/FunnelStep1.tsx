@@ -261,7 +261,7 @@ const FunnelStep1 = () => {
                 <div>
                   <input
                     type="text"
-                    placeholder="Your Full Name"
+                    placeholder="Your Full Name *"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
@@ -272,7 +272,7 @@ const FunnelStep1 = () => {
                 <div>
                   <input
                     type="email"
-                    placeholder="Your Email Address"
+                    placeholder="Your Email Address *"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
@@ -285,7 +285,8 @@ const FunnelStep1 = () => {
                     value={mobileNumber}
                     onChange={setMobileNumber}
                     required
-                    className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg"
+                    placeholder="Your Phone Number *"
+                    className="w-full px-6 py-4 rounded-xl border border-gray-300 focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-500 text-gray-900 text-lg font-medium shadow-lg bg-white"
                   />
                 </div>
 
