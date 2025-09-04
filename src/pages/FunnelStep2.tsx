@@ -169,7 +169,7 @@ const FunnelStep2 = () => {
                     placeholder="Tell us about your motivation and goals..."
                     value={motivation}
                     onChange={(e) => setMotivation(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 min-h-[100px]"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 min-h-[100px] bg-white"
                     required
                   />
                 </div>
