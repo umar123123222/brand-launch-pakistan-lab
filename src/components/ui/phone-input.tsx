@@ -39,13 +39,9 @@ const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
     }
 
     return (
-      <input
+      <Input
         type="tel"
-        className={cn(
-          // Base input styles without default height/padding constraints
-          "flex w-full border border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          className
-        )}
+        className={className}
         value={value}
         onChange={handleChange}
         placeholder="+923334254321"
