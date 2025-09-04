@@ -1142,7 +1142,7 @@ export type Database = {
           id: string
           investment_range: string | null
           motivation: string | null
-          name: string | null
+          name: string
           phone: string
         }
         Insert: {
@@ -1155,7 +1155,7 @@ export type Database = {
           id?: string
           investment_range?: string | null
           motivation?: string | null
-          name?: string | null
+          name: string
           phone: string
         }
         Update: {
@@ -1168,7 +1168,7 @@ export type Database = {
           id?: string
           investment_range?: string | null
           motivation?: string | null
-          name?: string | null
+          name?: string
           phone?: string
         }
         Relationships: []
