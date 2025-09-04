@@ -6,6 +6,7 @@ import { CheckoutData } from "@/pages/Checkout";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
 
 interface ConfirmationStepProps {
   checkoutData: CheckoutData;
@@ -29,6 +30,33 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
+
+  // Fetch company settings for currency
+  const { data: companySettings } = useQuery({
+    queryKey: ["company-settings"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("company_settings")
+        .select("*")
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Currency formatting function
+  const formatCurrency = (amount: number) => {
+    const currency = companySettings?.currency || 'USD';
+    const symbols: { [key: string]: string } = { 
+      PKR: 'Rs. ', 
+      AED: 'AED ', 
+      USD: '$ ',
+      EUR: '€ ',
+      GBP: '£ '
+    };
+    return `${symbols[currency] || ''}${amount.toFixed(2)}`;
+  };
 
   useEffect(() => {
     fetchItemDetails();
@@ -256,18 +284,18 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
                 <div key={product.id} className="flex justify-between items-center">
                   <div>
                     <div className="font-medium">{product.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {product.quantity} × ${product.price.toFixed(2)}
-                    </div>
-                  </div>
-                  <div className="font-medium">${product.total.toFixed(2)}</div>
+                     <div className="text-sm text-muted-foreground">
+                       {product.quantity} × {formatCurrency(product.price)}
+                     </div>
+                   </div>
+                   <div className="font-medium">{formatCurrency(product.total)}</div>
                 </div>
               ))}
               <Separator />
-              <div className="flex justify-between font-semibold">
-                <span>Products Total:</span>
-                <span>${productsTotal.toFixed(2)}</span>
-              </div>
+               <div className="flex justify-between font-semibold">
+                 <span>Products Total:</span>
+                 <span>{formatCurrency(productsTotal)}</span>
+               </div>
             </div>
           </CardContent>
         </Card>
@@ -285,18 +313,18 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
                 <div key={pack.id} className="flex justify-between items-center">
                   <div>
                     <div className="font-medium">{pack.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {pack.quantity} × ${pack.price.toFixed(2)}
-                    </div>
-                  </div>
-                  <div className="font-medium">${pack.total.toFixed(2)}</div>
+                     <div className="text-sm text-muted-foreground">
+                       {pack.quantity} × {formatCurrency(pack.price)}
+                     </div>
+                   </div>
+                   <div className="font-medium">{formatCurrency(pack.total)}</div>
                 </div>
               ))}
               <Separator />
-              <div className="flex justify-between font-semibold">
-                <span>Packaging Total:</span>
-                <span>${packagingTotal.toFixed(2)}</span>
-              </div>
+               <div className="flex justify-between font-semibold">
+                 <span>Packaging Total:</span>
+                 <span>{formatCurrency(packagingTotal)}</span>
+               </div>
             </div>
           </CardContent>
         </Card>
@@ -314,18 +342,18 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
                 <div key={addon.id} className="flex justify-between items-center">
                   <div>
                     <div className="font-medium">{addon.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {addon.quantity} × ${addon.price.toFixed(2)}
-                    </div>
-                  </div>
-                  <div className="font-medium">${addon.total.toFixed(2)}</div>
+                     <div className="text-sm text-muted-foreground">
+                       {addon.quantity} × {formatCurrency(addon.price)}
+                     </div>
+                   </div>
+                   <div className="font-medium">{formatCurrency(addon.total)}</div>
                 </div>
               ))}
               <Separator />
-              <div className="flex justify-between font-semibold">
-                <span>Addons Total:</span>
-                <span>${addonsTotal.toFixed(2)}</span>
-              </div>
+               <div className="flex justify-between font-semibold">
+                 <span>Addons Total:</span>
+                 <span>{formatCurrency(addonsTotal)}</span>
+               </div>
             </div>
           </CardContent>
         </Card>
@@ -334,10 +362,10 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
       {/* Grand Total */}
       <Card className="border-primary/20">
         <CardContent className="pt-6">
-          <div className="flex justify-between items-center text-xl font-bold">
-            <span>Total Invoice Amount:</span>
-            <span className="text-primary">${grandTotal.toFixed(2)}</span>
-          </div>
+           <div className="flex justify-between items-center text-xl font-bold">
+             <span>Total Invoice Amount:</span>
+             <span className="text-primary">{formatCurrency(grandTotal)}</span>
+           </div>
         </CardContent>
       </Card>
 
