@@ -143,12 +143,44 @@ const ProductSelection = ({
     if (quantity > 0) {
       updated.push({ id, type, quantity });
     }
-    setLocalProducts(updated);
+    
+    // Auto-sync packaging quantities with total product quantity
+    if (type === 'product') {
+      const newLocalProducts = [...updated];
+      const totalProducts = newLocalProducts
+        .filter(p => p.type === 'product')
+        .reduce((sum, p) => sum + p.quantity, 0);
+      
+      // Update all existing packaging items to match total product quantity
+      const packagingItems = newLocalProducts.filter(p => p.type === 'packaging');
+      packagingItems.forEach(item => {
+        const index = newLocalProducts.findIndex(p => p.id === item.id && p.type === 'packaging');
+        if (index !== -1 && totalProducts > 0) {
+          newLocalProducts[index].quantity = totalProducts;
+        }
+      });
+      
+      setLocalProducts(newLocalProducts);
+    } else {
+      setLocalProducts(updated);
+    }
   };
 
   const handleQuantityDecrease = (item: any, type: 'product' | 'packaging' | 'addon') => {
     const quantity = getQuantity(item.id, type);
     const minQuantity = type === 'product' ? item.moq || 1 : type === 'packaging' ? item.min_order_quantity || 1 : 1;
+    
+    // For packaging, auto-sync with total products - don't allow manual changes
+    if (type === 'packaging') {
+      const totalProducts = localProducts
+        .filter(p => p.type === 'product')
+        .reduce((sum, p) => sum + p.quantity, 0);
+      
+      if (totalProducts > 0) {
+        updateQuantity(item.id, type, 0); // Remove packaging if no products
+      }
+      return;
+    }
     
     if (quantity <= minQuantity) {
       // If at or below MOQ, go to 0
@@ -162,6 +194,18 @@ const ProductSelection = ({
   const handleQuantityIncrease = (item: any, type: 'product' | 'packaging' | 'addon') => {
     const quantity = getQuantity(item.id, type);
     const minQuantity = type === 'product' ? item.moq || 1 : type === 'packaging' ? item.min_order_quantity || 1 : 1;
+    
+    // For packaging, auto-sync with total products - don't allow manual changes  
+    if (type === 'packaging') {
+      const totalProducts = localProducts
+        .filter(p => p.type === 'product')
+        .reduce((sum, p) => sum + p.quantity, 0);
+      
+      if (totalProducts > 0) {
+        updateQuantity(item.id, type, totalProducts); // Set packaging to total products
+      }
+      return;
+    }
     
     if (quantity === 0) {
       // If at 0, jump to MOQ
@@ -182,31 +226,45 @@ const ProductSelection = ({
 
     const hasAddons = localProducts.some(p => p.type === 'addon');
     const productsMOQ = hasAddons ? companySettings.products_moq_with_addon : companySettings.products_moq_without_addon;
-    const packagingMOQ = hasAddons ? companySettings.packaging_moq_with_addon : companySettings.packaging_moq_without_addon;
 
-    // Check products MOQ
-    const totalProducts = localProducts
-      .filter(p => p.type === 'product')
-      .reduce((sum, p) => sum + p.quantity, 0);
+    // Check individual product MOQs first
+    const selectedProducts = localProducts.filter(p => p.type === 'product');
+    for (const selectedProduct of selectedProducts) {
+      const productData = products?.find(p => p.id === selectedProduct.id);
+      const individualMOQ = productData?.moq || 1;
+      
+      if (selectedProduct.quantity < individualMOQ) {
+        toast({
+          title: "Individual Product MOQ Not Met",
+          description: `${productData?.name || 'Product'} requires minimum ${individualMOQ} pieces, but you selected ${selectedProduct.quantity}`,
+          variant: "destructive",
+        });
+        return false;
+      }
+    }
+
+    // Check total products MOQ
+    const totalProducts = selectedProducts.reduce((sum, p) => sum + p.quantity, 0);
 
     if (totalProducts > 0 && totalProducts < productsMOQ) {
       toast({
-        title: "MOQ Requirement",
-        description: `Minimum order quantity for products is ${productsMOQ}${hasAddons ? ' (with addons)' : ' (without addons)'}`,
+        title: "Company MOQ Requirement",
+        description: `Total minimum order quantity is ${productsMOQ} pieces${hasAddons ? ' (with addons)' : ' (without addons)'}. You have ${totalProducts} pieces.`,
         variant: "destructive",
       });
       return false;
     }
 
-    // Check packaging MOQ
+    // Check packaging quantity equals product quantity
     const totalPackaging = localProducts
       .filter(p => p.type === 'packaging')
       .reduce((sum, p) => sum + p.quantity, 0);
-
-    if (totalPackaging > 0 && totalPackaging < packagingMOQ) {
+    
+    const hasPackaging = localProducts.some(p => p.type === 'packaging');
+    if (hasPackaging && totalProducts > 0 && totalPackaging !== totalProducts) {
       toast({
-        title: "MOQ Requirement",
-        description: `Minimum order quantity for packaging is ${packagingMOQ}${hasAddons ? ' (with addons)' : ' (without addons)'}`,
+        title: "Packaging Quantity Mismatch",
+        description: `Total packaging quantity (${totalPackaging}) must equal total product quantity (${totalProducts})`,
         variant: "destructive",
       });
       return false;
@@ -246,6 +304,12 @@ const ProductSelection = ({
     const quantity = getQuantity(item.id, type);
     const minQuantity = type === 'product' ? item.moq || 1 : type === 'packaging' ? item.min_order_quantity || 1 : 1;
     const isAddon = type === 'addon';
+    const isPackaging = type === 'packaging';
+    
+    // For packaging, calculate auto quantity based on total products
+    const totalProducts = localProducts
+      .filter(p => p.type === 'product')
+      .reduce((sum, p) => sum + p.quantity, 0);
 
     return (
       <Card key={`${type}-${item.id}`} className="h-full">
@@ -280,8 +344,14 @@ const ProductSelection = ({
             </div>
             {!isAddon && (
               <div className="flex justify-between">
-                <span>MOQ:</span>
-                <span className="font-medium">{minQuantity}</span>
+                <span>{isPackaging ? "Per Unit:" : "Min MOQ:"}</span>
+                <span className="font-medium">{isPackaging ? "1 piece" : `${minQuantity} pieces`}</span>
+              </div>
+            )}
+            {isPackaging && (
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Auto-synced:</span>
+                <span>Equals total products</span>
               </div>
             )}
           </div>
@@ -294,6 +364,23 @@ const ProductSelection = ({
                   type="checkbox"
                   checked={quantity > 0}
                   onChange={(e) => updateQuantity(item.id, type, e.target.checked ? 1 : 0)}
+                  className="h-4 w-4"
+                />
+              </div>
+            ) : isPackaging ? (
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium">Add to Order:</Label>
+                <input
+                  type="checkbox"
+                  checked={quantity > 0}
+                  onChange={(e) => {
+                    if (e.target.checked && totalProducts > 0) {
+                      updateQuantity(item.id, type, totalProducts);
+                    } else {
+                      updateQuantity(item.id, type, 0);
+                    }
+                  }}
+                  disabled={totalProducts === 0}
                   className="h-4 w-4"
                 />
               </div>
@@ -325,10 +412,26 @@ const ProductSelection = ({
               </div>
             )}
           </div>
+          
+          {isPackaging && quantity > 0 && (
+            <div className="mt-2 text-xs text-center text-muted-foreground bg-muted/50 rounded p-1">
+              Quantity: {totalProducts} pieces
+            </div>
+          )}
         </CardContent>
       </Card>
     );
   };
+
+  // Calculate current totals for display
+  const totalProducts = localProducts
+    .filter(p => p.type === 'product')
+    .reduce((sum, p) => sum + p.quantity, 0);
+  const totalPackaging = localProducts
+    .filter(p => p.type === 'packaging')
+    .reduce((sum, p) => sum + p.quantity, 0);
+  const hasAddons = localProducts.some(p => p.type === 'addon');
+  const requiredMOQ = companySettings ? (hasAddons ? companySettings.products_moq_with_addon : companySettings.products_moq_without_addon) : 0;
 
   return (
     <div className="space-y-6">
@@ -338,6 +441,25 @@ const ProductSelection = ({
           Choose your products, packaging, and add-ons. MOQ rules apply.
         </p>
       </div>
+
+      {/* Current Order Summary */}
+      {totalProducts > 0 && (
+        <Card className="bg-primary/5 border-primary/20">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center">
+              <div className="space-y-1">
+                <div className="text-sm font-medium">Current Order Summary</div>
+                <div className="text-xs text-muted-foreground">
+                  Products: {totalProducts} pieces | Packaging: {totalPackaging} pieces | MOQ Required: {requiredMOQ} pieces
+                </div>
+              </div>
+              <div className={`text-sm font-medium px-2 py-1 rounded ${totalProducts >= requiredMOQ ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                {totalProducts >= requiredMOQ ? '✓ MOQ Met' : `Need ${requiredMOQ - totalProducts} more`}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Products Section */}
       <div>
@@ -355,7 +477,12 @@ const ProductSelection = ({
 
       {/* Packaging Section */}
       <div>
-        <h3 className="text-lg font-medium mb-4 text-foreground">Packaging</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium text-foreground">Packaging</h3>
+          <div className="text-sm text-muted-foreground">
+            Quantity auto-syncs with total products ({totalProducts} pieces)
+          </div>
+        </div>
         {packaging && packaging.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {packaging.map((pack) => renderItemCard(pack, 'packaging'))}
@@ -379,17 +506,62 @@ const ProductSelection = ({
             <p>No add-ons available.</p>
           </div>
         )}
+        
+        {/* Addon Benefits Information */}
+        {companySettings && (
+          <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold text-sm">
+                  💡
+                </div>
+                <div>
+                  <h4 className="font-medium text-green-800 mb-1">Add-on Benefits</h4>
+                  <p className="text-sm text-green-700">
+                    Adding any add-on reduces your minimum order requirement from{' '}
+                    <span className="font-semibold">{companySettings.products_moq_without_addon} pieces</span> to{' '}
+                    <span className="font-semibold">{companySettings.products_moq_with_addon} pieces</span>!
+                  </p>
+                  {hasAddons && (
+                    <div className="mt-1 text-xs text-green-600 font-medium">
+                      ✅ Add-on selected - reduced MOQ active!
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* MOQ Information */}
       {companySettings && (
         <Card className="bg-muted/50">
           <CardHeader>
-            <CardTitle className="text-sm">MOQ Information</CardTitle>
+            <CardTitle className="text-sm flex items-center gap-2">
+              📋 Order Requirements
+            </CardTitle>
           </CardHeader>
-          <CardContent className="text-sm space-y-1">
-            <div>Products MOQ: {companySettings.products_moq_without_addon} (without addons), {companySettings.products_moq_with_addon} (with addons)</div>
-            <div>Packaging MOQ: {companySettings.packaging_moq_without_addon} (without addons), {companySettings.packaging_moq_with_addon} (with addons)</div>
+          <CardContent className="text-sm space-y-3">
+            <div className="space-y-2">
+              <div className="font-medium">Individual Product MOQ:</div>
+              <div className="text-muted-foreground ml-4">Each product has its own minimum order quantity (shown on product cards)</div>
+            </div>
+            <div className="space-y-2">
+              <div className="font-medium">Company Total MOQ:</div>
+              <div className="text-muted-foreground ml-4">
+                • Without Add-ons: {companySettings.products_moq_without_addon} pieces total
+              </div>
+              <div className="text-muted-foreground ml-4">
+                • With Add-ons: {companySettings.products_moq_with_addon} pieces total
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="font-medium">Packaging Logic:</div>
+              <div className="text-muted-foreground ml-4">
+                Each packaging item quantity automatically equals your total product quantity
+              </div>
+            </div>
           </CardContent>
         </Card>
       )}
