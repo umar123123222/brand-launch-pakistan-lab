@@ -481,6 +481,11 @@ const ProductSelection = ({
     (hasAddons ? companySettings.packaging_moq_with_addon : companySettings.packaging_moq_without_addon) : 
     (hasAddons ? 100 : 300); // Fallback values
 
+  // Check if all MOQ requirements are met
+  const isProductMOQMet = totalProducts >= requiredProductMOQ;
+  const isPackagingMOQMet = totalPackaging === 0 || (totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts);
+  const canContinue = isProductMOQMet && isPackagingMOQMet;
+
   return (
     <div className="space-y-6">
       <div className="text-center">
@@ -687,7 +692,24 @@ const ProductSelection = ({
           <ArrowLeft className="w-4 h-4" />
           Back
         </Button>
-        <Button onClick={handleContinue} className="flex items-center gap-2 w-full sm:w-auto">
+        
+        {/* MOQ Validation Message */}
+        {!canContinue && (
+          <div className="text-sm text-destructive text-center bg-destructive/10 p-2 rounded">
+            {!isProductMOQMet && (
+              <div>⚠️ Products MOQ not met: Need {requiredProductMOQ - totalProducts} more products</div>
+            )}
+            {!isPackagingMOQMet && totalPackaging > 0 && (
+              <div>⚠️ Packaging issues: {totalPackaging !== totalProducts ? `Must equal product quantity (${totalProducts})` : `Need ${requiredPackagingMOQ - totalPackaging} more packaging`}</div>
+            )}
+          </div>
+        )}
+        
+        <Button 
+          onClick={handleContinue} 
+          disabled={!canContinue}
+          className="flex items-center gap-2 w-full sm:w-auto"
+        >
           Continue
           <ArrowRight className="w-4 h-4" />
         </Button>
