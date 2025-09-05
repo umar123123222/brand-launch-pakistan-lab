@@ -354,7 +354,7 @@ const ProductSelection = ({
             )}
           </div>
           
-          <h3 className="font-medium mb-1">{item.name}</h3>
+          <h3 className="font-medium mb-1 text-black">{item.name}</h3>
           {item.description && (
             <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
               {item.description}
@@ -363,13 +363,13 @@ const ProductSelection = ({
           
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span>Price:</span>
-              <span className="font-medium">{formatCurrency(item.price)}</span>
+              <span className="text-black">Price:</span>
+              <span className="font-medium text-black">{formatCurrency(item.price)}</span>
             </div>
             {!isAddon && (
               <div className="flex justify-between">
-                <span>{isPackaging ? "Per Unit:" : "Min MOQ:"}</span>
-                <span className="font-medium">{isPackaging ? "1 piece" : `${minQuantity} pieces`}</span>
+                <span className="text-black">{isPackaging ? "Per Unit:" : "Min MOQ:"}</span>
+                <span className="font-medium text-black">{isPackaging ? "1 piece" : `${minQuantity} pieces`}</span>
               </div>
             )}
             {isPackaging && (
@@ -386,7 +386,7 @@ const ProductSelection = ({
           <div className="mt-4">
             {isAddon ? (
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium">Select:</Label>
+                <Label className="text-sm font-medium text-black">Select:</Label>
                 <input
                   type="checkbox"
                   checked={quantity > 0}
@@ -397,7 +397,7 @@ const ProductSelection = ({
             ) : isPackaging ? (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium">Add to Order:</Label>
+                  <Label className="text-sm font-medium text-black">Add to Order:</Label>
                   <input
                     type="checkbox"
                     checked={quantity > 0}
@@ -427,7 +427,7 @@ const ProductSelection = ({
               </div>
             ) : (
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium">Quantity:</Label>
+                <Label className="text-sm font-medium text-black">Quantity:</Label>
                 <div className="flex items-center gap-1 bg-muted/30 rounded-lg p-1">
                   <Button
                     variant="ghost"
