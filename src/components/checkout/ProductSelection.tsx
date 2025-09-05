@@ -112,7 +112,8 @@ const ProductSelection = ({
     queryFn: async () => {
       const { data, error } = await supabase
         .from("company_settings")
-        .select("*")
+        .select("products_moq_without_addon, products_moq_with_addon, packaging_moq_without_addon, packaging_moq_with_addon, packaging_necessary, currency")
+        .limit(1)
         .single();
       
       if (error) throw error;
@@ -471,8 +472,14 @@ const ProductSelection = ({
     .filter(p => p.type === 'packaging')
     .reduce((sum, p) => sum + p.quantity, 0);
   const hasAddons = localProducts.some(p => p.type === 'addon');
-  const requiredProductMOQ = companySettings ? (hasAddons ? companySettings.products_moq_with_addon : companySettings.products_moq_without_addon) : 0;
-  const requiredPackagingMOQ = companySettings ? (hasAddons ? companySettings.packaging_moq_with_addon : companySettings.packaging_moq_without_addon) : 0;
+  
+  // Use fallback values if company settings not loaded yet
+  const requiredProductMOQ = companySettings ? 
+    (hasAddons ? companySettings.products_moq_with_addon : companySettings.products_moq_without_addon) : 
+    (hasAddons ? 100 : 300); // Fallback values
+  const requiredPackagingMOQ = companySettings ? 
+    (hasAddons ? companySettings.packaging_moq_with_addon : companySettings.packaging_moq_without_addon) : 
+    (hasAddons ? 100 : 300); // Fallback values
 
   return (
     <div className="space-y-6">
