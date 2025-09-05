@@ -31,7 +31,8 @@
     --destructive-foreground: 0 0% 98%;
 
     --border: 270 20% 80%;
-    --input: 0 0% 100% / 0.1;
+    --input: 213 100% 96%;
+    --input-foreground: 222.2 84% 4.9%;
     --ring: 270 60% 50%;
 
     --radius: 0.5rem;
@@ -79,7 +80,8 @@
     --destructive-foreground: 0 0% 98%;
 
     --border: 270 30% 30%;
-    --input: 0 0% 100% / 0.1;
+    --input: 213 88% 25%;
+    --input-foreground: 210 40% 98%;
     --ring: 270 60% 60%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
