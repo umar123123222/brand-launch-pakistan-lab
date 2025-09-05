@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ArrowRight, Plus, Minus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Plus, Minus, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ProductSelectionProps {
@@ -372,9 +372,12 @@ const ProductSelection = ({
               </div>
             )}
             {isPackaging && (
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Auto-synced:</span>
-                <span>Equals total products</span>
+              <div className="flex justify-between text-xs">
+                <span className="flex items-center gap-1 text-blue-600">
+                  <RefreshCw className="h-3 w-3" />
+                  Auto-synced:
+                </span>
+                <span className="font-medium text-blue-600">= Total products ({totalProducts})</span>
               </div>
             )}
           </div>
@@ -391,21 +394,35 @@ const ProductSelection = ({
                 />
               </div>
             ) : isPackaging ? (
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium">Add to Order:</Label>
-                <input
-                  type="checkbox"
-                  checked={quantity > 0}
-                  onChange={(e) => {
-                    if (e.target.checked && totalProducts > 0) {
-                      updateQuantity(item.id, type, totalProducts);
-                    } else {
-                      updateQuantity(item.id, type, 0);
-                    }
-                  }}
-                  disabled={totalProducts === 0}
-                  className="h-4 w-4"
-                />
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-medium">Add to Order:</Label>
+                  <input
+                    type="checkbox"
+                    checked={quantity > 0}
+                    onChange={(e) => {
+                      if (e.target.checked && totalProducts > 0) {
+                        updateQuantity(item.id, type, totalProducts);
+                      } else {
+                        updateQuantity(item.id, type, 0);
+                      }
+                    }}
+                    disabled={totalProducts === 0}
+                    className="h-4 w-4"
+                  />
+                </div>
+                {totalProducts === 0 && (
+                  <div className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" />
+                    Add products first
+                  </div>
+                )}
+                {quantity > 0 && (
+                  <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded flex items-center gap-1">
+                    <RefreshCw className="h-3 w-3" />
+                    Auto-synced to {totalProducts} pieces
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center justify-between">
@@ -484,8 +501,18 @@ const ProductSelection = ({
                     <span>Required MOQ:</span>
                     <span className="font-medium">{requiredProductMOQ} pieces {hasAddons ? '(with addons)' : '(without addons)'}</span>
                   </div>
-                  <div className={`text-xs px-2 py-1 rounded text-center ${totalProducts >= requiredProductMOQ ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
-                    {totalProducts >= requiredProductMOQ ? '✓ Products MOQ Met' : `Need ${requiredProductMOQ - totalProducts} more products`}
+                  <div className={`text-xs px-2 py-1 rounded text-center ${totalProducts >= requiredProductMOQ ? 'bg-green-100 text-green-700' : 'bg-destructive/10 text-destructive'}`}>
+                    {totalProducts >= requiredProductMOQ ? (
+                      <span className="flex items-center justify-center gap-1">
+                        <CheckCircle className="h-3 w-3" />
+                        Products MOQ Met
+                      </span>
+                    ) : (
+                      <span className="flex items-center justify-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
+                        Need {requiredProductMOQ - totalProducts} more products
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -500,10 +527,23 @@ const ProductSelection = ({
                     <span className="font-medium">{requiredPackagingMOQ} pieces {hasAddons ? '(with addons)' : '(without addons)'}</span>
                   </div>
                   {totalPackaging > 0 && (
-                    <div className={`text-xs px-2 py-1 rounded text-center ${totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
-                      {totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts ? '✓ Packaging Requirements Met' : 
-                       totalPackaging !== totalProducts ? 'Packaging must equal product quantity' :
-                       `Need ${requiredPackagingMOQ - totalPackaging} more packaging`}
+                    <div className={`text-xs px-2 py-1 rounded text-center ${totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts ? 'bg-green-100 text-green-700' : 'bg-destructive/10 text-destructive'}`}>
+                      {totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts ? (
+                        <span className="flex items-center justify-center gap-1">
+                          <CheckCircle className="h-3 w-3" />
+                          Packaging Requirements Met
+                        </span>
+                      ) : totalPackaging !== totalProducts ? (
+                        <span className="flex items-center justify-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          Packaging must equal product quantity ({totalProducts})
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          Need {requiredPackagingMOQ - totalPackaging} more packaging
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>
@@ -537,9 +577,13 @@ const ProductSelection = ({
       {/* Packaging Section */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium text-foreground">Packaging</h3>
-          <div className="text-sm text-muted-foreground">
-            Quantity auto-syncs with total products ({totalProducts} pieces)
+          <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
+            Packaging
+            <RefreshCw className="h-4 w-4 text-blue-600" />
+          </h3>
+          <div className="text-sm bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200 flex items-center gap-2">
+            <RefreshCw className="h-3 w-3" />
+            Auto-syncs with products ({totalProducts} pieces each)
           </div>
         </div>
         {packaging && packaging.length > 0 ? (
