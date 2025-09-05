@@ -41,7 +41,7 @@ const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
     return (
       <Input
         type="tel"
-        className={className}
+        className={cn("w-full", className)}
         value={value}
         onChange={handleChange}
         placeholder="+923334254321"
