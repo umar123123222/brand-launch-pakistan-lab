@@ -354,7 +354,7 @@ const ProductSelection = ({
             )}
           </div>
           
-          <h3 className="font-medium mb-1 text-black">{item.name}</h3>
+          <h3 className="font-medium mb-1 text-card-foreground">{item.name}</h3>
           {item.description && (
             <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
               {item.description}
