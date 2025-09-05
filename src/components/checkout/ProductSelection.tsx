@@ -226,6 +226,7 @@ const ProductSelection = ({
 
     const hasAddons = localProducts.some(p => p.type === 'addon');
     const productsMOQ = hasAddons ? companySettings.products_moq_with_addon : companySettings.products_moq_without_addon;
+    const packagingMOQ = hasAddons ? companySettings.packaging_moq_with_addon : companySettings.packaging_moq_without_addon;
 
     // Check individual product MOQs first
     const selectedProducts = localProducts.filter(p => p.type === 'product');
@@ -243,28 +244,50 @@ const ProductSelection = ({
       }
     }
 
-    // Check total products MOQ
+    // Check total products MOQ (company requirement)
     const totalProducts = selectedProducts.reduce((sum, p) => sum + p.quantity, 0);
 
     if (totalProducts > 0 && totalProducts < productsMOQ) {
       toast({
-        title: "Company MOQ Requirement",
-        description: `Total minimum order quantity is ${productsMOQ} pieces${hasAddons ? ' (with addons)' : ' (without addons)'}. You have ${totalProducts} pieces.`,
+        title: "Company Products MOQ Requirement",
+        description: `Total products minimum order is ${productsMOQ} pieces${hasAddons ? ' (with addons)' : ' (without addons)'}. You have ${totalProducts} pieces.`,
         variant: "destructive",
       });
       return false;
     }
 
-    // Check packaging quantity equals product quantity
-    const totalPackaging = localProducts
-      .filter(p => p.type === 'packaging')
-      .reduce((sum, p) => sum + p.quantity, 0);
-    
-    const hasPackaging = localProducts.some(p => p.type === 'packaging');
-    if (hasPackaging && totalProducts > 0 && totalPackaging !== totalProducts) {
+    // Check packaging requirements
+    const selectedPackaging = localProducts.filter(p => p.type === 'packaging');
+    const totalPackaging = selectedPackaging.reduce((sum, p) => sum + p.quantity, 0);
+    const hasPackaging = selectedPackaging.length > 0;
+
+    if (hasPackaging) {
+      // 1. Check packaging quantity equals product quantity (user requirement)
+      if (totalProducts > 0 && totalPackaging !== totalProducts) {
+        toast({
+          title: "Packaging Quantity Mismatch",
+          description: `Total packaging quantity (${totalPackaging}) must equal total product quantity (${totalProducts})`,
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      // 2. Check packaging meets company MOQ requirement
+      if (totalPackaging < packagingMOQ) {
+        toast({
+          title: "Company Packaging MOQ Requirement",
+          description: `Total packaging minimum order is ${packagingMOQ} pieces${hasAddons ? ' (with addons)' : ' (without addons)'}. You have ${totalPackaging} pieces.`,
+          variant: "destructive",
+        });
+        return false;
+      }
+    }
+
+    // If products are selected but no packaging, check if packaging is necessary
+    if (totalProducts > 0 && !hasPackaging && companySettings.packaging_necessary) {
       toast({
-        title: "Packaging Quantity Mismatch",
-        description: `Total packaging quantity (${totalPackaging}) must equal total product quantity (${totalProducts})`,
+        title: "Packaging Required",
+        description: "Packaging selection is required when ordering products.",
         variant: "destructive",
       });
       return false;
@@ -431,7 +454,8 @@ const ProductSelection = ({
     .filter(p => p.type === 'packaging')
     .reduce((sum, p) => sum + p.quantity, 0);
   const hasAddons = localProducts.some(p => p.type === 'addon');
-  const requiredMOQ = companySettings ? (hasAddons ? companySettings.products_moq_with_addon : companySettings.products_moq_without_addon) : 0;
+  const requiredProductMOQ = companySettings ? (hasAddons ? companySettings.products_moq_with_addon : companySettings.products_moq_without_addon) : 0;
+  const requiredPackagingMOQ = companySettings ? (hasAddons ? companySettings.packaging_moq_with_addon : companySettings.packaging_moq_without_addon) : 0;
 
   return (
     <div className="space-y-6">
@@ -443,19 +467,54 @@ const ProductSelection = ({
       </div>
 
       {/* Current Order Summary */}
-      {totalProducts > 0 && (
+      {(totalProducts > 0 || totalPackaging > 0) && (
         <Card className="bg-primary/5 border-primary/20">
           <CardContent className="p-4">
-            <div className="flex justify-between items-center">
-              <div className="space-y-1">
-                <div className="text-sm font-medium">Current Order Summary</div>
-                <div className="text-xs text-muted-foreground">
-                  Products: {totalProducts} pieces | Packaging: {totalPackaging} pieces | MOQ Required: {requiredMOQ} pieces
+            <div className="space-y-3">
+              <div className="text-sm font-medium">Current Order Summary</div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                {/* Products Status */}
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Products:</span>
+                    <span className="font-medium">{totalProducts} pieces</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Required MOQ:</span>
+                    <span className="font-medium">{requiredProductMOQ} pieces {hasAddons ? '(with addons)' : '(without addons)'}</span>
+                  </div>
+                  <div className={`text-xs px-2 py-1 rounded text-center ${totalProducts >= requiredProductMOQ ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                    {totalProducts >= requiredProductMOQ ? '✓ Products MOQ Met' : `Need ${requiredProductMOQ - totalProducts} more products`}
+                  </div>
+                </div>
+
+                {/* Packaging Status */}
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Packaging:</span>
+                    <span className="font-medium">{totalPackaging} pieces</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Required MOQ:</span>
+                    <span className="font-medium">{requiredPackagingMOQ} pieces {hasAddons ? '(with addons)' : '(without addons)'}</span>
+                  </div>
+                  {totalPackaging > 0 && (
+                    <div className={`text-xs px-2 py-1 rounded text-center ${totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                      {totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts ? '✓ Packaging Requirements Met' : 
+                       totalPackaging !== totalProducts ? 'Packaging must equal product quantity' :
+                       `Need ${requiredPackagingMOQ - totalPackaging} more packaging`}
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className={`text-sm font-medium px-2 py-1 rounded ${totalProducts >= requiredMOQ ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
-                {totalProducts >= requiredMOQ ? '✓ MOQ Met' : `Need ${requiredMOQ - totalProducts} more`}
-              </div>
+
+              {/* Addon Status */}
+              {hasAddons && (
+                <div className="text-xs text-center bg-green-50 text-green-700 px-2 py-1 rounded">
+                  🎉 Add-on selected - Reduced MOQ active! (From {companySettings?.products_moq_without_addon} to {companySettings?.products_moq_with_addon} pieces)
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -550,10 +609,16 @@ const ProductSelection = ({
             <div className="space-y-2">
               <div className="font-medium">Company Total MOQ:</div>
               <div className="text-muted-foreground ml-4">
-                • Without Add-ons: {companySettings.products_moq_without_addon} pieces total
+                • Products without Add-ons: {companySettings.products_moq_without_addon} pieces
               </div>
               <div className="text-muted-foreground ml-4">
-                • With Add-ons: {companySettings.products_moq_with_addon} pieces total
+                • Products with Add-ons: {companySettings.products_moq_with_addon} pieces
+              </div>
+              <div className="text-muted-foreground ml-4">
+                • Packaging without Add-ons: {companySettings.packaging_moq_without_addon} pieces
+              </div>
+              <div className="text-muted-foreground ml-4">
+                • Packaging with Add-ons: {companySettings.packaging_moq_with_addon} pieces
               </div>
             </div>
             <div className="space-y-2">
