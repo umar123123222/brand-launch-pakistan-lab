@@ -315,7 +315,7 @@ const ClientInformation = ({
                     updateField('cnicFrontImage', file);
                   }}
                   required
-                  className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                  className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-input file:text-input-foreground hover:file:bg-input/80 cursor-pointer"
                 />
                 {localClientInfo.cnicFrontImage && (
                   <p className="text-sm text-muted-foreground mt-1">
@@ -337,7 +337,7 @@ const ClientInformation = ({
                     updateField('cnicBackImage', file);
                   }}
                   required
-                  className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                  className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-input file:text-input-foreground hover:file:bg-input/80 cursor-pointer"
                 />
                 {localClientInfo.cnicBackImage && (
                   <p className="text-sm text-muted-foreground mt-1">
