@@ -326,12 +326,13 @@ const BookConsultation = () => {
     }
   };
 
-  // Check if date is available for booking (tomorrow onwards, no Sundays)
+  // Check if date is available for booking (only next 3 dates)
   const isDateAvailable = (date: Date) => {
     const today = startOfDay(new Date());
     const tomorrow = addDays(today, 1);
+    const thirdDay = addDays(today, 3);
     
-    return date >= tomorrow && !isSunday(date);
+    return date >= tomorrow && date <= thirdDay && !isSunday(date);
   };
 
   return (

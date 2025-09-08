@@ -70,15 +70,14 @@ const ThankYou = () => {
     }
   };
 
-  // Generate time slots for next 3 business days (excluding Sundays)
+  // Generate time slots for next 3 dates only (excluding Sundays)
   const generateTimeSlots = async () => {
     const slots: TimeSlot[] = [];
     const today = new Date();
-    let validDaysFound = 0;
-    let dayOffset = 1;
     const agentCount = await getAgentCapacity();
 
-    while (validDaysFound < 3) {
+    // Generate slots for exactly the next 3 dates (tomorrow, day after, and day after that)
+    for (let dayOffset = 1; dayOffset <= 3; dayOffset++) {
       const currentDate = new Date(today);
       currentDate.setDate(today.getDate() + dayOffset);
       
@@ -113,9 +112,7 @@ const ThankYou = () => {
             }
           }
         }
-        validDaysFound++;
       }
-      dayOffset++;
     }
     
     return slots;
