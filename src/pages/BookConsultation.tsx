@@ -133,7 +133,7 @@ const BookConsultation = () => {
       const slotTimes = slots.map(slot => slot.datetime.toISOString());
       
       const { data: bookedSlots, error } = await supabase
-        .from('bookings')
+        .from('booking_form_submissions')
         .select('booking_datetime')
         .eq('status', 'confirmed')
         .in('booking_datetime', slotTimes);
@@ -246,7 +246,7 @@ const BookConsultation = () => {
       console.log('Current user auth state:', supabase.auth.getUser());
 
       const { data: booking, error: bookingError } = await supabase
-        .from('bookings')
+        .from('booking_form_submissions')
         .insert(bookingData)
         .select()
         .single();

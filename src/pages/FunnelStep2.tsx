@@ -46,7 +46,7 @@ const FunnelStep2 = () => {
 
     try {
       const { error } = await supabase
-        .from("full_applications")
+        .from("funnel_step1_submissions")
         .update({
           city: city.trim(),
           has_business: hasBusiness,

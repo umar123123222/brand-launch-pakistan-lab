@@ -46,7 +46,7 @@ const FunnelStep1 = () => {
       });
       
       const { data, error } = await supabase
-        .from("full_applications")
+        .from("funnel_step1_submissions")
         .insert([{ 
           name: name.trim(),
           email: email.trim(),

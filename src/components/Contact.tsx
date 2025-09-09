@@ -44,7 +44,7 @@ const Contact = () => {
 
     try {
       const { error } = await supabase
-        .from("front_leads")
+        .from("contact_form_submissions")
         .insert([{
           name: form.name.trim(),
           email: form.email.trim(),

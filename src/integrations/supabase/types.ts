@@ -220,6 +220,51 @@ export type Database = {
           },
         ]
       }
+      booking_form_submissions: {
+        Row: {
+          booking_datetime: string
+          business_timeline: string
+          categories: string[]
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          investment_ready: boolean
+          seen_elyscents: boolean
+          status: string
+          updated_at: string
+          whatsapp_number: string
+        }
+        Insert: {
+          booking_datetime: string
+          business_timeline: string
+          categories: string[]
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          investment_ready: boolean
+          seen_elyscents: boolean
+          status?: string
+          updated_at?: string
+          whatsapp_number: string
+        }
+        Update: {
+          booking_datetime?: string
+          business_timeline?: string
+          categories?: string[]
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          investment_ready?: boolean
+          seen_elyscents?: boolean
+          status?: string
+          updated_at?: string
+          whatsapp_number?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           booking_datetime: string
@@ -1056,6 +1101,39 @@ export type Database = {
         }
         Relationships: []
       }
+      consultation_form_submissions: {
+        Row: {
+          category: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          phone: string | null
+          submitted_at: string | null
+          vision: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          phone?: string | null
+          submitted_at?: string | null
+          vision?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          phone?: string | null
+          submitted_at?: string | null
+          vision?: string | null
+        }
+        Relationships: []
+      }
       consultations: {
         Row: {
           category: string | null
@@ -1083,6 +1161,78 @@ export type Database = {
           phone?: string | null
           submitted_at?: string | null
           vision?: string | null
+        }
+        Relationships: []
+      }
+      contact_form_submissions: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          phone_number: string | null
+          product_category: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          phone_number?: string | null
+          product_category?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          phone_number?: string | null
+          product_category?: string | null
+        }
+        Relationships: []
+      }
+      elevate_booking_submissions: {
+        Row: {
+          agenda: string | null
+          brand_name: string
+          contact_name: string
+          created_at: string
+          email: string
+          id: string
+          lead_id: string | null
+          phone: string | null
+          slot_id: string | null
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          agenda?: string | null
+          brand_name: string
+          contact_name: string
+          created_at?: string
+          email: string
+          id?: string
+          lead_id?: string | null
+          phone?: string | null
+          slot_id?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          agenda?: string | null
+          brand_name?: string
+          contact_name?: string
+          created_at?: string
+          email?: string
+          id?: string
+          lead_id?: string | null
+          phone?: string | null
+          slot_id?: string | null
+          updated_at?: string
+          whatsapp?: string | null
         }
         Relationships: []
       }
@@ -1156,6 +1306,48 @@ export type Database = {
         Relationships: []
       }
       full_applications: {
+        Row: {
+          build_support: string | null
+          category: string | null
+          city: string | null
+          created_at: string
+          email: string
+          has_business: string | null
+          id: string
+          investment_range: string | null
+          motivation: string | null
+          name: string
+          phone: string
+        }
+        Insert: {
+          build_support?: string | null
+          category?: string | null
+          city?: string | null
+          created_at?: string
+          email: string
+          has_business?: string | null
+          id?: string
+          investment_range?: string | null
+          motivation?: string | null
+          name: string
+          phone: string
+        }
+        Update: {
+          build_support?: string | null
+          category?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string
+          has_business?: string | null
+          id?: string
+          investment_range?: string | null
+          motivation?: string | null
+          name?: string
+          phone?: string
+        }
+        Relationships: []
+      }
+      funnel_step1_submissions: {
         Row: {
           build_support: string | null
           category: string | null
