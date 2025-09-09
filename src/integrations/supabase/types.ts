@@ -784,6 +784,9 @@ export type Database = {
           cnic_front_image: string | null
           cnic_number: string | null
           country: string | null
+          courier_password: string | null
+          courier_url: string | null
+          courier_username: string | null
           created_at: string | null
           dashboard_password: string | null
           dashboard_suspended: boolean | null
@@ -800,6 +803,7 @@ export type Database = {
           instagram_username: string | null
           labels_details: string | null
           labels_name: string | null
+          lead_source: string | null
           name: string
           niche: string | null
           notes: string | null
@@ -809,6 +813,7 @@ export type Database = {
           product_id: string | null
           product_quantity: number | null
           shopify_password: string | null
+          shopify_url: string | null
           shopify_username: string | null
           status: string
           strn: string | null
@@ -831,6 +836,9 @@ export type Database = {
           cnic_front_image?: string | null
           cnic_number?: string | null
           country?: string | null
+          courier_password?: string | null
+          courier_url?: string | null
+          courier_username?: string | null
           created_at?: string | null
           dashboard_password?: string | null
           dashboard_suspended?: boolean | null
@@ -847,6 +855,7 @@ export type Database = {
           instagram_username?: string | null
           labels_details?: string | null
           labels_name?: string | null
+          lead_source?: string | null
           name: string
           niche?: string | null
           notes?: string | null
@@ -856,6 +865,7 @@ export type Database = {
           product_id?: string | null
           product_quantity?: number | null
           shopify_password?: string | null
+          shopify_url?: string | null
           shopify_username?: string | null
           status?: string
           strn?: string | null
@@ -878,6 +888,9 @@ export type Database = {
           cnic_front_image?: string | null
           cnic_number?: string | null
           country?: string | null
+          courier_password?: string | null
+          courier_url?: string | null
+          courier_username?: string | null
           created_at?: string | null
           dashboard_password?: string | null
           dashboard_suspended?: boolean | null
@@ -894,6 +907,7 @@ export type Database = {
           instagram_username?: string | null
           labels_details?: string | null
           labels_name?: string | null
+          lead_source?: string | null
           name?: string
           niche?: string | null
           notes?: string | null
@@ -903,6 +917,7 @@ export type Database = {
           product_id?: string | null
           product_quantity?: number | null
           shopify_password?: string | null
+          shopify_url?: string | null
           shopify_username?: string | null
           status?: string
           strn?: string | null
@@ -1118,7 +1133,7 @@ export type Database = {
           message: string | null
           name: string
           phone_number: string | null
-          "product _category": string | null
+          product_category: string | null
         }
         Insert: {
           created_at?: string
@@ -1127,7 +1142,7 @@ export type Database = {
           message?: string | null
           name: string
           phone_number?: string | null
-          "product _category"?: string | null
+          product_category?: string | null
         }
         Update: {
           created_at?: string
@@ -1136,7 +1151,7 @@ export type Database = {
           message?: string | null
           name?: string
           phone_number?: string | null
-          "product _category"?: string | null
+          product_category?: string | null
         }
         Relationships: []
       }
@@ -1254,6 +1269,7 @@ export type Database = {
       invoices: {
         Row: {
           amount_due_now: number
+          client_id: string | null
           created_at: string | null
           created_by: number | null
           due_date: string
@@ -1261,12 +1277,17 @@ export type Database = {
           invoice_number: string
           invoice_title: string | null
           invoice_url: string | null
+          items: Json | null
           lead_id: string
+          status: string | null
+          subtotal: number | null
+          tax_amount: number | null
           total_amount: number
           updated_at: string | null
         }
         Insert: {
           amount_due_now: number
+          client_id?: string | null
           created_at?: string | null
           created_by?: number | null
           due_date: string
@@ -1274,12 +1295,17 @@ export type Database = {
           invoice_number: string
           invoice_title?: string | null
           invoice_url?: string | null
+          items?: Json | null
           lead_id: string
+          status?: string | null
+          subtotal?: number | null
+          tax_amount?: number | null
           total_amount: number
           updated_at?: string | null
         }
         Update: {
           amount_due_now?: number
+          client_id?: string | null
           created_at?: string | null
           created_by?: number | null
           due_date?: string
@@ -1287,7 +1313,11 @@ export type Database = {
           invoice_number?: string
           invoice_title?: string | null
           invoice_url?: string | null
+          items?: Json | null
           lead_id?: string
+          status?: string | null
+          subtotal?: number | null
+          tax_amount?: number | null
           total_amount?: number
           updated_at?: string | null
         }
@@ -1967,6 +1997,7 @@ export type Database = {
     Views: {
       analytics_dashboard: {
         Row: {
+          clients_work_completed: number | null
           full_payment_clients: number | null
           ghosted_clients: number | null
           half_payment_clients: number | null
@@ -2002,6 +2033,14 @@ export type Database = {
         Args: { email_input?: string; phone_input?: string }
         Returns: string
       }
+      get_client_assignment_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      get_clients_work_completed: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -2013,6 +2052,19 @@ export type Database = {
       get_next_available_agent: {
         Args: { booking_date: string; booking_time: string }
         Returns: string
+      }
+      get_next_client_assignee: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_notification_recipients: {
+        Args: {
+          action_type: string
+          actor_role: string
+          assigned_agent_id?: string
+          client_id?: string
+        }
+        Returns: string[]
       }
       get_or_create_client_by_contact: {
         Args: {
@@ -2027,12 +2079,37 @@ export type Database = {
         }
         Returns: string
       }
+      get_total_packaging: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      get_total_products: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      get_user_meetings_count: {
+        Args: { user_email?: string }
+        Returns: number
+      }
       hash_password: {
         Args: { password: string }
         Returns: string
       }
       normalize_phone: {
         Args: { phone_input: string }
+        Returns: string
+      }
+      redistribute_unassigned_clients: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      upsert_client_auth: {
+        Args: {
+          p_client_id: string
+          p_email: string
+          p_is_active?: boolean
+          p_password_hash: string
+        }
         Returns: string
       }
       verify_client_password: {

@@ -48,9 +48,9 @@ const Contact = () => {
         .insert([{
           name: form.name.trim(),
           email: form.email.trim(),
-          phone_number: form.phone.trim(),
-          "product _category": form.category.trim(),
-          message: form.vision.trim(),
+          phone_number: form.phone.trim() || null,
+          product_category: form.category.trim() || null,
+          message: form.vision.trim() || null,
         }]);
 
       if (error) {
