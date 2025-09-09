@@ -12,30 +12,15 @@ const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       let inputValue = e.target.value
       
-      // Remove all non-digit characters except + at the beginning
-      let cleanValue = inputValue.replace(/[^\d+]/g, '')
+      // Allow common phone number characters: digits, spaces, dashes, parentheses, dots, plus
+      let cleanValue = inputValue.replace(/[^0-9\s\-\(\)\.\+]/g, '')
       
-      // If empty, allow it for typing
-      if (!cleanValue) {
-        onChange(cleanValue)
-        return
+      // Limit total length to reasonable phone number length
+      if (cleanValue.length > 20) {
+        cleanValue = cleanValue.substring(0, 20)
       }
       
-      // Ensure it starts with + for international format
-      if (!cleanValue.startsWith('+') && cleanValue.length > 0) {
-        // If user starts typing digits without +, add it
-        cleanValue = '+' + cleanValue
-      }
-      
-      // Limit total length to reasonable international phone number length
-      if (cleanValue.length > 15) {
-        cleanValue = cleanValue.substring(0, 15)
-      }
-      
-      // Basic validation: must start with + followed by digits
-      if (cleanValue.match(/^\+\d*$/)) {
-        onChange(cleanValue)
-      }
+      onChange(cleanValue)
     }
 
     return (
@@ -47,7 +32,7 @@ const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
         )}
         value={value}
         onChange={handleChange}
-        placeholder="+923334254321"
+        placeholder="03001234567"
         ref={ref}
         {...props}
       />
