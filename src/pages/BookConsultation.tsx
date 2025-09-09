@@ -261,17 +261,9 @@ const BookConsultation = () => {
           bookingData: bookingData
         });
         
-        // Try inserting without .single() to see if that's the issue
-        const { data: booking2, error: bookingError2 } = await supabase
-          .from('bookings')
-          .insert(bookingData)
-          .select();
-        
-        console.log('Attempt without .single():', { data: booking2, error: bookingError2 });
-        
         toast({
           title: "Booking failed",
-          description: bookingError.message || "Please try again or contact support.",
+          description: `Database error: ${bookingError.message}. Please try again or contact support.`,
           variant: "destructive"
         });
         return;

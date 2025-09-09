@@ -22,6 +22,7 @@ const FunnelStep1 = () => {
     if (!name.trim() || !email.trim() || !mobileNumber.trim()) {
       toast({
         title: "Please fill in all fields",
+        description: "Name, email and phone number are required.",
         variant: "destructive",
       });
       return;

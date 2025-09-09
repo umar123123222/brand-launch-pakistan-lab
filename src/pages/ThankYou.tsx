@@ -225,9 +225,10 @@ const ThankYou = () => {
         });
 
       if (error) {
+        console.error("Database error:", error);
         toast({
           title: "Booking failed",
-          description: "Please try again or contact support.",
+          description: `Database error: ${error.message}. Please try again or contact support.`,
           variant: "destructive"
         });
         return;

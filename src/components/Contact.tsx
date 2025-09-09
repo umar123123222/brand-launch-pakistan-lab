@@ -57,7 +57,7 @@ const Contact = () => {
         console.error("Database error:", error);
         toast({
           title: "Submission Failed", 
-          description: "There was an issue saving your information. Please try again.",
+          description: `Database error: ${error.message}. Please try again.`,
           variant: "destructive",
         });
         return;
