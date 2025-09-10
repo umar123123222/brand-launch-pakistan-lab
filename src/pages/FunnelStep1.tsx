@@ -87,7 +87,7 @@ const FunnelStep1 = () => {
 
       // Redirect to book consultation after a small delay to ensure localStorage is set
       setTimeout(() => {
-        navigate("/book-consultation");
+        navigate("/thank-you");
       }, 100);
     } catch (error) {
       console.error("Error submitting form:", error);
