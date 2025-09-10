@@ -214,6 +214,7 @@ const ThankYou = () => {
       const { error } = await supabase
         .from('bookings')
         .insert({
+          id: crypto.randomUUID(),
           full_name: formData.fullName,
           email: formData.email,
           whatsapp_number: formData.whatsappNumber,
