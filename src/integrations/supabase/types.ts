@@ -287,7 +287,7 @@ export type Database = {
           created_at?: string
           email: string
           full_name: string
-          id?: string
+          id: string
           investment_ready: boolean
           seen_elyscents: boolean
           status?: string
@@ -1288,7 +1288,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
-          id?: string
+          id: string
           message?: string | null
           name: string
           phone_number?: string | null
@@ -1326,7 +1326,7 @@ export type Database = {
           created_at?: string
           email: string
           has_business?: string | null
-          id?: string
+          id: string
           investment_range?: string | null
           motivation?: string | null
           name: string
