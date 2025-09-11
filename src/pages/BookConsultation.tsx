@@ -93,6 +93,8 @@ const BookConsultation = () => {
     
     try {
       const dateString = date.toISOString().split('T')[0];
+      console.log('Loading slots for date:', dateString, 'Business hours:', businessHours);
+      
       const response = await fetch(
         `https://bsqtjhjqytuncpvbnuwp.supabase.co/functions/v1/get-slot-availability?date=${dateString}&startHour=${businessHours.start}&endHour=${businessHours.end}`,
         {
@@ -104,10 +106,12 @@ const BookConsultation = () => {
       );
 
       if (!response.ok) {
+        console.error('Edge function response not ok:', response.status, response.statusText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('Edge function response data:', data);
       
       if (data.error) {
         console.warn('No slots available:', data.error);
@@ -124,6 +128,7 @@ const BookConsultation = () => {
         booked: slot.booked
       }));
 
+      console.log('Mapped slots:', slots);
       setAvailableSlots(slots);
     } catch (error) {
       console.error('Error fetching slot availability:', error);
