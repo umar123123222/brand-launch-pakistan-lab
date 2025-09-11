@@ -2224,6 +2224,14 @@ export type Database = {
       }
     }
     Functions: {
+      check_booking_capacity: {
+        Args: {
+          booking_date: string
+          booking_time: string
+          max_capacity?: number
+        }
+        Returns: boolean
+      }
       create_user_with_temp_password: {
         Args: {
           temp_pass?: string
