@@ -222,9 +222,11 @@ export type Database = {
       }
       booking_form_submissions: {
         Row: {
+          "Booking Date PKT": string | null
           booking_datetime: string
           business_timeline: string
           categories: string[]
+          "Created Date PKT": string | null
           created_at: string
           email: string
           full_name: string
@@ -236,9 +238,11 @@ export type Database = {
           whatsapp_number: string
         }
         Insert: {
+          "Booking Date PKT"?: string | null
           booking_datetime: string
           business_timeline: string
           categories: string[]
+          "Created Date PKT"?: string | null
           created_at?: string
           email: string
           full_name: string
@@ -250,9 +254,11 @@ export type Database = {
           whatsapp_number: string
         }
         Update: {
+          "Booking Date PKT"?: string | null
           booking_datetime?: string
           business_timeline?: string
           categories?: string[]
+          "Created Date PKT"?: string | null
           created_at?: string
           email?: string
           full_name?: string
@@ -267,9 +273,11 @@ export type Database = {
       }
       bookings: {
         Row: {
+          "Booking Date PKT": string | null
           booking_datetime: string
           business_timeline: string
           categories: string[]
+          "Created Date PKT": string | null
           created_at: string
           email: string
           full_name: string
@@ -281,9 +289,11 @@ export type Database = {
           whatsapp_number: string
         }
         Insert: {
+          "Booking Date PKT"?: string | null
           booking_datetime: string
           business_timeline: string
           categories: string[]
+          "Created Date PKT"?: string | null
           created_at?: string
           email: string
           full_name: string
@@ -295,9 +305,11 @@ export type Database = {
           whatsapp_number: string
         }
         Update: {
+          "Booking Date PKT"?: string | null
           booking_datetime?: string
           business_timeline?: string
           categories?: string[]
+          "Created Date PKT"?: string | null
           created_at?: string
           email?: string
           full_name?: string
