@@ -87,54 +87,97 @@ const BookConsultation = () => {
     }
   };
 
-  // Load slots for selected date using the new edge function
-  const loadSlotsForDate = async (date: Date) => {
-    if (!date) return;
+  // Generate time slots for a specific date in Pakistan timezone
+  const generateTimeSlotsForDate = async (date: Date): Promise<TimeSlot[]> => {
+    const slots: TimeSlot[] = [];
+    const dayOfWeek = date.getDay();
     
-    try {
-      const dateString = date.toISOString().split('T')[0];
-      console.log('Loading slots for date:', dateString, 'Business hours:', businessHours);
-      
-      const response = await fetch(
-        `https://bsqtjhjqytuncpvbnuwp.supabase.co/functions/v1/get-slot-availability?date=${dateString}&startHour=${businessHours.start}&endHour=${businessHours.end}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      if (!response.ok) {
-        console.error('Edge function response not ok:', response.status, response.statusText);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log('Edge function response data:', data);
-      
-      if (data.error) {
-        console.warn('No slots available:', data.error);
-        setAvailableSlots([]);
-        return;
-      }
-
-      // Map the slots to our TimeSlot interface
-      const slots: TimeSlot[] = data.slots.map((slot: any) => ({
-        time: slot.time,
-        datetime: new Date(slot.datetime),
-        available: slot.available,
-        capacity: slot.capacity,
-        booked: slot.booked
-      }));
-
-      console.log('Mapped slots:', slots);
-      setAvailableSlots(slots);
-    } catch (error) {
-      console.error('Error fetching slot availability:', error);
-      // Fallback to empty slots
-      setAvailableSlots([]);
+    // Skip Sundays
+    if (dayOfWeek === 0) {
+      return slots;
     }
+
+    // Check for holidays
+    const { data: holidays } = await supabase
+      .from('holidays')
+      .select('date')
+      .eq('date', date.toISOString().split('T')[0]);
+
+    if (holidays && holidays.length > 0) {
+      return slots; // No slots on holidays
+    }
+    
+    let availableHours = { start: businessHours.start, end: businessHours.end };
+    let agentCount = await getAgentCapacity();
+
+    // Generate 1-hour slots in Pakistan timezone
+    for (let hour = availableHours.start; hour < availableHours.end; hour++) {
+      // Create time slot in Pakistan timezone, then convert to UTC for storage
+      const slotDateTimeUTC = createPakistanTimeSlot(date, hour);
+      
+      // Double-check it's within Pakistan business hours
+      if (!isWithinPakistanBusinessHours(slotDateTimeUTC)) {
+        continue;
+      }
+      
+      slots.push({
+        time: formatPakistanTime(slotDateTimeUTC), // Display in Pakistan time (12-hour format)
+        datetime: new Date(slotDateTimeUTC), // Store as UTC
+        available: true,
+        capacity: agentCount,
+        booked: 0
+      });
+    }
+    
+    return slots;
+  };
+
+  // Check slot availability and capacity
+  const checkSlotAvailability = async (slots: TimeSlot[]) => {
+    try {
+      if (slots.length === 0) return slots;
+
+      const slotTimes = slots.map(slot => slot.datetime.toISOString());
+      
+      const { data: bookedSlots, error } = await supabase
+        .from('booking_form_submissions')
+        .select('booking_datetime')
+        .eq('status', 'confirmed')
+        .in('booking_datetime', slotTimes);
+
+      if (error) {
+        console.error('Error fetching bookings:', error);
+        return slots;
+      }
+
+      // Count bookings per time slot
+      const bookingCounts = new Map<string, number>();
+      bookedSlots?.forEach(booking => {
+        const timeKey = new Date(booking.booking_datetime).getTime().toString();
+        bookingCounts.set(timeKey, (bookingCounts.get(timeKey) || 0) + 1);
+      });
+
+      return slots.map(slot => {
+        const timeKey = slot.datetime.getTime().toString();
+        const bookedCount = bookingCounts.get(timeKey) || 0;
+        
+        return {
+          ...slot,
+          booked: bookedCount,
+          available: bookedCount < slot.capacity
+        };
+      });
+    } catch (error) {
+      console.error('Error checking availability:', error);
+      return slots;
+    }
+  };
+
+  // Load slots for selected date
+  const loadSlotsForDate = async (date: Date) => {
+    const slots = await generateTimeSlotsForDate(date);
+    const slotsWithAvailability = await checkSlotAvailability(slots);
+    setAvailableSlots(slotsWithAvailability);
   };
 
   useEffect(() => {
@@ -148,31 +191,10 @@ const BookConsultation = () => {
   useEffect(() => {
     if (selectedDate) {
       loadSlotsForDate(selectedDate);
-      
-      // Set up auto-refresh every 30 seconds when a date is selected
-      const interval = setInterval(() => {
-        if (!loading) { // Don't refresh if currently booking
-          loadSlotsForDate(selectedDate);
-        }
-      }, 30000);
-
-      return () => clearInterval(interval);
     } else {
       setAvailableSlots([]);
     }
-  }, [selectedDate, businessHours]);
-
-  // Add real-time slot refresh when user becomes active again
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden && selectedDate && !loading) {
-        loadSlotsForDate(selectedDate);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [selectedDate, loading]);
+  }, [selectedDate]);
 
   const handleCategoryChange = (category: string, checked: boolean) => {
     if (checked) {
@@ -213,92 +235,74 @@ const BookConsultation = () => {
       return;
     }
 
-    if (!selectedSlot) {
-      toast({
-        title: "Please select a time slot",
-        variant: "destructive"
-      });
-      return;
-    }
-
     setLoading(true);
     
     try {
-      console.log('Creating atomic booking...');
+      // Check if user came from funnel
+      const funnelApplicationId = localStorage.getItem('funnel_application_id');
       
-      // Use the atomic booking edge function
-      const response = await fetch('https://bsqtjhjqytuncpvbnuwp.supabase.co/functions/v1/create-booking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          fullName: formData.fullName,
-          email: formData.email,
-          whatsappNumber: formData.whatsappNumber,
-          categories: formData.categories,
-          businessTimeline: formData.businessTimeline,
-          investmentReady: formData.investmentReady === "Yes",
-          seenElyscents: formData.seenElyscents === "Yes",
-          bookingDatetime: selectedSlot.datetime.toISOString()
-        })
-      });
+      // First create the booking - log the exact data being sent
+      const bookingData = {
+        full_name: formData.fullName,
+        email: formData.email,
+        whatsapp_number: formData.whatsappNumber,
+        business_timeline: formData.businessTimeline,
+        investment_ready: formData.investmentReady === "Yes",
+        seen_elyscents: formData.seenElyscents === "Yes",
+        categories: formData.categories,
+        booking_datetime: selectedSlot!.datetime.toISOString()
+      };
+      
+      console.log('Attempting to create booking with data:', bookingData);
+      console.log('Current user auth state:', supabase.auth.getUser());
 
-      const result = await response.json();
+      const { data: booking, error: bookingError } = await supabase
+        .from('booking_form_submissions')
+        .insert(bookingData)
+        .select()
+        .single();
 
-      if (!response.ok || !result.success) {
-        // Handle specific error codes
-        if (result.error_code === 'CAPACITY_EXCEEDED') {
-          toast({
-            title: "Time slot no longer available",
-            description: "This slot was just booked by someone else. Please select another time.",
-            variant: "destructive"
+      if (bookingError) {
+        console.error('Booking error details:', {
+          error: bookingError,
+          code: bookingError.code,
+          message: bookingError.message,
+          details: bookingError.details,
+          hint: bookingError.hint,
+          bookingData: bookingData
+        });
+        
+        toast({
+          title: "Booking failed",
+          description: `Database error: ${bookingError.message}. Please try again or contact support.`,
+          variant: "destructive"
+        });
+        return;
+      }
+
+      console.log('Booking created successfully:', booking);
+
+      // If user came from funnel, create the mapping
+      if (funnelApplicationId && booking) {
+        const { error: mappingError } = await supabase
+          .from('lead_client_mapping')
+          .insert({
+            lead_type: 'booking',
+            lead_id: booking.id,
+            client_id: funnelApplicationId
           });
-          
-          // Refresh availability for current date
-          if (selectedDate) {
-            await loadSlotsForDate(selectedDate);
-          }
-          setSelectedSlot(null);
-          return;
+        
+        if (mappingError) {
+          console.error('Mapping error:', mappingError);
+          // Don't fail the booking for mapping errors, just log
         }
         
-        if (result.error_code === 'DUPLICATE_BOOKING') {
-          toast({
-            title: "Duplicate booking detected",
-            description: "You already have a booking for this time slot.",
-            variant: "destructive"
-          });
-          return;
-        }
-
-        throw new Error(result.error || 'Booking failed');
+        // Clear the funnel application ID since booking is complete
+        localStorage.removeItem('funnel_application_id');
       }
 
-      console.log('Booking created successfully:', result);
-
-      // Handle funnel mapping if needed
-      const funnelApplicationId = localStorage.getItem('funnel_application_id');
-      if (funnelApplicationId && result.booking_id) {
-        try {
-          const { error: mappingError } = await supabase
-            .from('lead_client_mapping')
-            .insert({
-              lead_type: 'booking',
-              lead_id: result.booking_id,
-              client_id: funnelApplicationId
-            });
-          
-          if (mappingError) {
-            console.error('Mapping error:', mappingError);
-          }
-          
-          localStorage.removeItem('funnel_application_id');
-        } catch (mappingError) {
-          console.error('Error creating mapping:', mappingError);
-          // Don't fail the booking for mapping errors
-        }
-      }
+      // TODO: Agent assignment will be implemented when database types are updated
+      // For now, booking is created successfully without specific agent assignment
       
       toast({
         title: "Booking confirmed!",
@@ -308,7 +312,7 @@ const BookConsultation = () => {
       // Redirect to thank you page with booking details
       navigate('/book-consultation/thank-you', {
         state: {
-          bookingTime: selectedSlot.datetime,
+          bookingTime: selectedSlot!.datetime,
           fullName: formData.fullName
         }
       });
@@ -316,8 +320,8 @@ const BookConsultation = () => {
     } catch (error) {
       console.error('Booking error:', error);
       toast({
-        title: "Booking failed",
-        description: "An error occurred while creating your booking. Please try again.",
+        title: "Something went wrong",
+        description: "Please try again later.",
         variant: "destructive"  
       });
     } finally {
@@ -513,23 +517,10 @@ const BookConsultation = () => {
               {/* Enhanced Calendar Booking Section */}
               {formData.investmentReady === "Yes" && (
                 <div className="space-y-6">
-                   <div className="flex items-center justify-between">
-                     <h3 className="text-white text-xl font-bold flex items-center gap-2">
-                       <CalendarDays className="h-5 w-5" />
-                       Select Date & Time for Your Call
-                     </h3>
-                     {selectedDate && (
-                       <button
-                         type="button"
-                         onClick={() => loadSlotsForDate(selectedDate)}
-                         disabled={loading}
-                         className="flex items-center gap-2 px-3 py-2 text-sm text-white/80 hover:text-white border border-white/20 hover:border-white/40 rounded-lg transition-colors disabled:opacity-50"
-                       >
-                         <div className={`w-4 h-4 border-2 border-white/20 border-t-white rounded-full ${loading ? 'animate-spin' : ''}`}></div>
-                         Refresh
-                       </button>
-                     )}
-                   </div>
+                  <h3 className="text-white text-xl font-bold flex items-center gap-2">
+                    <CalendarDays className="h-5 w-5" />
+                    Select Date & Time for Your Call
+                  </h3>
                   <p className="text-sm text-gray-300 mt-1">All times shown in Pakistan Time (PKT)</p>
                   
                   <div className="bg-white/5 rounded-xl p-6 space-y-6">
@@ -591,38 +582,33 @@ const BookConsultation = () => {
                           </div>
                         ) : (
                           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-                             {availableSlots.map((slot, index) => (
-                               <button
-                                 key={index}
-                                 type="button"
-                                 disabled={!slot.available || loading}
-                                 onClick={() => setSelectedSlot(slot)}
-                                 className={`relative p-4 rounded-xl border-2 text-sm font-semibold transition-all duration-200 transform hover:scale-105 ${
-                                   selectedSlot?.datetime.getTime() === slot.datetime.getTime()
-                                     ? 'bg-white text-purple-900 border-white shadow-lg shadow-white/20'
-                                     : slot.available && !loading
-                                     ? 'bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/50'
-                                     : 'bg-gray-500/10 text-gray-400 border-gray-500/20 cursor-not-allowed opacity-50'
-                                 }`}
-                               >
-                                 <div className="text-base">{slot.time}</div>
-                                 {!slot.available ? (
-                                   <div className="text-xs mt-1 text-red-300">Full</div>
-                                 ) : slot.capacity > 1 && (
-                                   <div className="text-xs mt-1 opacity-75">
-                                     {slot.capacity - slot.booked} left
-                                   </div>
-                                 )}
-                                 {loading && (
-                                   <div className="absolute inset-0 bg-black/20 rounded-xl flex items-center justify-center">
-                                     <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-                                   </div>
-                                 )}
-                                 {selectedSlot?.datetime.getTime() === slot.datetime.getTime() && !loading && (
-                                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full"></div>
-                                 )}
-                               </button>
-                             ))}
+                            {availableSlots.map((slot, index) => (
+                              <button
+                                key={index}
+                                type="button"
+                                disabled={!slot.available}
+                                onClick={() => setSelectedSlot(slot)}
+                                className={`relative p-4 rounded-xl border-2 text-sm font-semibold transition-all duration-200 transform hover:scale-105 ${
+                                  selectedSlot?.datetime.getTime() === slot.datetime.getTime()
+                                    ? 'bg-white text-purple-900 border-white shadow-lg shadow-white/20'
+                                    : slot.available
+                                    ? 'bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/50'
+                                    : 'bg-gray-500/10 text-gray-400 border-gray-500/20 cursor-not-allowed opacity-50'
+                                }`}
+                              >
+                                <div className="text-base">{slot.time}</div>
+                                {!slot.available ? (
+                                  <div className="text-xs mt-1 text-red-300">Booked</div>
+                                ) : slot.capacity > 1 && slot.booked > 0 && (
+                                  <div className="text-xs mt-1 opacity-75">
+                                    {slot.capacity - slot.booked} left
+                                  </div>
+                                )}
+                                {selectedSlot?.datetime.getTime() === slot.datetime.getTime() && (
+                                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full"></div>
+                                )}
+                              </button>
+                            ))}
                           </div>
                         )}
                       </div>
