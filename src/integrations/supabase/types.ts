@@ -2232,6 +2232,19 @@ export type Database = {
         }
         Returns: boolean
       }
+      create_booking_atomic: {
+        Args: {
+          p_booking_datetime: string
+          p_business_timeline: string
+          p_categories: string[]
+          p_email: string
+          p_full_name: string
+          p_investment_ready: boolean
+          p_seen_elyscents: boolean
+          p_whatsapp_number: string
+        }
+        Returns: Json
+      }
       create_user_with_temp_password: {
         Args: {
           temp_pass?: string
