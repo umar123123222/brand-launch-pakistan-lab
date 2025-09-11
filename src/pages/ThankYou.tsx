@@ -11,6 +11,12 @@ import { Calendar } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { 
+  formatPakistanTime, 
+  createPakistanTimeSlot, 
+  isWithinPakistanBusinessHours,
+  toPakistanTime 
+} from "@/lib/timezone";
 
 // Declare fbq as a global variable to avoid TypeScript errors
 declare global {
@@ -70,7 +76,7 @@ const ThankYou = () => {
     }
   };
 
-  // Generate time slots for next 3 dates only (excluding Sundays)
+  // Generate time slots for next 3 dates only (excluding Sundays) in Pakistan timezone
   const generateTimeSlots = async () => {
     const slots: TimeSlot[] = [];
     const today = new Date();
@@ -90,21 +96,20 @@ const ThankYou = () => {
           .eq('date', currentDate.toISOString().split('T')[0]);
 
         if (!holidays || holidays.length === 0) {
-          // Generate slots from 9 AM to 5 PM (30-minute intervals)
+          // Generate slots from 9 AM to 5 PM (30-minute intervals) in Pakistan timezone
           for (let hour = 9; hour < 17; hour++) {
             for (let minute = 0; minute < 60; minute += 30) {
-              const slotTime = new Date(currentDate);
-              slotTime.setHours(hour, minute, 0, 0);
+              // Create time slot in Pakistan timezone, then convert to UTC for storage
+              const slotDateTimeUTC = createPakistanTimeSlot(currentDate, hour + (minute / 60));
               
-              const timeString = slotTime.toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-              });
+              // Validate it's within Pakistan business hours
+              if (!isWithinPakistanBusinessHours(slotDateTimeUTC)) {
+                continue;
+              }
               
               slots.push({
-                time: timeString,
-                datetime: new Date(slotTime),
+                time: formatPakistanTime(slotDateTimeUTC, 'h:mm a'), // Pakistan time 12-hour format
+                datetime: new Date(slotDateTimeUTC), // Store as UTC
                 available: true,
                 capacity: agentCount,
                 booked: 0
@@ -427,6 +432,7 @@ const ThankYou = () => {
                     <Calendar className="h-5 w-5" />
                     Select Your Preferred Time Slot
                   </h3>
+                  <p className="text-sm text-gray-300 mt-1">All times shown in Pakistan Time (PKT)</p>
                   
                   <div className="space-y-6">
                     {Object.entries(groupedSlots).map(([date, slots]) => (

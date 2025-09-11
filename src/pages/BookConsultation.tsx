@@ -12,6 +12,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { format, addDays, startOfDay, isSunday, isSameDay } from "date-fns";
+import { 
+  formatPakistanTime, 
+  formatPakistanDateTime, 
+  createPakistanTimeSlot, 
+  isWithinPakistanBusinessHours,
+  toPakistanTime 
+} from "@/lib/timezone";
 
 interface TimeSlot {
   time: string;
@@ -80,7 +87,7 @@ const BookConsultation = () => {
     }
   };
 
-  // Generate time slots for a specific date
+  // Generate time slots for a specific date in Pakistan timezone
   const generateTimeSlotsForDate = async (date: Date): Promise<TimeSlot[]> => {
     const slots: TimeSlot[] = [];
     const dayOfWeek = date.getDay();
@@ -103,19 +110,19 @@ const BookConsultation = () => {
     let availableHours = { start: businessHours.start, end: businessHours.end };
     let agentCount = await getAgentCapacity();
 
-    // Generate 1-hour slots
+    // Generate 1-hour slots in Pakistan timezone
     for (let hour = availableHours.start; hour < availableHours.end; hour++) {
-      const slotTime = new Date(date);
-      slotTime.setHours(hour, 0, 0, 0);
+      // Create time slot in Pakistan timezone, then convert to UTC for storage
+      const slotDateTimeUTC = createPakistanTimeSlot(date, hour);
       
-      const timeString = slotTime.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        hour12: true
-      });
+      // Double-check it's within Pakistan business hours
+      if (!isWithinPakistanBusinessHours(slotDateTimeUTC)) {
+        continue;
+      }
       
       slots.push({
-        time: timeString,
-        datetime: new Date(slotTime),
+        time: formatPakistanTime(slotDateTimeUTC), // Display in Pakistan time (12-hour format)
+        datetime: new Date(slotDateTimeUTC), // Store as UTC
         available: true,
         capacity: agentCount,
         booked: 0
@@ -514,6 +521,7 @@ const BookConsultation = () => {
                     <CalendarDays className="h-5 w-5" />
                     Select Date & Time for Your Call
                   </h3>
+                  <p className="text-sm text-gray-300 mt-1">All times shown in Pakistan Time (PKT)</p>
                   
                   <div className="bg-white/5 rounded-xl p-6 space-y-6">
                     {/* Enhanced Calendar */}

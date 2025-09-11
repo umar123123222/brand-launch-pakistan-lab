@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Footer from "@/components/Footer";
+import { formatPakistanDateTime } from "@/lib/timezone";
 
 const BookConsultationThankYou = () => {
   const location = useLocation();
@@ -15,18 +16,13 @@ const BookConsultationThankYou = () => {
 
   const formatBookingTime = (datetime: string) => {
     const date = new Date(datetime);
+    // Use Pakistan timezone formatting
+    const formattedDateTime = formatPakistanDateTime(date);
+    const [datePart, timePart] = formattedDateTime.split(' at ');
+    
     return {
-      date: date.toLocaleDateString('en-US', { 
-        weekday: 'long', 
-        month: 'long', 
-        day: 'numeric',
-        year: 'numeric'
-      }),
-      time: date.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      })
+      date: datePart,
+      time: timePart + ' PKT'
     };
   };
 
