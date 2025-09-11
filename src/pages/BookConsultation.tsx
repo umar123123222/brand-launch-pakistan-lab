@@ -174,7 +174,11 @@ const BookConsultation = () => {
   };
 
   useEffect(() => {
-    fetchScheduleData();
+    const initializeSchedule = async () => {
+      await fetchScheduleData();
+      await getNext3WorkingDays();
+    };
+    initializeSchedule();
   }, []);
 
   useEffect(() => {
@@ -318,13 +322,46 @@ const BookConsultation = () => {
     }
   };
 
-  // Check if date is available for booking (only next 3 dates)
-  const isDateAvailable = (date: Date) => {
+  // Get the next 3 working days (excluding Sundays and holidays)
+  const [availableBookingDates, setAvailableBookingDates] = useState<Date[]>([]);
+
+  const getNext3WorkingDays = async () => {
+    const workingDays: Date[] = [];
     const today = startOfDay(new Date());
-    const tomorrow = addDays(today, 1);
-    const thirdDay = addDays(today, 3);
+    let currentDate = addDays(today, 1); // Start from tomorrow
+    let daysChecked = 0;
+    const maxDaysToCheck = 14; // Prevent infinite loops
     
-    return date >= tomorrow && date <= thirdDay && !isSunday(date);
+    // Fetch holidays once
+    const { data: holidays } = await supabase
+      .from('holidays')
+      .select('date');
+    
+    const holidayDates = holidays?.map(h => h.date) || [];
+
+    while (workingDays.length < 3 && daysChecked < maxDaysToCheck) {
+      const dateString = currentDate.toISOString().split('T')[0];
+      const isHoliday = holidayDates.includes(dateString);
+      const isSundayDate = isSunday(currentDate);
+      
+      // If it's not Sunday and not a holiday, it's a working day
+      if (!isSundayDate && !isHoliday) {
+        workingDays.push(new Date(currentDate));
+      }
+      
+      currentDate = addDays(currentDate, 1);
+      daysChecked++;
+    }
+    
+    setAvailableBookingDates(workingDays);
+    return workingDays;
+  };
+
+  // Check if date is available for booking (must be one of the 3 working days)
+  const isDateAvailable = (date: Date) => {
+    return availableBookingDates.some(availableDate => 
+      isSameDay(date, availableDate)
+    );
   };
 
   return (
