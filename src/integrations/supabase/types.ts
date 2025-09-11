@@ -2304,6 +2304,10 @@ export type Database = {
         }
         Returns: string
       }
+      get_slot_availability: {
+        Args: { p_date: string; p_end_hour?: number; p_start_hour?: number }
+        Returns: Json
+      }
       get_total_packaging: {
         Args: Record<PropertyKey, never>
         Returns: number

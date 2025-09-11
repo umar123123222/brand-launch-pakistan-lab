@@ -76,47 +76,55 @@ const ThankYou = () => {
     }
   };
 
-  // Generate time slots for next 3 dates only (excluding Sundays) in Pakistan timezone
+  // Generate time slots using the new edge function
   const generateTimeSlots = async () => {
     const slots: TimeSlot[] = [];
     const today = new Date();
-    const agentCount = await getAgentCapacity();
 
-    // Generate slots for exactly the next 3 dates (tomorrow, day after, and day after that)
+    // Generate slots for exactly the next 3 dates
     for (let dayOffset = 1; dayOffset <= 3; dayOffset++) {
       const currentDate = new Date(today);
       currentDate.setDate(today.getDate() + dayOffset);
       
-      // Skip Sundays (0 = Sunday)
-      if (currentDate.getDay() !== 0) {
-        // Check for holidays
-        const { data: holidays } = await supabase
-          .from('holidays')
-          .select('date')
-          .eq('date', currentDate.toISOString().split('T')[0]);
-
-        if (!holidays || holidays.length === 0) {
-          // Generate slots from 9 AM to 5 PM (30-minute intervals) in Pakistan timezone
-          for (let hour = 9; hour < 17; hour++) {
-            for (let minute = 0; minute < 60; minute += 30) {
-              // Create time slot in Pakistan timezone, then convert to UTC for storage
-              const slotDateTimeUTC = createPakistanTimeSlot(currentDate, hour + (minute / 60));
-              
-              // Validate it's within Pakistan business hours
-              if (!isWithinPakistanBusinessHours(slotDateTimeUTC)) {
-                continue;
-              }
-              
-              slots.push({
-                time: formatPakistanTime(slotDateTimeUTC, 'h:mm a'), // Pakistan time 12-hour format
-                datetime: new Date(slotDateTimeUTC), // Store as UTC
-                available: true,
-                capacity: agentCount,
-                booked: 0
-              });
+      try {
+        const dateString = currentDate.toISOString().split('T')[0];
+        const response = await fetch(
+          `https://bsqtjhjqytuncpvbnuwp.supabase.co/functions/v1/get-slot-availability?date=${dateString}&startHour=9&endHour=17`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
             }
           }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          
+          if (data.slots && Array.isArray(data.slots)) {
+            // Convert 1-hour slots to 30-minute slots for this component
+            data.slots.forEach((hourSlot: any) => {
+              const baseTime = new Date(hourSlot.datetime);
+              
+              // Create two 30-minute slots for each hour slot
+              for (let minute = 0; minute < 60; minute += 30) {
+                const slotTime = new Date(baseTime);
+                slotTime.setMinutes(minute);
+                
+                slots.push({
+                  time: formatPakistanTime(slotTime, 'h:mm a'),
+                  datetime: new Date(slotTime),
+                  available: hourSlot.available,
+                  capacity: hourSlot.capacity,
+                  booked: Math.floor(hourSlot.booked / 2) // Distribute bookings across 30-min slots
+                });
+              }
+            });
+          }
         }
+      } catch (error) {
+        console.error(`Error fetching slots for ${currentDate}:`, error);
+        // Continue with next date on error
       }
     }
     
@@ -213,33 +221,70 @@ const ThankYou = () => {
       return;
     }
 
+    if (!selectedSlot) {
+      toast({
+        title: "Please select a time slot",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setLoading(true);
     
     try {
-      const { error } = await supabase
-        .from('bookings')
-        .insert({
-          id: crypto.randomUUID(),
-          full_name: formData.fullName,
+      console.log('Creating atomic booking...');
+      
+      // Use the atomic booking edge function
+      const response = await fetch('https://bsqtjhjqytuncpvbnuwp.supabase.co/functions/v1/create-booking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName,
           email: formData.email,
-          whatsapp_number: formData.whatsappNumber,
-          business_timeline: formData.businessTimeline,
-          investment_ready: formData.investmentReady === "Yes",
-          seen_elyscents: formData.seenElyscents === "Yes",
+          whatsappNumber: formData.whatsappNumber,
           categories: formData.categories,
-          booking_datetime: selectedSlot!.datetime.toISOString()
-        });
+          businessTimeline: formData.businessTimeline,
+          investmentReady: formData.investmentReady === "Yes",
+          seenElyscents: formData.seenElyscents === "Yes",
+          bookingDatetime: selectedSlot.datetime.toISOString()
+        })
+      });
 
-      if (error) {
-        console.error("Database error:", error);
-        toast({
-          title: "Booking failed",
-          description: `Database error: ${error.message}. Please try again or contact support.`,
-          variant: "destructive"
-        });
-        return;
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        // Handle specific error codes
+        if (result.error_code === 'CAPACITY_EXCEEDED') {
+          toast({
+            title: "Time slot no longer available",
+            description: "This slot was just booked by someone else. Please select another time.",
+            variant: "destructive"
+          });
+          
+          // Refresh availability
+          const updatedSlots = await generateTimeSlots();
+          const availableSlots = await checkSlotAvailability(updatedSlots);
+          setAvailableSlots(availableSlots);
+          setSelectedSlot(null);
+          return;
+        }
+        
+        if (result.error_code === 'DUPLICATE_BOOKING') {
+          toast({
+            title: "Duplicate booking detected",
+            description: "You already have a booking for this time slot.",
+            variant: "destructive"
+          });
+          return;
+        }
+
+        throw new Error(result.error || 'Booking failed');
       }
 
+      console.log('Booking created successfully:', result);
+      
       toast({
         title: "Booking confirmed!",
         description: "Redirecting you to confirmation page..."
@@ -248,7 +293,7 @@ const ThankYou = () => {
       // Redirect to thank you page with booking details
       navigate('/book-consultation/thank-you', {
         state: {
-          bookingTime: selectedSlot!.datetime,
+          bookingTime: selectedSlot.datetime,
           fullName: formData.fullName
         }
       });
@@ -256,8 +301,8 @@ const ThankYou = () => {
     } catch (error) {
       console.error('Booking error:', error);
       toast({
-        title: "Something went wrong",
-        description: "Please try again later.",
+        title: "Booking failed",
+        description: "An error occurred while creating your booking. Please try again.",
         variant: "destructive"
       });
     } finally {
