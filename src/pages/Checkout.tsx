@@ -213,8 +213,8 @@ const Checkout = () => {
                  description: "Your order has been submitted successfully.",
                });
 
-               // Navigate to thank you page or dashboard
-               navigate('/thank-you');
+                // Navigate to checkout thank you page
+                navigate('/checkout/thank-you');
                
              } catch (error) {
                console.error("Checkout error:", error);

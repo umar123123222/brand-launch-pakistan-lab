@@ -20,6 +20,8 @@ import HireUs from "./pages/HireUs";
 import PrivateLabel from "./pages/PrivateLabel";
 import Checkout from "./pages/Checkout";
 
+import CheckoutThankYou from "./pages/CheckoutThankYou";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -44,6 +46,7 @@ const App = () => (
           <Route path="/hire-us" element={<HireUs />} />
           <Route path="/private-label" element={<PrivateLabel />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout/thank-you" element={<CheckoutThankYou />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
