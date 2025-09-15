@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ArrowRight, Plus, Minus, CheckCircle, AlertCircle, RefreshCw, Package, Box, XCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, Plus, Minus, CheckCircle, AlertCircle, RefreshCw, Package, Box, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ProductSelectionProps {
@@ -33,6 +33,11 @@ const ProductSelection = ({
 }: ProductSelectionProps) => {
   const { toast } = useToast();
   const [localProducts, setLocalProducts] = useState(selectedProducts);
+  const [currentProductPage, setCurrentProductPage] = useState(0);
+  const [currentPackagingPage, setCurrentPackagingPage] = useState(0);
+  const [currentAddonPage, setCurrentAddonPage] = useState(0);
+  
+  const ITEMS_PER_PAGE = 6; // 3 columns x 2 rows
 
   // Fetch products for the selected category
   const { data: products, isLoading: productsLoading } = useQuery({
@@ -329,6 +334,61 @@ const ProductSelection = ({
   const autoSyncPackaging = true; // Based on the auto-sync logic in the original
   const isLoading = productsLoading || packagingLoading || addonsLoading;
 
+  // Pagination helper functions
+  const getPaginatedItems = (items: any[], currentPage: number) => {
+    const startIndex = currentPage * ITEMS_PER_PAGE;
+    return items?.slice(startIndex, startIndex + ITEMS_PER_PAGE) || [];
+  };
+
+  const getTotalPages = (items: any[]) => {
+    return Math.ceil((items?.length || 0) / ITEMS_PER_PAGE);
+  };
+
+  const renderPaginationControls = (
+    currentPage: number,
+    totalItems: number,
+    onPageChange: (page: number) => void,
+    label: string
+  ) => {
+    const totalPages = getTotalPages({ length: totalItems } as any[]);
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="flex items-center justify-center gap-4 mt-8">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onPageChange(Math.max(0, currentPage - 1))}
+          disabled={currentPage === 0}
+          className="flex items-center gap-2"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Previous
+        </Button>
+        
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            Page {currentPage + 1} of {totalPages}
+          </span>
+          <span className="text-xs text-muted-foreground/60">
+            ({Math.min((currentPage + 1) * ITEMS_PER_PAGE, totalItems)} of {totalItems} {label})
+          </span>
+        </div>
+        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
+          disabled={currentPage >= totalPages - 1}
+          className="flex items-center gap-2"
+        >
+          Next
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-card/30 via-background/50 to-muted/20 flex items-center justify-center">
@@ -370,43 +430,43 @@ const ProductSelection = ({
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
 
-          <div className="p-6">
-            <div className="mb-4">
-              <h4 className="font-bold text-card-foreground text-xl mb-2 group-hover:text-primary transition-colors duration-300 leading-tight">
+          <div className="p-8">
+            <div className="mb-6">
+              <h4 className="font-bold text-card-foreground text-xl mb-3 group-hover:text-primary transition-colors duration-300 leading-tight">
                 {item.name}
               </h4>
               {item.description && (
-                <p className="text-sm text-muted-foreground/80 line-clamp-2 leading-relaxed">
+                <p className="text-sm text-muted-foreground/80 line-clamp-3 leading-relaxed">
                   {item.description}
                 </p>
               )}
             </div>
 
-            <div className="flex items-center justify-between mb-4 p-3 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-primary/10">
+            <div className="flex items-center justify-between mb-6 p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-primary/10">
               <span className="text-sm font-medium text-muted-foreground">Price per unit:</span>
-              <span className="font-bold text-lg text-primary">
+              <span className="font-bold text-xl text-primary">
                 {formatCurrency(item.price)}
               </span>
             </div>
 
             {!isAddon && (
-              <div className="flex items-center justify-between mb-4 p-2 bg-muted/10 rounded-lg">
+              <div className="flex items-center justify-between mb-6 p-3 bg-muted/10 rounded-lg">
                 <span className="text-sm text-muted-foreground">{isPackaging ? "Per Unit:" : "Min MOQ:"}</span>
                 <span className="font-medium text-card-foreground text-sm">{isPackaging ? "1 piece" : `${minQuantity} pieces`}</span>
               </div>
             )}
 
             {isPackaging && (
-              <div className="flex items-center justify-between mb-4 p-2 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg border border-accent/20">
-                <span className="flex items-center gap-1 text-xs text-accent font-medium">
-                  <RefreshCw className="h-3 w-3" />
+              <div className="flex items-center justify-between mb-6 p-3 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg border border-accent/20">
+                <span className="flex items-center gap-2 text-sm text-accent font-medium">
+                  <RefreshCw className="h-4 w-4" />
                   Auto-synced:
                 </span>
-                <span className="font-bold text-xs text-accent">= Total products ({totalProducts})</span>
+                <span className="font-bold text-sm text-accent">= Total products ({totalProducts})</span>
               </div>
             )}
 
-            <div className="mt-4">
+            <div className="mt-6">
               {isAddon ? (
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-bold text-card-foreground">Select Add-on:</Label>
@@ -495,7 +555,7 @@ const ProductSelection = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-card/30 via-background/50 to-muted/20">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-6 py-8 max-w-[1600px]">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
             Select Your Products
@@ -513,11 +573,24 @@ const ProductSelection = ({
               <Package className="h-6 w-6 text-primary" />
             </div>
             <h3 className="text-2xl font-bold text-foreground">Premium Products</h3>
+            {products && products.length > ITEMS_PER_PAGE && (
+              <div className="ml-auto text-sm text-muted-foreground">
+                {products.length} products available
+              </div>
+            )}
           </div>
           {products && products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-              {products.map((product) => renderItemCard(product, 'product'))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+                {getPaginatedItems(products, currentProductPage).map((product) => renderItemCard(product, 'product'))}
+              </div>
+              {renderPaginationControls(
+                currentProductPage,
+                products.length,
+                setCurrentProductPage,
+                'products'
+              )}
+            </>
           ) : (
             <div className="text-center py-16 bg-card/30 backdrop-blur-sm rounded-2xl border border-border/50">
               <Package className="mx-auto h-16 w-16 mb-6 text-muted-foreground/60" />
@@ -538,11 +611,24 @@ const ProductSelection = ({
                 ✨ Auto-synced with products
               </div>
             )}
+            {packaging && packaging.length > ITEMS_PER_PAGE && (
+              <div className="ml-auto text-sm text-muted-foreground">
+                {packaging.length} options available
+              </div>
+            )}
           </div>
           {packaging && packaging.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-              {packaging.map((pack) => renderItemCard(pack, 'packaging'))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+                {getPaginatedItems(packaging, currentPackagingPage).map((pack) => renderItemCard(pack, 'packaging'))}
+              </div>
+              {renderPaginationControls(
+                currentPackagingPage,
+                packaging.length,
+                setCurrentPackagingPage,
+                'packaging options'
+              )}
+            </>
           ) : (
             <div className="text-center py-16 bg-card/30 backdrop-blur-sm rounded-2xl border border-border/50">
               <Box className="mx-auto h-16 w-16 mb-6 text-muted-foreground/60" />
@@ -558,11 +644,24 @@ const ProductSelection = ({
               <Plus className="h-6 w-6 text-secondary" />
             </div>
             <h3 className="text-2xl font-bold text-foreground">Premium Add-ons</h3>
+            {addons && addons.length > ITEMS_PER_PAGE && (
+              <div className="ml-auto text-sm text-muted-foreground">
+                {addons.length} add-ons available
+              </div>
+            )}
           </div>
           {addons && addons.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-              {addons.map((addon) => renderItemCard(addon, 'addon'))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+                {getPaginatedItems(addons, currentAddonPage).map((addon) => renderItemCard(addon, 'addon'))}
+              </div>
+              {renderPaginationControls(
+                currentAddonPage,
+                addons.length,
+                setCurrentAddonPage,
+                'add-ons'
+              )}
+            </>
           ) : (
             <div className="text-center py-16 bg-card/30 backdrop-blur-sm rounded-2xl border border-border/50">
               <Plus className="mx-auto h-16 w-16 mb-6 text-muted-foreground/60" />
