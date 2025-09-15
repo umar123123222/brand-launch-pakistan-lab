@@ -139,47 +139,46 @@ const ProductSelection = ({
     setLocalProducts(selectedProducts);
   }, [selectedProducts]);
 
+  // Auto-sync packaging quantities when total product quantity changes
+  useEffect(() => {
+    const totalProducts = localProducts
+      .filter(p => p.type === 'product')
+      .reduce((sum, p) => sum + p.quantity, 0);
+
+    const selectedPackaging = localProducts.filter(p => p.type === 'packaging');
+    
+    if (selectedPackaging.length > 0 && totalProducts > 0) {
+      const updatedProducts = localProducts.map(item => {
+        if (item.type === 'packaging') {
+          return { ...item, quantity: totalProducts };
+        }
+        return item;
+      });
+      
+      // Only update if quantities actually changed
+      const hasChanged = selectedPackaging.some(p => p.quantity !== totalProducts);
+      if (hasChanged) {
+        setLocalProducts(updatedProducts);
+      }
+    }
+  }, [localProducts.filter(p => p.type === 'product')]);
+
   const updateQuantity = (id: string, type: 'product' | 'packaging' | 'addon', quantity: number) => {
     const updated = localProducts.filter(p => !(p.id === id && p.type === type));
     if (quantity > 0) {
       updated.push({ id, type, quantity });
     }
     
-    // Auto-sync packaging quantities with total product quantity
-    if (type === 'product') {
-      const newLocalProducts = [...updated];
-      const totalProducts = newLocalProducts
-        .filter(p => p.type === 'product')
-        .reduce((sum, p) => sum + p.quantity, 0);
-      
-      // Update all existing packaging items to match total product quantity
-      const packagingItems = newLocalProducts.filter(p => p.type === 'packaging');
-      packagingItems.forEach(item => {
-        const index = newLocalProducts.findIndex(p => p.id === item.id && p.type === 'packaging');
-        if (index !== -1 && totalProducts > 0) {
-          newLocalProducts[index].quantity = totalProducts;
-        }
-      });
-      
-      setLocalProducts(newLocalProducts);
-    } else {
-      setLocalProducts(updated);
-    }
+    setLocalProducts(updated);
   };
 
   const handleQuantityDecrease = (item: any, type: 'product' | 'packaging' | 'addon') => {
     const quantity = getQuantity(item.id, type);
     const minQuantity = type === 'product' ? item.moq || 1 : type === 'packaging' ? item.min_order_quantity || 1 : 1;
     
-    // For packaging, auto-sync with total products - don't allow manual changes
+    // For packaging, don't allow manual changes - only remove
     if (type === 'packaging') {
-      const totalProducts = localProducts
-        .filter(p => p.type === 'product')
-        .reduce((sum, p) => sum + p.quantity, 0);
-      
-      if (totalProducts > 0) {
-        updateQuantity(item.id, type, 0); // Remove packaging if no products
-      }
+      updateQuantity(item.id, type, 0);
       return;
     }
     
@@ -196,15 +195,8 @@ const ProductSelection = ({
     const quantity = getQuantity(item.id, type);
     const minQuantity = type === 'product' ? item.moq || 1 : type === 'packaging' ? item.min_order_quantity || 1 : 1;
     
-    // For packaging, auto-sync with total products - don't allow manual changes  
+    // For packaging, don't allow manual changes
     if (type === 'packaging') {
-      const totalProducts = localProducts
-        .filter(p => p.type === 'product')
-        .reduce((sum, p) => sum + p.quantity, 0);
-      
-      if (totalProducts > 0) {
-        updateQuantity(item.id, type, totalProducts); // Set packaging to total products
-      }
       return;
     }
     
