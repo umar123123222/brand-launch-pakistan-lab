@@ -37,7 +37,7 @@ const ProductSelection = ({
   const [currentPackagingPage, setCurrentPackagingPage] = useState(0);
   const [currentAddonPage, setCurrentAddonPage] = useState(0);
   
-  const ITEMS_PER_PAGE = 6; // 3 columns x 2 rows
+  const ITEMS_PER_PAGE = 4; // 2 columns x 2 rows
 
   // Fetch products for the selected category
   const { data: products, isLoading: productsLoading } = useQuery({
@@ -443,33 +443,33 @@ const ProductSelection = ({
             </div>
 
             <div className="flex items-center justify-between mb-6 p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-primary/10">
-              <span className="text-base font-medium text-muted-foreground whitespace-nowrap">Price per unit:</span>
-              <span className="font-bold text-xl text-primary whitespace-nowrap">
+              <span className="text-base font-medium text-muted-foreground">Price per unit:</span>
+              <span className="font-bold text-xl text-primary">
                 {formatCurrency(item.price)}
               </span>
             </div>
 
             {!isAddon && (
               <div className="flex items-center justify-between mb-6 p-3 bg-muted/10 rounded-lg">
-                <span className="text-base text-muted-foreground whitespace-nowrap">{isPackaging ? "Per Unit:" : "Min MOQ:"}</span>
-                <span className="font-medium text-card-foreground text-base whitespace-nowrap">{isPackaging ? "1 piece" : `${minQuantity} pieces`}</span>
+                <span className="text-base text-muted-foreground">{isPackaging ? "Per Unit:" : "Min MOQ:"}</span>
+                <span className="font-medium text-card-foreground text-base">{isPackaging ? "1 piece" : `${minQuantity} pieces`}</span>
               </div>
             )}
 
             {isPackaging && (
               <div className="flex items-center justify-between mb-6 p-3 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg border border-accent/20">
-                <span className="flex items-center gap-2 text-base text-accent font-medium whitespace-nowrap">
+                <span className="flex items-center gap-2 text-base text-accent font-medium">
                   <RefreshCw className="h-4 w-4" />
                   Auto-synced:
                 </span>
-                <span className="font-bold text-base text-accent whitespace-nowrap">= Total products ({totalProducts})</span>
+                <span className="font-bold text-base text-accent">= Total products ({totalProducts})</span>
               </div>
             )}
 
             <div className="mt-6">
               {isAddon ? (
                 <div className="flex items-center justify-between">
-                  <Label className="text-base font-bold text-card-foreground whitespace-nowrap">Select Add-on:</Label>
+                  <Label className="text-base font-bold text-card-foreground">Select Add-on:</Label>
                   <div className="relative">
                     <input
                       type="checkbox"
@@ -482,7 +482,7 @@ const ProductSelection = ({
               ) : isPackaging ? (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label className="text-base font-bold text-card-foreground whitespace-nowrap">Add to Order:</Label>
+                    <Label className="text-base font-bold text-card-foreground">Add to Order:</Label>
                     <div className="relative">
                       <input
                         type="checkbox"
@@ -501,20 +501,20 @@ const ProductSelection = ({
                   </div>
                   {totalProducts === 0 && (
                     <div className="text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-lg flex items-center gap-2 border border-amber-200">
-                      <AlertCircle className="h-4 w-4" />
-                      Add products first to enable packaging
+                      <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                      <span>Add products first to enable packaging</span>
                     </div>
                   )}
                   {quantity > 0 && (
                     <div className="text-sm text-accent bg-accent/10 px-3 py-2 rounded-lg flex items-center gap-2 border border-accent/20">
-                      <RefreshCw className="h-4 w-4" />
-                      Auto-synced to {totalProducts} pieces
+                      <RefreshCw className="h-4 w-4 flex-shrink-0" />
+                      <span>Auto-synced to {totalProducts} pieces</span>
                     </div>
                   )}
                 </div>
               ) : (
                 <div className="flex items-center justify-between">
-                  <Label className="text-base font-bold text-card-foreground whitespace-nowrap">Quantity:</Label>
+                  <Label className="text-base font-bold text-card-foreground">Quantity:</Label>
                   <div className="flex items-center bg-card/50 backdrop-blur-sm border-2 border-primary/20 rounded-xl overflow-hidden shadow-lg">
                     <Button
                       variant="ghost"
@@ -581,7 +581,7 @@ const ProductSelection = ({
           </div>
           {products && products.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-10 lg:gap-16">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 lg:gap-20">
                 {getPaginatedItems(products, currentProductPage).map((product) => renderItemCard(product, 'product'))}
               </div>
               {renderPaginationControls(
@@ -619,7 +619,7 @@ const ProductSelection = ({
           </div>
           {packaging && packaging.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-10 lg:gap-16">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 lg:gap-20">
                 {getPaginatedItems(packaging, currentPackagingPage).map((pack) => renderItemCard(pack, 'packaging'))}
               </div>
               {renderPaginationControls(
@@ -652,7 +652,7 @@ const ProductSelection = ({
           </div>
           {addons && addons.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-10 lg:gap-16">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 lg:gap-20">
                 {getPaginatedItems(addons, currentAddonPage).map((addon) => renderItemCard(addon, 'addon'))}
               </div>
               {renderPaginationControls(
