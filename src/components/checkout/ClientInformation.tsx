@@ -13,6 +13,7 @@ interface ClientInfo {
   name: string;
   phone: string;
   email: string;
+  address: string;
   businessName: string;
   businessEmail?: string;
   businessPhone?: string;
@@ -85,6 +86,7 @@ const ClientInformation = ({
             name: clientData.name || localClientInfo.name,
             email: clientData.email || localClientInfo.email,
             phone: clientData.phone || localClientInfo.phone,
+            address: clientData.address || localClientInfo.address,
             businessName: clientData.brand_name || localClientInfo.businessName,
             businessEmail: clientData.business_email || localClientInfo.businessEmail,
             businessPhone: clientData.business_number || localClientInfo.businessPhone,
@@ -159,6 +161,15 @@ const ClientInformation = ({
       toast({
         title: "Required Field",
         description: "Business name is required to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!localClientInfo.address.trim()) {
+      toast({
+        title: "Required Field",
+        description: "Address is required to continue.",
         variant: "destructive",
       });
       return;
@@ -286,6 +297,20 @@ const ClientInformation = ({
                   required
                 />
               </div>
+            </div>
+
+            <div>
+              <Label htmlFor="address" className="text-sm font-medium">
+                Address <span className="text-destructive">*</span>
+              </Label>
+              <Textarea
+                id="address"
+                value={localClientInfo.address || ''}
+                onChange={(e) => updateField('address', e.target.value)}
+                placeholder="Enter your complete address"
+                rows={3}
+                required
+              />
             </div>
 
             <div>

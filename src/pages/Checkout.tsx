@@ -22,6 +22,7 @@ export interface CheckoutData {
     name: string;
     phone: string;
     email: string;
+    address: string;
     businessName: string;
     businessEmail?: string;
     businessPhone?: string;
@@ -47,6 +48,7 @@ const Checkout = () => {
       name: "",
       phone: "",
       email: "",
+      address: "",
       businessName: "",
       cnicNumber: "",
       cnicFrontImage: null,
