@@ -255,17 +255,22 @@ const ProductSelection = ({
     const hasPackaging = selectedPackaging.length > 0;
 
     if (hasPackaging) {
-      // 1. Check packaging quantity equals product quantity (user requirement)
-      if (totalProducts > 0 && totalPackaging !== totalProducts) {
-        toast({
-          title: "Packaging Quantity Mismatch",
-          description: `Total packaging quantity (${totalPackaging}) must equal total product quantity (${totalProducts})`,
-          variant: "destructive",
-        });
-        return false;
+      // 1. Check each packaging item quantity equals product quantity (user requirement)
+      for (const packagingProduct of selectedPackaging) {
+        const packagingData = packaging?.find(p => p.id === packagingProduct.id);
+        const packagingName = packagingData?.name || 'Packaging item';
+        
+        if (totalProducts > 0 && packagingProduct.quantity !== totalProducts) {
+          toast({
+            title: "Packaging Quantity Mismatch",
+            description: `${packagingName} quantity (${packagingProduct.quantity}) must equal total product quantity (${totalProducts})`,
+            variant: "destructive",
+          });
+          return false;
+        }
       }
 
-      // 2. Check packaging meets company MOQ requirement
+      // 2. Check packaging meets company MOQ requirement (sum all packaging for company MOQ)
       if (totalPackaging < packagingMOQ) {
         toast({
           title: "Company Packaging MOQ Requirement",
@@ -475,7 +480,14 @@ const ProductSelection = ({
 
   // Check if all MOQ requirements are met
   const isProductMOQMet = totalProducts >= requiredProductMOQ;
-  const isPackagingMOQMet = totalPackaging === 0 || (totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts);
+  
+  // For packaging MOQ: check that each selected packaging has quantity equal to total products AND total packaging meets company MOQ
+  const selectedPackaging = localProducts.filter(p => p.type === 'packaging');
+  const isPackagingMOQMet = selectedPackaging.length === 0 || (
+    selectedPackaging.every(pkg => pkg.quantity === totalProducts) && 
+    totalPackaging >= requiredPackagingMOQ
+  );
+  
   const canContinue = isProductMOQMet && isPackagingMOQMet;
 
   return (
@@ -531,16 +543,16 @@ const ProductSelection = ({
                     <span className="font-medium">{requiredPackagingMOQ} pieces {hasAddons ? '(with addons)' : '(without addons)'}</span>
                   </div>
                   {totalPackaging > 0 && (
-                    <div className={`text-xs px-2 py-1 rounded text-center ${totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts ? 'bg-green-100 text-green-700' : 'bg-destructive/10 text-destructive'}`}>
-                      {totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts ? (
+                    <div className={`text-xs px-2 py-1 rounded text-center ${isPackagingMOQMet ? 'bg-green-100 text-green-700' : 'bg-destructive/10 text-destructive'}`}>
+                      {isPackagingMOQMet ? (
                         <span className="flex items-center justify-center gap-1">
                           <CheckCircle className="h-3 w-3" />
                           Packaging Requirements Met
                         </span>
-                      ) : totalPackaging !== totalProducts ? (
+                      ) : selectedPackaging.some(pkg => pkg.quantity !== totalProducts) ? (
                         <span className="flex items-center justify-center gap-1">
                           <AlertCircle className="h-3 w-3" />
-                          Packaging must equal product quantity ({totalProducts})
+                          Each packaging must equal product quantity ({totalProducts})
                         </span>
                       ) : (
                         <span className="flex items-center justify-center gap-1">
