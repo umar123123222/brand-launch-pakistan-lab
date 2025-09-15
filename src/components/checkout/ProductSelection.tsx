@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ArrowRight, Plus, Minus, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
+import { ArrowLeft, ArrowRight, Plus, Minus, CheckCircle, AlertCircle, RefreshCw, Package, Box, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ProductSelectionProps {
@@ -313,13 +313,30 @@ const ProductSelection = ({
     }
   };
 
+  const getTotalProducts = () => {
+    return localProducts
+      .filter(p => p.type === 'product')
+      .reduce((sum, p) => sum + p.quantity, 0);
+  };
+
+  const getTotalPackaging = () => {
+    return localProducts
+      .filter(p => p.type === 'packaging')
+      .reduce((sum, p) => sum + p.quantity, 0);
+  };
+
+  const canContinue = localProducts.length > 0;
+  const autoSyncPackaging = true; // Based on the auto-sync logic in the original
   const isLoading = productsLoading || packagingLoading || addonsLoading;
 
   if (isLoading) {
     return (
-      <div className="text-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-        <p className="mt-2 text-muted-foreground">Loading products...</p>
+      <div className="min-h-screen bg-gradient-to-br from-card/30 via-background/50 to-muted/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary/20 border-t-primary mx-auto mb-6"></div>
+          <p className="text-xl text-muted-foreground">Loading premium products...</p>
+          <p className="text-sm text-muted-foreground/60 mt-2">Please wait while we fetch the best options for you</p>
+        </div>
       </div>
     );
   }
@@ -336,390 +353,301 @@ const ProductSelection = ({
       .reduce((sum, p) => sum + p.quantity, 0);
 
     return (
-      <Card key={`${type}-${item.id}`} className="h-full">
-        <CardContent className="p-6">
-          <div className="aspect-square mb-3 bg-muted rounded-lg overflow-hidden">
+      <Card key={`${type}-${item.id}`} className="group h-full bg-card/70 backdrop-blur-sm border border-border/50 shadow-lg hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-[1.02] hover:bg-card/80 overflow-hidden">
+        <CardContent className="p-0">
+          <div className="aspect-square bg-gradient-to-br from-muted/30 to-muted/10 relative overflow-hidden">
             {item.image_url || (item.images && item.images[0]) ? (
               <img
                 src={item.image_url || item.images[0]}
                 alt={item.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
-                <span className="text-lg font-bold text-primary/60">
-                  {item.name.charAt(0).toUpperCase()}
-                </span>
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted/20 to-muted/5">
+                <Package className="h-20 w-20 text-muted-foreground/60 group-hover:text-primary/60 transition-colors duration-300" />
               </div>
             )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
-          
-          <h3 className="font-medium mb-1 text-gray-900">{item.name}</h3>
-          {item.description && (
-            <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
-              {item.description}
-            </p>
-          )}
-          
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-black">Price:</span>
-              <span className="font-medium text-black">{formatCurrency(item.price)}</span>
+
+          <div className="p-6">
+            <div className="mb-4">
+              <h4 className="font-bold text-card-foreground text-xl mb-2 group-hover:text-primary transition-colors duration-300 leading-tight">
+                {item.name}
+              </h4>
+              {item.description && (
+                <p className="text-sm text-muted-foreground/80 line-clamp-2 leading-relaxed">
+                  {item.description}
+                </p>
+              )}
             </div>
+
+            <div className="flex items-center justify-between mb-4 p-3 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-primary/10">
+              <span className="text-sm font-medium text-muted-foreground">Price per unit:</span>
+              <span className="font-bold text-lg text-primary">
+                {formatCurrency(item.price)}
+              </span>
+            </div>
+
             {!isAddon && (
-              <div className="flex justify-between">
-                <span className="text-black">{isPackaging ? "Per Unit:" : "Min MOQ:"}</span>
-                <span className="font-medium text-black">{isPackaging ? "1 piece" : `${minQuantity} pieces`}</span>
+              <div className="flex items-center justify-between mb-4 p-2 bg-muted/10 rounded-lg">
+                <span className="text-sm text-muted-foreground">{isPackaging ? "Per Unit:" : "Min MOQ:"}</span>
+                <span className="font-medium text-card-foreground text-sm">{isPackaging ? "1 piece" : `${minQuantity} pieces`}</span>
               </div>
             )}
+
             {isPackaging && (
-              <div className="flex justify-between text-xs">
-                <span className="flex items-center gap-1 text-blue-600">
+              <div className="flex items-center justify-between mb-4 p-2 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg border border-accent/20">
+                <span className="flex items-center gap-1 text-xs text-accent font-medium">
                   <RefreshCw className="h-3 w-3" />
                   Auto-synced:
                 </span>
-                <span className="font-medium text-blue-600">= Total products ({totalProducts})</span>
+                <span className="font-bold text-xs text-accent">= Total products ({totalProducts})</span>
               </div>
             )}
-          </div>
 
-          <div className="mt-4">
-            {isAddon ? (
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium text-black">Select:</Label>
-                <input
-                  type="checkbox"
-                  checked={quantity > 0}
-                  onChange={(e) => updateQuantity(item.id, type, e.target.checked ? 1 : 0)}
-                  className="h-4 w-4"
-                />
-              </div>
-            ) : isPackaging ? (
-              <div className="space-y-2">
+            <div className="mt-4">
+              {isAddon ? (
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium text-black">Add to Order:</Label>
-                  <input
-                    type="checkbox"
-                    checked={quantity > 0}
-                    onChange={(e) => {
-                      if (e.target.checked && totalProducts > 0) {
-                        updateQuantity(item.id, type, totalProducts);
-                      } else {
-                        updateQuantity(item.id, type, 0);
-                      }
-                    }}
-                    disabled={totalProducts === 0}
-                    className="h-4 w-4"
-                  />
-                </div>
-                {totalProducts === 0 && (
-                  <div className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded flex items-center gap-1">
-                    <AlertCircle className="h-3 w-3" />
-                    Add products first
+                  <Label className="text-sm font-bold text-card-foreground">Select Add-on:</Label>
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={quantity > 0}
+                      onChange={(e) => updateQuantity(item.id, type, e.target.checked ? 1 : 0)}
+                      className="h-5 w-5 rounded border-2 border-primary/20 text-primary focus:ring-primary/20 focus:ring-2"
+                    />
                   </div>
-                )}
-                {quantity > 0 && (
-                  <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded flex items-center gap-1">
-                    <RefreshCw className="h-3 w-3" />
-                    Auto-synced to {totalProducts} pieces
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium text-black">Quantity:</Label>
-                <div className="flex items-center bg-background border border-input rounded-md overflow-hidden">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-9 w-9 p-0 hover:bg-muted/50 border-r border-input/50 rounded-none"
-                    onClick={() => handleQuantityDecrease(item, type)}
-                    disabled={quantity <= 0}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => {
-                      const newQuantity = Math.max(0, parseInt(e.target.value) || 0);
-                      updateQuantity(item.id, type, newQuantity);
-                    }}
-                    className="h-9 w-16 text-center border-0 focus-visible:ring-0 focus-visible:ring-offset-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    min="0"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-9 w-9 p-0 hover:bg-muted/50 border-l border-input/50 rounded-none"
-                    onClick={() => handleQuantityIncrease(item, type)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
                 </div>
-              </div>
-            )}
-          </div>
-          
-          {isPackaging && quantity > 0 && (
-            <div className="mt-2 text-xs text-center text-muted-foreground bg-muted/50 rounded p-1">
-              Quantity: {totalProducts} pieces
+              ) : isPackaging ? (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-bold text-card-foreground">Add to Order:</Label>
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={quantity > 0}
+                        onChange={(e) => {
+                          if (e.target.checked && totalProducts > 0) {
+                            updateQuantity(item.id, type, totalProducts);
+                          } else {
+                            updateQuantity(item.id, type, 0);
+                          }
+                        }}
+                        disabled={totalProducts === 0}
+                        className="h-5 w-5 rounded border-2 border-primary/20 text-primary focus:ring-primary/20 focus:ring-2 disabled:opacity-50"
+                      />
+                    </div>
+                  </div>
+                  {totalProducts === 0 && (
+                    <div className="text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg flex items-center gap-2 border border-amber-200">
+                      <AlertCircle className="h-4 w-4" />
+                      Add products first to enable packaging
+                    </div>
+                  )}
+                  {quantity > 0 && (
+                    <div className="text-xs text-accent bg-accent/10 px-3 py-2 rounded-lg flex items-center gap-2 border border-accent/20">
+                      <RefreshCw className="h-4 w-4" />
+                      Auto-synced to {totalProducts} pieces
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-bold text-card-foreground">Quantity:</Label>
+                  <div className="flex items-center bg-card/50 backdrop-blur-sm border-2 border-primary/20 rounded-xl overflow-hidden shadow-lg">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-10 w-10 p-0 hover:bg-primary/10 hover:text-primary border-r border-primary/10 rounded-none transition-all duration-200"
+                      onClick={() => handleQuantityDecrease(item, type)}
+                      disabled={quantity <= 0}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <Input
+                      type="number"
+                      value={quantity}
+                      onChange={(e) => {
+                        const newQuantity = Math.max(0, parseInt(e.target.value) || 0);
+                        updateQuantity(item.id, type, newQuantity);
+                      }}
+                      className="h-10 w-16 text-center border-0 bg-transparent font-bold text-card-foreground focus-visible:ring-0 focus-visible:ring-offset-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      min="0"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-10 w-10 p-0 hover:bg-primary/10 hover:text-primary border-l border-primary/10 rounded-none transition-all duration-200"
+                      onClick={() => handleQuantityIncrease(item, type)}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </CardContent>
       </Card>
     );
   };
 
-  // Calculate current totals for display
-  const totalProducts = localProducts
-    .filter(p => p.type === 'product')
-    .reduce((sum, p) => sum + p.quantity, 0);
-  const totalPackaging = localProducts
-    .filter(p => p.type === 'packaging')
-    .reduce((sum, p) => sum + p.quantity, 0);
-  const hasAddons = localProducts.some(p => p.type === 'addon');
-  
-  // Use fallback values if company settings not loaded yet
-  const requiredProductMOQ = companySettings ? 
-    (hasAddons ? companySettings.products_moq_with_addon : companySettings.products_moq_without_addon) : 
-    (hasAddons ? 100 : 300); // Fallback values
-  const requiredPackagingMOQ = companySettings ? 
-    (hasAddons ? companySettings.packaging_moq_with_addon : companySettings.packaging_moq_without_addon) : 
-    (hasAddons ? 100 : 300); // Fallback values
-
-  // Check if all MOQ requirements are met
-  const isProductMOQMet = totalProducts >= requiredProductMOQ;
-  const isPackagingMOQMet = totalPackaging === 0 || (totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts);
-  const canContinue = isProductMOQMet && isPackagingMOQMet;
-
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold mb-2">Select Products & Services</h2>
-        <p className="text-muted-foreground">
-          Choose your products, packaging, and add-ons. MOQ rules apply.
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-card/30 via-background/50 to-muted/20">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
+            Select Your Products
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Choose from our premium {selectedCategory} collection - each product comes with flexible packaging options and premium add-ons
+          </p>
+          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto mt-6 rounded-full"></div>
+        </div>
 
-      {/* Current Order Summary */}
-      {(totalProducts > 0 || totalPackaging > 0) && (
-        <Card className="bg-primary/5 border-primary/20">
-          <CardContent className="p-4">
-            <div className="space-y-3">
-              <div className="text-sm font-medium">Current Order Summary</div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                {/* Products Status */}
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span>Products:</span>
-                    <span className="font-medium">{totalProducts} pieces</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Required MOQ:</span>
-                    <span className="font-medium">{requiredProductMOQ} pieces {hasAddons ? '(with addons)' : '(without addons)'}</span>
-                  </div>
-                  <div className={`text-xs px-2 py-1 rounded text-center ${totalProducts >= requiredProductMOQ ? 'bg-green-100 text-green-700' : 'bg-destructive/10 text-destructive'}`}>
-                    {totalProducts >= requiredProductMOQ ? (
-                      <span className="flex items-center justify-center gap-1">
-                        <CheckCircle className="h-3 w-3" />
-                        Products MOQ Met
-                      </span>
-                    ) : (
-                      <span className="flex items-center justify-center gap-1">
-                        <AlertCircle className="h-3 w-3" />
-                        Need {requiredProductMOQ - totalProducts} more products
-                      </span>
-                    )}
-                  </div>
-                </div>
+        {/* Enhanced Products Section */}
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-3 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl">
+              <Package className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="text-2xl font-bold text-foreground">Premium Products</h3>
+          </div>
+          {products && products.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+              {products.map((product) => renderItemCard(product, 'product'))}
+            </div>
+          ) : (
+            <div className="text-center py-16 bg-card/30 backdrop-blur-sm rounded-2xl border border-border/50">
+              <Package className="mx-auto h-16 w-16 mb-6 text-muted-foreground/60" />
+              <p className="text-lg text-muted-foreground">No products available for this category.</p>
+            </div>
+          )}
+        </div>
 
-                {/* Packaging Status */}
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span>Packaging:</span>
-                    <span className="font-medium">{totalPackaging} pieces</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Required MOQ:</span>
-                    <span className="font-medium">{requiredPackagingMOQ} pieces {hasAddons ? '(with addons)' : '(without addons)'}</span>
-                  </div>
-                  {totalPackaging > 0 && (
-                    <div className={`text-xs px-2 py-1 rounded text-center ${totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts ? 'bg-green-100 text-green-700' : 'bg-destructive/10 text-destructive'}`}>
-                      {totalPackaging >= requiredPackagingMOQ && totalPackaging === totalProducts ? (
-                        <span className="flex items-center justify-center gap-1">
-                          <CheckCircle className="h-3 w-3" />
-                          Packaging Requirements Met
-                        </span>
-                      ) : totalPackaging !== totalProducts ? (
-                        <span className="flex items-center justify-center gap-1">
-                          <AlertCircle className="h-3 w-3" />
-                          Packaging must equal product quantity ({totalProducts})
-                        </span>
-                      ) : (
-                        <span className="flex items-center justify-center gap-1">
-                          <AlertCircle className="h-3 w-3" />
-                          Need {requiredPackagingMOQ - totalPackaging} more packaging
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
+        {/* Enhanced Packaging Section */}
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-3 bg-gradient-to-br from-accent/20 to-accent/10 rounded-xl">
+              <Box className="h-6 w-6 text-accent" />
+            </div>
+            <h3 className="text-2xl font-bold text-foreground">Professional Packaging</h3>
+            {autoSyncPackaging && (
+              <div className="px-4 py-2 bg-gradient-to-r from-primary/10 to-accent/10 text-primary border border-primary/20 rounded-full text-sm font-medium">
+                ✨ Auto-synced with products
               </div>
+            )}
+          </div>
+          {packaging && packaging.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+              {packaging.map((pack) => renderItemCard(pack, 'packaging'))}
+            </div>
+          ) : (
+            <div className="text-center py-16 bg-card/30 backdrop-blur-sm rounded-2xl border border-border/50">
+              <Box className="mx-auto h-16 w-16 mb-6 text-muted-foreground/60" />
+              <p className="text-lg text-muted-foreground">No packaging options available for this category.</p>
+            </div>
+          )}
+        </div>
 
-              {/* Addon Status */}
-              {hasAddons && (
-                <div className="text-xs text-center bg-green-50 text-green-700 px-2 py-1 rounded">
-                  🎉 Add-on selected - Reduced MOQ active! (From {companySettings?.products_moq_without_addon} to {companySettings?.products_moq_with_addon} pieces)
+        {/* Enhanced Add-ons Section */}
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-3 bg-gradient-to-br from-secondary/20 to-secondary/10 rounded-xl">
+              <Plus className="h-6 w-6 text-secondary" />
+            </div>
+            <h3 className="text-2xl font-bold text-foreground">Premium Add-ons</h3>
+          </div>
+          {addons && addons.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+              {addons.map((addon) => renderItemCard(addon, 'addon'))}
+            </div>
+          ) : (
+            <div className="text-center py-16 bg-card/30 backdrop-blur-sm rounded-2xl border border-border/50">
+              <Plus className="mx-auto h-16 w-16 mb-6 text-muted-foreground/60" />
+              <p className="text-lg text-muted-foreground">No add-ons available for this category.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Enhanced Order Summary */}
+        {(getTotalProducts() > 0 || getTotalPackaging() > 0) && (
+          <div className="bg-gradient-to-br from-card/80 to-card/60 backdrop-blur-sm p-8 rounded-2xl border border-primary/20 shadow-xl shadow-primary/10 mb-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl">
+                <CheckCircle className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-2xl font-bold text-foreground">Order Summary</h3>
+            </div>
+            
+            <div className="space-y-4 mb-6">
+              {getTotalProducts() > 0 && (
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-primary/5 to-transparent rounded-lg border border-primary/10">
+                  <span className="text-card-foreground font-medium">Total Products:</span>
+                  <span className="font-bold text-xl text-primary">{getTotalProducts()}</span>
+                </div>
+              )}
+              {getTotalPackaging() > 0 && (
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-accent/5 to-transparent rounded-lg border border-accent/10">
+                  <span className="text-card-foreground font-medium">Total Packaging:</span>
+                  <span className="font-bold text-xl text-accent">{getTotalPackaging()}</span>
                 </div>
               )}
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Products Section */}
-      <div>
-        <h3 className="text-lg font-medium mb-4 text-foreground">Products</h3>
-        {products && products.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product) => renderItemCard(product, 'product'))}
-          </div>
-        ) : (
-          <div className="text-center py-8 text-muted-foreground">
-            <p>No products found for this category.</p>
-          </div>
-        )}
-      </div>
-
-      {/* Packaging Section */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
-            Packaging
-            <RefreshCw className="h-4 w-4 text-blue-600" />
-          </h3>
-          <div className="text-sm bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200 flex items-center gap-2">
-            <RefreshCw className="h-3 w-3" />
-            Auto-syncs with products ({totalProducts} pieces each)
-          </div>
-        </div>
-        {packaging && packaging.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {packaging.map((pack) => renderItemCard(pack, 'packaging'))}
-          </div>
-        ) : (
-          <div className="text-center py-8 text-muted-foreground">
-            <p>No packaging options available.</p>
-          </div>
-        )}
-      </div>
-
-      {/* Addons Section */}
-      <div>
-        <h3 className="text-lg font-medium mb-4 text-foreground">Add-ons</h3>
-        {addons && addons.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {addons.map((addon) => renderItemCard(addon, 'addon'))}
-          </div>
-        ) : (
-          <div className="text-center py-8 text-muted-foreground">
-            <p>No add-ons available.</p>
-          </div>
-        )}
-        
-        {/* Addon Benefits Information */}
-        {companySettings && (
-          <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold text-sm">
-                  💡
-                </div>
-                <div>
-                  <h4 className="font-medium text-green-800 mb-1">Add-on Benefits</h4>
-                  <p className="text-sm text-green-700">
-                    Adding any add-on reduces your minimum order requirement from{' '}
-                    <span className="font-semibold">{companySettings.products_moq_without_addon} pieces</span> to{' '}
-                    <span className="font-semibold">{companySettings.products_moq_with_addon} pieces</span>!
-                  </p>
-                  {hasAddons && (
-                    <div className="mt-1 text-xs text-green-600 font-medium">
-                      ✅ Add-on selected - reduced MOQ active!
-                    </div>
+            
+            <div className="space-y-4">
+              <div className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
+                MOQ Requirements
+              </div>
+              {companySettings?.products_moq_without_addon && (
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-background/50 to-background/30">
+                  {getTotalProducts() >= companySettings.products_moq_without_addon ? (
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                  ) : (
+                    <XCircle className="h-5 w-5 text-red-500" />
                   )}
+                  <span className={`font-medium ${getTotalProducts() >= companySettings.products_moq_without_addon ? "text-green-600" : "text-red-600"}`}>
+                    Products MOQ: {getTotalProducts()}/{companySettings.products_moq_without_addon}
+                  </span>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-
-      {/* MOQ Information */}
-      {companySettings && (
-        <Card className="bg-muted/50">
-          <CardHeader>
-            <CardTitle className="text-sm flex items-center gap-2">
-              📋 Order Requirements
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm space-y-3">
-            <div className="space-y-2">
-              <div className="font-medium">Individual Product MOQ:</div>
-              <div className="text-muted-foreground ml-4">Each product has its own minimum order quantity (shown on product cards)</div>
+              )}
+              {companySettings?.packaging_moq_without_addon && (
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-background/50 to-background/30">
+                  {getTotalPackaging() >= companySettings.packaging_moq_without_addon ? (
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                  ) : (
+                    <XCircle className="h-5 w-5 text-red-500" />
+                  )}
+                  <span className={`font-medium ${getTotalPackaging() >= companySettings.packaging_moq_without_addon ? "text-green-600" : "text-red-600"}`}>
+                    Packaging MOQ: {getTotalPackaging()}/{companySettings.packaging_moq_without_addon}
+                  </span>
+                </div>
+              )}
             </div>
-            <div className="space-y-2">
-              <div className="font-medium">Company Total MOQ:</div>
-              <div className="text-muted-foreground ml-4">
-                • Products without Add-ons: {companySettings.products_moq_without_addon} pieces
-              </div>
-              <div className="text-muted-foreground ml-4">
-                • Products with Add-ons: {companySettings.products_moq_with_addon} pieces
-              </div>
-              <div className="text-muted-foreground ml-4">
-                • Packaging without Add-ons: {companySettings.packaging_moq_without_addon} pieces
-              </div>
-              <div className="text-muted-foreground ml-4">
-                • Packaging with Add-ons: {companySettings.packaging_moq_with_addon} pieces
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="font-medium">Packaging Logic:</div>
-              <div className="text-muted-foreground ml-4">
-                Each packaging item quantity automatically equals your total product quantity
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">
-        <Button variant="secondary" onClick={onBack} className="flex items-center gap-2 w-full sm:w-auto">
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </Button>
-        
-        {/* MOQ Validation Message */}
-        {!canContinue && (
-          <div className="text-sm text-destructive text-center bg-destructive/10 p-2 rounded">
-            {!isProductMOQMet && (
-              <div>⚠️ Products MOQ not met: Need {requiredProductMOQ - totalProducts} more products</div>
-            )}
-            {!isPackagingMOQMet && totalPackaging > 0 && (
-              <div>⚠️ Packaging issues: {totalPackaging !== totalProducts ? `Must equal product quantity (${totalProducts})` : `Need ${requiredPackagingMOQ - totalPackaging} more packaging`}</div>
-            )}
           </div>
         )}
-        
-        <Button 
-          onClick={handleContinue} 
-          disabled={!canContinue}
-          className="flex items-center gap-2 w-full sm:w-auto"
-        >
-          Continue
-          <ArrowRight className="w-4 h-4" />
-        </Button>
+
+        {/* Enhanced Navigation */}
+        <div className="flex flex-col sm:flex-row justify-between gap-4 pt-8">
+          <Button
+            variant="outline"
+            onClick={onBack}
+            className="flex items-center gap-3 px-8 py-3 text-base font-medium border-2 border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            Back to Categories
+          </Button>
+          
+          <Button
+            onClick={handleContinue}
+            disabled={!canContinue}
+            className="flex items-center gap-3 px-8 py-3 text-base font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 disabled:from-muted disabled:to-muted shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            Continue to Details
+            <ArrowRight className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
     </div>
   );
