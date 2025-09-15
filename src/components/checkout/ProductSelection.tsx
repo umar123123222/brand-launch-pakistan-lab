@@ -337,7 +337,7 @@ const ProductSelection = ({
 
     return (
       <Card key={`${type}-${item.id}`} className="h-full">
-        <CardContent className="p-4">
+        <CardContent className="p-6">
           <div className="aspect-square mb-3 bg-muted rounded-lg overflow-hidden">
             {item.image_url || (item.images && item.images[0]) ? (
               <img
@@ -428,26 +428,33 @@ const ProductSelection = ({
             ) : (
               <div className="flex items-center justify-between">
                 <Label className="text-sm font-medium text-black">Quantity:</Label>
-                <div className="flex items-center gap-1 bg-muted/30 rounded-lg p-1">
+                <div className="flex items-center bg-background border border-input rounded-md overflow-hidden">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-7 w-7 p-0 hover:bg-primary/10 transition-colors"
+                    className="h-9 w-9 p-0 hover:bg-muted/50 border-r border-input/50 rounded-none"
                     onClick={() => handleQuantityDecrease(item, type)}
                     disabled={quantity <= 0}
                   >
-                    <Minus className="h-3 w-3" />
+                    <Minus className="h-4 w-4" />
                   </Button>
-                  <div className="min-w-[3rem] px-2 py-1 text-center text-sm font-medium bg-card text-card-foreground rounded border border-input">
-                    {quantity}
-                  </div>
+                  <Input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => {
+                      const newQuantity = Math.max(0, parseInt(e.target.value) || 0);
+                      updateQuantity(item.id, type, newQuantity);
+                    }}
+                    className="h-9 w-16 text-center border-0 focus-visible:ring-0 focus-visible:ring-offset-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    min="0"
+                  />
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-7 w-7 p-0 hover:bg-primary/10 transition-colors"
+                    className="h-9 w-9 p-0 hover:bg-muted/50 border-l border-input/50 rounded-none"
                     onClick={() => handleQuantityIncrease(item, type)}
                   >
-                    <Plus className="h-3 w-3" />
+                    <Plus className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -576,7 +583,7 @@ const ProductSelection = ({
       <div>
         <h3 className="text-lg font-medium mb-4 text-foreground">Products</h3>
         {products && products.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product) => renderItemCard(product, 'product'))}
           </div>
         ) : (
@@ -599,7 +606,7 @@ const ProductSelection = ({
           </div>
         </div>
         {packaging && packaging.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {packaging.map((pack) => renderItemCard(pack, 'packaging'))}
           </div>
         ) : (
@@ -613,7 +620,7 @@ const ProductSelection = ({
       <div>
         <h3 className="text-lg font-medium mb-4 text-foreground">Add-ons</h3>
         {addons && addons.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {addons.map((addon) => renderItemCard(addon, 'addon'))}
           </div>
         ) : (
