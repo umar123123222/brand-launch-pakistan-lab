@@ -272,7 +272,7 @@ const ConfirmationStep = ({ checkoutData, onBack, onConfirm }: ConfirmationStepP
       {/* Action Buttons */}
       <div className="flex gap-4 pt-4">
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={onBack}
           disabled={saving}
           className="flex items-center gap-2"
