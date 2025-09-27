@@ -98,14 +98,7 @@ const CheckoutThankYou = () => {
           {/* Additional Info */}
           <div className="mt-8 text-center">
             <p className="text-gray-300">
-              Questions? Contact us at{" "}
-              <a href="mailto:support@elevate51.com" className="text-yellow-400 hover:text-yellow-300">
-                support@elevate51.com
-              </a>{" "}
-              or{" "}
-              <a href="https://wa.me/923001234567" className="text-yellow-400 hover:text-yellow-300" target="_blank" rel="noopener noreferrer">
-                WhatsApp us
-              </a>
+              Questions? Don't worry - you can discuss all your questions and concerns with your assigned agent when they contact you.
             </p>
           </div>
         </div>
