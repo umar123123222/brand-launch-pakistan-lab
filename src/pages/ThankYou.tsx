@@ -56,23 +56,23 @@ const ThankYou = () => {
     }
   }, []);
 
-  // Get available agent count (excluding SuperAdmins)
+  // Get available agent count (only SalesAgents)
   const getAgentCapacity = async (): Promise<number> => {
     try {
       const { data: agents, error } = await supabase
         .from('user_profiles')
         .select('role')
-        .in('role', ['Admin', 'SalesAgent']);
+        .eq('role', 'SalesAgent');
 
       if (error) {
         console.error('Error fetching agents:', error);
-        return 3; // Fallback capacity
+        return 1; // Minimum fallback capacity
       }
 
-      return agents?.length || 3;
+      return agents?.length || 1;
     } catch (error) {
       console.error('Error getting agent capacity:', error);
-      return 3; // Fallback capacity
+      return 1; // Minimum fallback capacity
     }
   };
 
@@ -216,25 +216,27 @@ const ThankYou = () => {
     setLoading(true);
     
     try {
-      const { error } = await supabase
-        .from('bookings')
-        .insert({
-          id: crypto.randomUUID(),
-          full_name: formData.fullName,
-          email: formData.email,
-          whatsapp_number: formData.whatsappNumber,
-          business_timeline: formData.businessTimeline,
-          investment_ready: formData.investmentReady === "Yes",
-          seen_elyscents: formData.seenElyscents === "Yes",
-          categories: formData.categories,
-          booking_datetime: selectedSlot!.datetime.toISOString()
+      // Use atomic booking creation to prevent race conditions
+      const { data: bookingResult, error: bookingError } = await supabase
+        .rpc('create_booking_atomic', {
+          p_full_name: formData.fullName,
+          p_email: formData.email,
+          p_whatsapp_number: formData.whatsappNumber,
+          p_categories: formData.categories,
+          p_business_timeline: formData.businessTimeline,
+          p_investment_ready: formData.investmentReady === "Yes",
+          p_seen_elyscents: formData.seenElyscents === "Yes",
+          p_booking_datetime: selectedSlot!.datetime.toISOString()
         });
 
-      if (error) {
-        console.error("Database error:", error);
+      const result = bookingResult as any;
+      if (bookingError || !result?.success) {
+        const errorMsg = result?.error || bookingError?.message || 'Unknown error';
+        console.error('Atomic booking failed:', errorMsg);
+        
         toast({
           title: "Booking failed",
-          description: `Database error: ${error.message}. Please try again or contact support.`,
+          description: errorMsg,
           variant: "destructive"
         });
         return;

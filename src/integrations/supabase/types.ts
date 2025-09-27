@@ -222,9 +222,11 @@ export type Database = {
       }
       booking_form_submissions: {
         Row: {
+          "Booking Date PKT": string | null
           booking_datetime: string
           business_timeline: string
           categories: string[]
+          "Created Date PKT": string | null
           created_at: string
           email: string
           full_name: string
@@ -236,9 +238,11 @@ export type Database = {
           whatsapp_number: string
         }
         Insert: {
+          "Booking Date PKT"?: string | null
           booking_datetime: string
           business_timeline: string
           categories: string[]
+          "Created Date PKT"?: string | null
           created_at?: string
           email: string
           full_name: string
@@ -250,9 +254,11 @@ export type Database = {
           whatsapp_number: string
         }
         Update: {
+          "Booking Date PKT"?: string | null
           booking_datetime?: string
           business_timeline?: string
           categories?: string[]
+          "Created Date PKT"?: string | null
           created_at?: string
           email?: string
           full_name?: string
@@ -267,9 +273,11 @@ export type Database = {
       }
       bookings: {
         Row: {
+          "Booking Date PKT": string | null
           booking_datetime: string
           business_timeline: string
           categories: string[]
+          "Created Date PKT": string | null
           created_at: string
           email: string
           full_name: string
@@ -281,9 +289,11 @@ export type Database = {
           whatsapp_number: string
         }
         Insert: {
+          "Booking Date PKT"?: string | null
           booking_datetime: string
           business_timeline: string
           categories: string[]
+          "Created Date PKT"?: string | null
           created_at?: string
           email: string
           full_name: string
@@ -295,9 +305,11 @@ export type Database = {
           whatsapp_number: string
         }
         Update: {
+          "Booking Date PKT"?: string | null
           booking_datetime?: string
           business_timeline?: string
           categories?: string[]
+          "Created Date PKT"?: string | null
           created_at?: string
           email?: string
           full_name?: string
@@ -837,6 +849,7 @@ export type Database = {
           dashboard_suspended: boolean | null
           domain: string | null
           drive_link: string | null
+          drive_link_visible_to_client: boolean
           email: string
           facebook_page_url: string | null
           form_filled_date: string | null
@@ -889,6 +902,7 @@ export type Database = {
           dashboard_suspended?: boolean | null
           domain?: string | null
           drive_link?: string | null
+          drive_link_visible_to_client?: boolean
           email: string
           facebook_page_url?: string | null
           form_filled_date?: string | null
@@ -941,6 +955,7 @@ export type Database = {
           dashboard_suspended?: boolean | null
           domain?: string | null
           drive_link?: string | null
+          drive_link_visible_to_client?: boolean
           email?: string
           facebook_page_url?: string | null
           form_filled_date?: string | null
@@ -2212,6 +2227,27 @@ export type Database = {
       }
     }
     Functions: {
+      check_booking_capacity: {
+        Args: {
+          booking_date: string
+          booking_time: string
+          max_capacity?: number
+        }
+        Returns: boolean
+      }
+      create_booking_atomic: {
+        Args: {
+          p_booking_datetime: string
+          p_business_timeline: string
+          p_categories: string[]
+          p_email: string
+          p_full_name: string
+          p_investment_ready: boolean
+          p_seen_elyscents: boolean
+          p_whatsapp_number: string
+        }
+        Returns: Json
+      }
       create_user_with_temp_password: {
         Args: {
           temp_pass?: string
@@ -2224,6 +2260,14 @@ export type Database = {
       find_existing_client: {
         Args: { email_input?: string; phone_input?: string }
         Returns: string
+      }
+      get_agent_public_info: {
+        Args: { agent_email: string }
+        Returns: {
+          email: string
+          name: string
+          primary_contact: string
+        }[]
       }
       get_client_assignment_stats: {
         Args: Record<PropertyKey, never>
@@ -2271,6 +2315,10 @@ export type Database = {
         }
         Returns: string
       }
+      get_slot_availability: {
+        Args: { p_date: string; p_end_hour?: number; p_start_hour?: number }
+        Returns: Json
+      }
       get_total_packaging: {
         Args: Record<PropertyKey, never>
         Returns: number
@@ -2294,6 +2342,16 @@ export type Database = {
       redistribute_unassigned_clients: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      send_client_notification: {
+        Args: {
+          p_change_description: string
+          p_change_type: string
+          p_client_id: string
+          p_entity_name?: string
+          p_triggered_by?: string
+        }
+        Returns: boolean
       }
       upsert_client_auth: {
         Args: {
