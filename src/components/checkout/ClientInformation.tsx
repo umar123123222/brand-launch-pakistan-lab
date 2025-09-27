@@ -45,6 +45,7 @@ const ClientInformation = ({
   const [existingClientId, setExistingClientId] = useState<string | null>(null);
   const [isExistingClient, setIsExistingClient] = useState(false);
   const [isCheckingClient, setIsCheckingClient] = useState(false);
+  const [hasCheckedExistingClient, setHasCheckedExistingClient] = useState(false);
 
   const updateField = (field: keyof ClientInfo, value: string | File | null) => {
     const updated = { ...localClientInfo, [field]: value };
@@ -117,16 +118,23 @@ const ClientInformation = ({
     }
   };
 
-  // Check for existing client when email or phone changes
+  // Check for existing client when email or phone changes (only once per session)
   useEffect(() => {
+    // Only check if we haven't already checked and we have valid contact info
+    if (hasCheckedExistingClient) return;
+    
     const timeoutId = setTimeout(() => {
-      if (localClientInfo.email || localClientInfo.phone) {
+      const hasValidEmail = localClientInfo.email && localClientInfo.email.includes('@');
+      const hasValidPhone = localClientInfo.phone && localClientInfo.phone.length >= 10;
+      
+      if (hasValidEmail || hasValidPhone) {
         checkExistingClient(localClientInfo.email, localClientInfo.phone);
+        setHasCheckedExistingClient(true);
       }
     }, 1000); // Debounce for 1 second
 
     return () => clearTimeout(timeoutId);
-  }, [localClientInfo.email, localClientInfo.phone]);
+  }, [localClientInfo.email, localClientInfo.phone, hasCheckedExistingClient]);
 
   const handleNext = () => {
     // Required field validations
