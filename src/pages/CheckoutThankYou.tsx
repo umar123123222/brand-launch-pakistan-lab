@@ -82,7 +82,7 @@ const CheckoutThankYou = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex justify-center">
                 <Button
                   onClick={() => navigate('/')}
                   variant="secondary"
@@ -90,12 +90,6 @@ const CheckoutThankYou = () => {
                 >
                   <Home className="w-4 h-4" />
                   Return to Home
-                </Button>
-                <Button
-                  onClick={() => navigate('/dashboard')}
-                  className="flex items-center gap-2"
-                >
-                  View Dashboard
                 </Button>
               </div>
             </CardContent>
